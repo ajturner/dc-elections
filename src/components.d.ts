@@ -16,6 +16,11 @@ export namespace Components {
         "filename": string;
     }
     interface DcElectionQuestion {
+        /**
+          * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
+         */
+        "groups": Array<any>;
+        "question": string;
     }
 }
 declare global {
@@ -54,6 +59,11 @@ declare namespace LocalJSX {
         "filename"?: string;
     }
     interface DcElectionQuestion {
+        /**
+          * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
+         */
+        "groups"?: Array<any>;
+        "question"?: string;
     }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;

@@ -1,4 +1,4 @@
-import { Component, getAssetPath, Host, h, Prop } from '@stencil/core';
+import { Component, Host, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'dc-election-candidate',

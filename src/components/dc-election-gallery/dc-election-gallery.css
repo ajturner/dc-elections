@@ -1,3 +1,13 @@
 :host {
   display: block;
 }
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 600px;
+}
+.gallery dc-election-candidate {
+  border: thin solid #eee;
+  padding: 0.5rem;
+}
