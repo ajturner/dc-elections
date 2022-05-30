@@ -16,31 +16,34 @@ export class DcElectionQuestion {
   *   {response: "No", "candidates": ["C3", "C4"]} 
   * ]
   */
-  @Prop() groups: Array<any> = [];
+  @Prop() responses: Array<any> = [];
 
   renderCandidates(candidates: Array<any> ) {
     return (
        candidates.map((candidate) => {
-        return (<dc-election-candidate fullname={candidate}></dc-election-candidate>)
+        return (<dc-election-candidate fullname={candidate.Candidate} office={candidate.Race}></dc-election-candidate>)
       })
     )
   }
-  renderGroup(group) {
+  renderResponse(response) {
+    console.log("DcElectionQuestion: renderResponse", {
+      response
+    });
     return (
-      <div>
-      <span class="response">{group.response}</span>
-      {this.renderCandidates(group.candidates)}
-      </div>
+      <dc-election-gallery candidates={response.candidates}>
+        <div class="response">{response.response}</div>
+      </dc-election-gallery>
+      
     )
   }
   render() {
     return (
       <Host>
         <slot></slot>
-        <span class="question">{this.question}</span>
-        {this.groups.map((group) => {
+        <div class="question">{this.question}</div>
+        {this.responses.map((response) => {
           return (
-            this.renderGroup(group)
+            this.renderResponse(response)
           )
         })}
       </Host>

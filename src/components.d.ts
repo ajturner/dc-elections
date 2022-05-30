@@ -13,14 +13,17 @@ export namespace Components {
         "photo": string;
     }
     interface DcElectionGallery {
-        "filename": string;
+        "candidates": Array<any>;
     }
     interface DcElectionQuestion {
+        "question": string;
         /**
           * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
          */
-        "groups": Array<any>;
-        "question": string;
+        "responses": Array<any>;
+    }
+    interface DcElectionSurvey {
+        "filename": string;
     }
 }
 declare global {
@@ -42,10 +45,17 @@ declare global {
         prototype: HTMLDcElectionQuestionElement;
         new (): HTMLDcElectionQuestionElement;
     };
+    interface HTMLDcElectionSurveyElement extends Components.DcElectionSurvey, HTMLStencilElement {
+    }
+    var HTMLDcElectionSurveyElement: {
+        prototype: HTMLDcElectionSurveyElement;
+        new (): HTMLDcElectionSurveyElement;
+    };
     interface HTMLElementTagNameMap {
         "dc-election-candidate": HTMLDcElectionCandidateElement;
         "dc-election-gallery": HTMLDcElectionGalleryElement;
         "dc-election-question": HTMLDcElectionQuestionElement;
+        "dc-election-survey": HTMLDcElectionSurveyElement;
     }
 }
 declare namespace LocalJSX {
@@ -56,19 +66,23 @@ declare namespace LocalJSX {
         "photo"?: string;
     }
     interface DcElectionGallery {
-        "filename"?: string;
+        "candidates"?: Array<any>;
     }
     interface DcElectionQuestion {
+        "question"?: string;
         /**
           * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
          */
-        "groups"?: Array<any>;
-        "question"?: string;
+        "responses"?: Array<any>;
+    }
+    interface DcElectionSurvey {
+        "filename"?: string;
     }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;
         "dc-election-gallery": DcElectionGallery;
         "dc-election-question": DcElectionQuestion;
+        "dc-election-survey": DcElectionSurvey;
     }
 }
 export { LocalJSX as JSX };
@@ -78,6 +92,7 @@ declare module "@stencil/core" {
             "dc-election-candidate": LocalJSX.DcElectionCandidate & JSXBase.HTMLAttributes<HTMLDcElectionCandidateElement>;
             "dc-election-gallery": LocalJSX.DcElectionGallery & JSXBase.HTMLAttributes<HTMLDcElectionGalleryElement>;
             "dc-election-question": LocalJSX.DcElectionQuestion & JSXBase.HTMLAttributes<HTMLDcElectionQuestionElement>;
+            "dc-election-survey": LocalJSX.DcElectionSurvey & JSXBase.HTMLAttributes<HTMLDcElectionSurveyElement>;
         }
     }
 }
