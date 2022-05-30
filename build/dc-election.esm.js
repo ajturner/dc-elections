@@ -1,0 +1,1 @@
+import{p as e,b as o}from"./p-fd383776.js";(()=>{const o=import.meta.url,i={};return""!==o&&(i.resourcesUrl=new URL(".",o).href),e(i)})().then((e=>o([["p-ea254a16",[[1,"dc-election-gallery",{filename:[1],candidates:[32],questions:[32]}],[1,"dc-election-question",{question:[1],groups:[16]}],[1,"dc-election-candidate",{fullname:[1],photo:[1],office:[1],bio:[1]}]]]],e)));
