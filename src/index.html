@@ -9,6 +9,26 @@
     <script nomodule src="/build/dc-election.js"></script>
   </head>
   <body>
-    <my-component first="Stencil" last="'Don't call me a framework' JS"></my-component>
+  <h3>Candidate Cards</h3>
+  <div class="gallery">
+    <dc-election-candidate fullname="Candice Candidate" photo="/assets/person.png" bio="local resident" office="council" ></dc-election-candidate>
+    <dc-election-candidate fullname="Candice Candidate" photo="/assets/person.png" bio="local resident" ></dc-election-candidate>
+    <dc-election-candidate fullname="Candice Candidate" photo="/assets/person.png"></dc-election-candidate>
+    <dc-election-candidate fullname="Candice Candidate"></dc-election-candidate>
+  </div>
+  <h3>Candidate Gallery</h3>
+  <dc-election-gallery filename="/assets/candidates.csv"></dc-election-gallery>
+
+  <style>
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 600px;
+    }
+    .gallery dc-election-candidate {
+      border: thin solid gray;
+      min-height: 200px;
+    }
+  </style>
   </body>
 </html>

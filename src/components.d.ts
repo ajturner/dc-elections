@@ -6,56 +6,68 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first": string;
-        /**
-          * The last name
-         */
-        "last": string;
-        /**
-          * The middle name
-         */
-        "middle": string;
+    interface DcElectionCandidate {
+        "bio": string;
+        "fullname": string;
+        "office": string;
+        "photo": string;
+    }
+    interface DcElectionGallery {
+        "filename": string;
+    }
+    interface DcElectionQuestion {
     }
 }
 declare global {
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
+    interface HTMLDcElectionCandidateElement extends Components.DcElectionCandidate, HTMLStencilElement {
     }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
+    var HTMLDcElectionCandidateElement: {
+        prototype: HTMLDcElectionCandidateElement;
+        new (): HTMLDcElectionCandidateElement;
+    };
+    interface HTMLDcElectionGalleryElement extends Components.DcElectionGallery, HTMLStencilElement {
+    }
+    var HTMLDcElectionGalleryElement: {
+        prototype: HTMLDcElectionGalleryElement;
+        new (): HTMLDcElectionGalleryElement;
+    };
+    interface HTMLDcElectionQuestionElement extends Components.DcElectionQuestion, HTMLStencilElement {
+    }
+    var HTMLDcElectionQuestionElement: {
+        prototype: HTMLDcElectionQuestionElement;
+        new (): HTMLDcElectionQuestionElement;
     };
     interface HTMLElementTagNameMap {
-        "my-component": HTMLMyComponentElement;
+        "dc-election-candidate": HTMLDcElectionCandidateElement;
+        "dc-election-gallery": HTMLDcElectionGalleryElement;
+        "dc-election-question": HTMLDcElectionQuestionElement;
     }
 }
 declare namespace LocalJSX {
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first"?: string;
-        /**
-          * The last name
-         */
-        "last"?: string;
-        /**
-          * The middle name
-         */
-        "middle"?: string;
+    interface DcElectionCandidate {
+        "bio"?: string;
+        "fullname"?: string;
+        "office"?: string;
+        "photo"?: string;
+    }
+    interface DcElectionGallery {
+        "filename"?: string;
+    }
+    interface DcElectionQuestion {
     }
     interface IntrinsicElements {
-        "my-component": MyComponent;
+        "dc-election-candidate": DcElectionCandidate;
+        "dc-election-gallery": DcElectionGallery;
+        "dc-election-question": DcElectionQuestion;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "dc-election-candidate": LocalJSX.DcElectionCandidate & JSXBase.HTMLAttributes<HTMLDcElectionCandidateElement>;
+            "dc-election-gallery": LocalJSX.DcElectionGallery & JSXBase.HTMLAttributes<HTMLDcElectionGalleryElement>;
+            "dc-election-question": LocalJSX.DcElectionQuestion & JSXBase.HTMLAttributes<HTMLDcElectionQuestionElement>;
         }
     }
 }
