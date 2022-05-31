@@ -17,8 +17,17 @@
     <dc-election-candidate fullname="Candice Candidate"></dc-election-candidate>
   </div> -->
   
+  <a href="#housing">Housing</a> | <a href="#transportation">Transportation</a>
   <div class="survey" style="max-width: 660px;">
-    <dc-election-survey filename="./assets/questions.csv"></dc-election-gallery>
+    
+    <dc-election-survey id="housing" filename="./assets/housing.csv">
+    <h2 slot="title">Housing</h2>
+    </dc-election-survey>
+
+    
+    <dc-election-survey id="transportation" filename="./assets/transportation.csv">
+    <h2 slot="title">Transportation</h2>
+    </dc-election-survey>
   </div>
   </body>
 </html>

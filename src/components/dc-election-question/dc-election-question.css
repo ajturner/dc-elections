@@ -4,14 +4,25 @@
   margin-bottom: 2rem;
 }
 
+.preface {
+  font-weight: 300;
+}
+
 .question {
   font-weight: 700;
   font-size: 1.5rem;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
 }
 
 .response {
   font-weight: 600;
   font-size: 1.3rem;
   padding: 1rem 0;
+}
+
+.footnote {
+  font-weight: 300px;
+  font-size: 0.8rem;
+  font-style: italic;
+  padding-top: 0.5rem;
 }

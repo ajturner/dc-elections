@@ -37,8 +37,6 @@ async fetchCandidates(filename: string): Promise<Array<any>> {
       // ]}
 
     })
-
-    console.log("DcElectionGallery: fetchCandidates", [candidatesParse, this.candidates, this.questions]);
     return [];
   }
 
@@ -76,7 +74,7 @@ async fetchCandidates(filename: string): Promise<Array<any>> {
       response.candidates.push( candidate );
     })
 
-    console.log("DcElectionGallery: groupQuestionResponses", {
+    console.debug("DcElectionGallery: groupQuestionResponses", {
       question,
       candidates,
       responses
@@ -91,7 +89,7 @@ async fetchCandidates(filename: string): Promise<Array<any>> {
   render() {
     return (
       <Host>
-        <slot></slot>
+        <slot name="title"></slot>
         <div class="questions">
           {this.questions.map((question) => {
           return (
@@ -101,7 +99,7 @@ async fetchCandidates(filename: string): Promise<Array<any>> {
             ></dc-election-question>
           )
         })}
-        </div>        
+        </div>
       </Host>
     );
   }

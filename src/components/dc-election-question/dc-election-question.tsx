@@ -1,5 +1,5 @@
 import { Component, Host, h, Prop } from '@stencil/core';
-
+import { shuffle } from '../../utils/utils';
 @Component({
   tag: 'dc-election-question',
   styleUrl: 'dc-election-question.css',
@@ -19,28 +19,44 @@ export class DcElectionQuestion {
   @Prop() responses: Array<any> = [];
 
   renderCandidates(candidates: Array<any> ) {
+
     return (
-       candidates.map((candidate) => {
+       shuffle(candidates).map((candidate) => {
         return (<dc-election-candidate fullname={candidate.Candidate} office={candidate.Race}></dc-election-candidate>)
       })
     )
   }
+  
   renderResponse(response) {
-    console.log("DcElectionQuestion: renderResponse", {
-      response
-    });
-    return (
-      <dc-election-gallery candidates={response.candidates}>
+    
+    // TODO: remove the prior change of this default response.
+    if(response.response !== "No Response") {
+      return (
+        <dc-election-gallery candidates={shuffle(response.candidates)}>
         <div class="response">{response.response}</div>
-      </dc-election-gallery>
-      
-    )
+        </dc-election-gallery>
+      )
+    } else {
+      const names = response.candidates.map((c) => {
+        return (c?.Candidate)
+      })
+      return (
+        <div class="footnote">No response from {shuffle(names).join(', ')}</div>
+      )
+    }
   }
+  renderQuestion(question: string):string {
+    let formattedString = question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
+    return (
+      <div class="question" innerHTML={formattedString} />
+    );
+  }
+
   render() {
     return (
       <Host>
         <slot></slot>
-        <div class="question">{this.question}</div>
+        {this.renderQuestion(this.question)}
         {this.responses.map((response) => {
           return (
             this.renderResponse(response)
