@@ -13,6 +13,7 @@ export namespace Components {
         "photo": string;
     }
     interface DcElectionGallery {
+        "appearance": "grid" | "stack";
         "candidates": Array<any>;
     }
     interface DcElectionQuestion {
@@ -21,6 +22,7 @@ export namespace Components {
           * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
          */
         "responses": Array<any>;
+        "showNoResponse": boolean;
     }
     interface DcElectionSurvey {
         "filename": string;
@@ -66,6 +68,7 @@ declare namespace LocalJSX {
         "photo"?: string;
     }
     interface DcElectionGallery {
+        "appearance"?: "grid" | "stack";
         "candidates"?: Array<any>;
     }
     interface DcElectionQuestion {
@@ -74,6 +77,7 @@ declare namespace LocalJSX {
           * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
          */
         "responses"?: Array<any>;
+        "showNoResponse"?: boolean;
     }
     interface DcElectionSurvey {
         "filename"?: string;

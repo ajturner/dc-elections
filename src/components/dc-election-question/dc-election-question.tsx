@@ -8,6 +8,7 @@ import { shuffle } from '../../utils/utils';
 export class DcElectionQuestion {
 
   @Prop() question: string = null;
+  @Prop() showNoResponse: boolean = false;e
 
   /**
   * Holds an Array of answers to candidates
@@ -32,11 +33,11 @@ export class DcElectionQuestion {
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response") {
       return (
-        <dc-election-gallery candidates={shuffle(response.candidates)}>
-        <div class="response">{response.response}</div>
+        <dc-election-gallery appearance="stack" candidates={shuffle(response.candidates)}>
+          <div class="response">{response.response}</div>
         </dc-election-gallery>
       )
-    } else {
+    } else if(this.showNoResponse) {
       const names = response.candidates.map((c) => {
         return (c?.Candidate)
       })
@@ -44,6 +45,8 @@ export class DcElectionQuestion {
         <div class="footnote">No response from {shuffle(names).join(', ')}</div>
       )
     }
+
+    // otherwise no response;
   }
   renderQuestion(question: string):string {
     let formattedString = question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
@@ -57,11 +60,13 @@ export class DcElectionQuestion {
       <Host>
         <slot></slot>
         {this.renderQuestion(this.question)}
-        {this.responses.map((response) => {
-          return (
-            this.renderResponse(response)
-          )
-        })}
+        <div class="graphic">
+          {this.responses.map((response) => {
+            return (
+              this.renderResponse(response)
+            )
+          })}
+        </div>
       </Host>
     );
   }

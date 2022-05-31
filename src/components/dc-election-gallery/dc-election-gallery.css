@@ -4,9 +4,13 @@
 
 .gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   max-width: 660px;
+  grid-gap: 0.3rem;
 }
+.gallery .grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .gallery dc-election-candidate {
   border: thin solid #eee;
   padding: 0.5rem;

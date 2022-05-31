@@ -7,12 +7,13 @@ import { Component, Host, h, Prop } from '@stencil/core';
 })
 export class DcElectionGallery {
   @Prop() candidates: Array<any> = [];
+  @Prop() appearance: "grid" | "stack" = "grid";
 
   render() {
     return (
       <Host>
         <slot></slot>
-        <div class="gallery">
+        <div class={`gallery ${this.appearance}`}>
         {this.candidates.map((candidate) => {
           return (
             <dc-election-candidate 
