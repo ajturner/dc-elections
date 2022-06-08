@@ -17,6 +17,7 @@ export class DcElectionGallery {
         {this.candidates.map((candidate) => {
           return (
             <dc-election-candidate 
+              photo={`assets/photos/${candidate["Photo"]}`}
               fullname={candidate["Candidate"]}
               office={candidate?.Race}
             ></dc-election-candidate>

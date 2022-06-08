@@ -27,8 +27,8 @@ async fetchCandidates(filename: string): Promise<Array<any>> {
     const candidatesParse = Papa.parse(candidatesText, parseConfig);
     this.candidates = candidatesParse.data;
 
-    // Skip first two columns: Candidate, Race
-    this.questions = candidatesParse.meta.fields.slice(2).map((question) => {
+    // Skip first three columns: Photo, Candidate, Race
+    this.questions = candidatesParse.meta.fields.slice(3).map((question) => {
       const responses = this.groupQuestionResponses(question, this.candidates);
       return { question, responses }
       // return {"question": question, responses: [
@@ -72,12 +72,6 @@ async fetchCandidates(filename: string): Promise<Array<any>> {
 
       // Add this candidate to the cohort of responses
       response.candidates.push( candidate );
-    })
-
-    console.debug("DcElectionGallery: groupQuestionResponses", {
-      question,
-      candidates,
-      responses
     })
 
     return responses;

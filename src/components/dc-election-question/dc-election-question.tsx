@@ -23,7 +23,7 @@ export class DcElectionQuestion {
 
     return (
        shuffle(candidates).map((candidate) => {
-        return (<dc-election-candidate fullname={candidate.Candidate} office={candidate.Race}></dc-election-candidate>)
+        return (<dc-election-candidate photo={candidate.Photo} fullname={candidate.Candidate} office={candidate.Race}></dc-election-candidate>)
       })
     )
   }
