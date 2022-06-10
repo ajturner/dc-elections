@@ -1,5 +1,5 @@
 // Fisher-Yates (Knuth) array shuffle from http://sedition.com/perl/javascript-fy.html
-export function shuffle(array) {
+export function randomShuffle(array: Array<any>): Array<any> {
   let currentIndex = array.length,  randomIndex;
 
   // While there remain elements to shuffle.
@@ -15,4 +15,14 @@ export function shuffle(array) {
   }
 
   return array;
+}
+
+export function sortShuffle(array: Array<any>, attribute:string = "Race"): Array<any> {
+  return array.sort((a, b) => {
+    return a[attribute] > b[attribute] ? 1 : -1;
+  })
+}
+
+export function shuffle(array: Array<any>): Array<any> {
+  return sortShuffle(array);
 }
