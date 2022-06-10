@@ -15,6 +15,11 @@ export class DcElectionGallery {
         <slot></slot>
         <div class={`gallery ${this.appearance}`}>
         {this.candidates.map((candidate) => {
+          // don't display placeholder candidates.
+          // used to add another column but with no responses.
+          if(candidate["Candidate"] === undefined || candidate["Candidate"].length === 0) {
+            return;
+          }
           return (
             <dc-election-candidate 
               photo={`assets/photos/${candidate["Photo"]}`}
