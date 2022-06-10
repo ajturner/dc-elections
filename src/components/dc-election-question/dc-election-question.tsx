@@ -33,9 +33,11 @@ export class DcElectionQuestion {
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response") {
       return (
-        <dc-election-gallery appearance="stack" candidates={shuffle(response.candidates)}>
-          <div class="response">{response.response}</div>
-        </dc-election-gallery>
+        <div class="response-gallery">
+          <dc-election-gallery appearance="grid" candidates={shuffle(response.candidates)}>
+            <div class="response">{response.response}</div>
+          </dc-election-gallery>
+        </div>
       )
     } else if(this.showNoResponse) {
       const names = response.candidates.map((c) => {
