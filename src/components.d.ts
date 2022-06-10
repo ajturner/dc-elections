@@ -13,7 +13,7 @@ export namespace Components {
         "photo": string;
     }
     interface DcElectionGallery {
-        "appearance": "grid" | "stack";
+        "appearance": "grid" | "stack" | "narrow";
         "candidates": Array<any>;
     }
     interface DcElectionQuestion {
@@ -68,7 +68,7 @@ declare namespace LocalJSX {
         "photo"?: string;
     }
     interface DcElectionGallery {
-        "appearance"?: "grid" | "stack";
+        "appearance"?: "grid" | "stack" | "narrow";
         "candidates"?: Array<any>;
     }
     interface DcElectionQuestion {

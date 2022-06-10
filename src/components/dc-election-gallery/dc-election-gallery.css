@@ -8,8 +8,8 @@
   grid-gap: 0.3rem;
   grid-template-columns: repeat(3, 1fr);
 }
-.gallery .grid {
-  grid-template-columns: repeat(3, 1fr);
+.narrow {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .gallery dc-election-candidate {

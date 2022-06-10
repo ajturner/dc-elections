@@ -13,6 +13,11 @@ export class DcElectionCandidate {
   @Prop() office: string = null;
   @Prop() bio: string = null;
 
+  // Add zero-width space for optional line-break on names with an apostrophe
+  private displayName(fullname:string):string {
+    return fullname.replace(/'/,"'\u200B");
+  }
+
   render() {
     // const imageSrc = getAssetPath(`../assets/${this.photo}`);
     return (
@@ -22,7 +27,7 @@ export class DcElectionCandidate {
           ? <img src={this.photo} alt={`Photograph of ${this.fullname}`} />
           : null}
         {this.fullname 
-          ? <span class="fullname">{this.fullname}</span>
+          ? <span class="fullname">{this.displayName(this.fullname)}</span>
           : null}
         {this.office 
           ? <span class="office">{this.office}</span>

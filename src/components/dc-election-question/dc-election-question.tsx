@@ -28,13 +28,15 @@ export class DcElectionQuestion {
     )
   }
   
-  renderResponse(response) {
+  renderResponse(response, responseCount:number = 2) {
     
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response") {
       return (
         <div class="response-gallery">
-          <dc-election-gallery appearance="grid" candidates={shuffle(response.candidates)}>
+          <dc-election-gallery 
+              appearance={responseCount > 3 ? 'narrow':'grid'} 
+              candidates={shuffle(response.candidates)}>
             <div class="response">{response.response}</div>
           </dc-election-gallery>
         </div>
@@ -65,7 +67,7 @@ export class DcElectionQuestion {
         <div class="graphic">
           {this.responses.map((response) => {
             return (
-              this.renderResponse(response)
+              this.renderResponse(response, this.responses.length)
             )
           })}
         </div>

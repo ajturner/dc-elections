@@ -7,7 +7,7 @@ import { Component, Host, h, Prop } from '@stencil/core';
 })
 export class DcElectionGallery {
   @Prop() candidates: Array<any> = [];
-  @Prop() appearance: "grid" | "stack" = "grid";
+  @Prop({mutable: true}) appearance: "grid" | "stack" | "narrow" = "grid";
 
   render() {
     return (
