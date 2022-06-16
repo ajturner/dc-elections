@@ -22,7 +22,7 @@ export class DcElectionQuestion {
   renderCandidates(candidates: Array<any> ) {
 
     return (
-       shuffle(candidates).map((candidate) => {
+       shuffle(candidates, "Race").map((candidate) => {
         return (<dc-election-candidate photo={candidate.Photo} fullname={candidate.Candidate} office={candidate.Race}></dc-election-candidate>)
       })
     )
@@ -36,7 +36,7 @@ export class DcElectionQuestion {
         <div class="response-gallery">
           <dc-election-gallery 
               appearance={responseCount > 3 ? 'narrow':'grid'} 
-              candidates={shuffle(response.candidates)}>
+              candidates={shuffle(response.candidates, "Race")}>
             <div class="response">{response.response}</div>
           </dc-election-gallery>
         </div>
@@ -65,7 +65,7 @@ export class DcElectionQuestion {
         <slot></slot>
         {this.renderQuestion(this.question)}
         <div class="graphic">
-          {this.responses.map((response) => {
+          {shuffle(this.responses, "response", "desc").map((response) => {
             return (
               this.renderResponse(response, this.responses.length)
             )
