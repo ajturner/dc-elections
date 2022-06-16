@@ -21,7 +21,7 @@ export class DcElectionCandidate {
   render() {
   
     // const imageSrc = getAssetPath(`../assets/${this.photo}`);
-    const imageSrc = `/assets/photos/${this.photo}`;
+    const imageSrc = `./../assets/photos/${this.photo}`;
 
     return (
       <Host>

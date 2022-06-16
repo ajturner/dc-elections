@@ -18,7 +18,7 @@ export const config: Config = {
       serviceWorker: null, // disable service workers
       copy: [
         {
-          src: "./2022_primary/**/*.html",
+          src: "./2022/**/*.html",
         }
       ]
     },
