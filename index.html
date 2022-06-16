@@ -1,8 +1,8 @@
-<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>DC Elections for GGWash</title> <script type="module" src="./build/dc-election.esm.js"></script> <script nomodule="" src="./build/dc-election.js"></script> </head> <body> <div class="navbar"> <a href="#housing">Housing</a> <a href="#transportation">Transportation</a> <a href="#parking">Parking</a> </div> <div class="main"> <dc-election-survey id="housing" filename="./assets/housing.csv"> <h2 slot="title">Housing</h2> </dc-election-survey> <dc-election-survey id="transportation" filename="./assets/transportation.csv"> <h2 slot="title">Transportation</h2> </dc-election-survey> <dc-election-survey id="parking" filename="./assets/parking.csv"> <h2 slot="title">Parking</h2> </dc-election-survey> </div> <style>body {
+<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>DC Elections for GGWash</title> <script type="module" src="./build/dc-election.esm.js"></script> <script nomodule="" src="./build/dc-election.js"></script> </head> <body> <ul> <li><a href="2022/primary_mayor.html">2022 Primary - Mayor</a></li> <li><a href="2022/primary_council.html">2022 Primary - Council</a></li> </ul> <style>body {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
-      
+
     }
 
     .navbar, .main {
@@ -15,7 +15,7 @@
       position: fixed; /* Set the navbar to fixed position */
       top: 0; /* Position the navbar at the top of the page */
       width: 100%; /* Full width */
-      box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);      
+      box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
     }
 
     .navbar h1 {
