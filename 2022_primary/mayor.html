@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>2022 DC Mayor Elections | GGWash</title>
+
+    <script type="module" src="./../build/dc-election.esm.js"></script>
+    <script nomodule src="./../build/dc-election.js"></script>
+  </head>
+  <body>
+  
+  <div class="navbar">
+   <!-- <h2>2022 DC Mayor</h2> -->
+  </div>  
+  <div class="main">
+    <dc-election-survey id="mayor" filename="./../assets/2022_mayor.csv">
+      <h2 slot="title">Mayor</h2>
+    </dc-election-survey>
+  </div>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      
+    }
+
+    .navbar, .main {
+      padding: 0 8px;
+    }
+    /* The navigation bar */
+    .navbar {
+      overflow: hidden;
+      background-color: white;
+      position: fixed; /* Set the navbar to fixed position */
+      top: 0; /* Position the navbar at the top of the page */
+      width: 100%; /* Full width */
+      box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);      
+    }
+
+    .navbar h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    /* Links inside the navbar */
+    .navbar a {
+      float: left;
+      display: block;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+
+    /* Change background on mouse-over */
+    .navbar a:hover {
+      background: #ddd;
+      color: black;
+    }
+
+    /* show horizontal scope */
+    #parking {
+      min-width: 1300px;
+      overflow: scroll;
+    }
+
+    /* Main content */
+    .main {
+      margin-top: 60px; /* Add a top margin to avoid content overlay */
+    }
+    dc-election-survey {
+      scroll-margin-top: 60px;
+    }    
+  </style>
+  </body>
+</html>
