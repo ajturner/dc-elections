@@ -21,11 +21,13 @@ export class DcElectionCandidate {
   render() {
   
     // const imageSrc = getAssetPath(`../assets/${this.photo}`);
+    const imageSrc = `/assets/photos/${this.photo}`;
+
     return (
       <Host>
         <slot></slot>
         {this.photo 
-          ? <img src={this.photo} alt={`Photograph of ${this.fullname}`} />
+          ? <img src={imageSrc} alt={`Photograph of ${this.fullname}`} />
           : null}
         {this.fullname 
           ? <span class="fullname">{this.displayName(this.fullname)}</span>

@@ -16,6 +16,11 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null, // disable service workers
+      copy: [
+        {
+          src: "./2022_primary/**/*.html",
+        }
+      ]
     },
   ],
 };

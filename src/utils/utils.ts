@@ -23,6 +23,7 @@ export function sortShuffle(array: Array<any>, attribute:string = "Race"): Array
   })
 }
 
+// TODO: add option for what type of shuffle: sort | random, and attribute
 export function shuffle(array: Array<any>): Array<any> {
   return sortShuffle(array);
 }

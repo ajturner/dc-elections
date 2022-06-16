@@ -23,7 +23,7 @@ export class DcElectionGallery {
           return (
             <dc-election-candidate 
               class={`race${candidate.Race.replace(/\s+/,'')}`}
-              photo={`assets/photos/${candidate["Photo"]}`}
+              photo={`${candidate["Photo"]}`}
               fullname={candidate["Candidate"]}
               office={candidate?.Race}
             ></dc-election-candidate>
