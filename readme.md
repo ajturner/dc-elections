@@ -4,6 +4,30 @@ Visualization project for DC Elections, starting in 2022.
 
 Built by [Andrew Turner](https://highearthorbit.com) in collaboration with [Greater Greater Washington](https://ggwash.org/).
 
+
+## Using Components
+
+
+### Surveys
+
+Surveys are a CSV file, primarily with the schema:
+
+```csv
+Photo,Candidate,Race,_Preface_ Question 1,_Preface_ Question 2, ...
+Nadeau.jpg,Brianne Nadeau,Ward 1,1. Yes,1. Yes,1. Yes,1. Yes,1. Yes,Guaranteed headways of 10 minutes or less within D.C.
+Harris.jpg,Sabel Harris,Ward 1,1. Yes,1. Yes,1. Yes,1. Yes,1. Yes,Guaranteed headways of 10 minutes or less within D.C.
+```
+
+#### Formatting
+
+You can use underscores to de-emphasize questions: `_Policy says.._ Do you support?`
+
+#### Ordering
+
+You can order responses by prefix answers with a number, like `1. Yes` or `2. No`. 
+
+The number will sort responses but will not be displayed in the results.
+
 ## Getting Started
 
 To start building a new web component using Stencil, clone this repo to a new directory:

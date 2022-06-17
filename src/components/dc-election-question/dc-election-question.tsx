@@ -32,12 +32,15 @@ export class DcElectionQuestion {
     
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response") {
+      // remove numeric prefix like `1. answer` -> `answer`
+      let formattedString = response.response.replace(/^[0-9]\.\s+/, '')
+      
       return (
         <div class="response-gallery">
           <dc-election-gallery 
               appearance={responseCount > 3 ? 'narrow':'grid'} 
               candidates={shuffle(response.candidates, "Race")}>
-            <div class="response">{response.response}</div>
+            <div class="response">{formattedString}</div>
           </dc-election-gallery>
         </div>
       )
@@ -54,6 +57,7 @@ export class DcElectionQuestion {
   }
   renderQuestion(question: string):string {
     let formattedString = question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
+
     return (
       <div class="question" innerHTML={formattedString} />
     );
@@ -65,7 +69,7 @@ export class DcElectionQuestion {
         <slot></slot>
         {this.renderQuestion(this.question)}
         <div class="graphic">
-          {shuffle(this.responses, "response", "desc").map((response) => {
+          {shuffle(this.responses, "response", "asc").map((response) => {
             return (
               this.renderResponse(response, this.responses.length)
             )
