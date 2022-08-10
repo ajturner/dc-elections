@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop } from '@stencil/core';
+import { Component, Host, h, Prop, getAssetPath } from '@stencil/core';
 
 @Component({
   tag: 'dc-election-candidate',
@@ -19,10 +19,8 @@ export class DcElectionCandidate {
   }
 
   render() {
-  
-    // const imageSrc = getAssetPath(`../assets/${this.photo}`);
-    const imageSrc = `./../assets/photos/${this.photo}`;
-
+    
+    const imageSrc = getAssetPath(`../assets/photos/${this.photo}`);
     return (
       <Host>
         <slot></slot>

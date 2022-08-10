@@ -7,7 +7,20 @@ Built by [Andrew Turner](https://highearthorbit.com) in collaboration with [Grea
 
 ## Using Components
 
+First, include the components source files
 
+```html
+<script type="module" src="./../build/dc-election.esm.js"></script>
+<script nomodule src="./../build/dc-election.js"></script>
+```
+
+Then in your HTML you can add the components with a survey filename URL and optional title:
+
+```html
+<dc-election-survey id="housing" filename="./../assets/housing.csv">
+  <h2 slot="title">Housing</h2>
+</dc-election-survey>
+```
 ### Surveys
 
 Surveys are a CSV file, primarily with the schema:
