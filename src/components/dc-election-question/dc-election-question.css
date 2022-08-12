@@ -1,54 +1,54 @@
 :host {
   display: block;
   border-top: thin solid #444;
-  margin-bottom: 2rem;
+  margin-bottom: 2em;
 }
 
 .preface {
   font-weight: 300;
-  font-size: 1.4rem;
+  font-size: 1.4em;
   display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.3em;
 }
 
 
 .question {
   font-weight: 700;
-  font-size: 1.5rem;
-  padding: 1rem 0;
+  font-size: 1.5em;
+  padding: 1em 0;
 }
 
 .response {
   font-weight: 600;
-  font-size: 1.3rem;
-  padding: 1rem 0;
+  font-size: 1.3em;
+  padding: 1em 0;
 }
 
 .footnote {
   font-weight: 300px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-style: italic;
-  padding-top: 0.5rem;
+  padding-top: 0.5em;
 }
 
 /* Graph */
 
 .graphic {
   display: grid;
-  grid-gap: 0.3rem;
+  grid-gap: 0.3em;
   grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
 
 }
 
 .graphic .response {
-  /* font-size: 1rem;
+  /* font-size: 1em;
   font-weight: 400;
-  height: 4rem; */
-  padding: 0 0.3rem;
+  height: 4em; */
+  padding: 0 0.3em;
   vertical-align: bottom;
 }
 
 .response-gallery:not(:last-child) {
     border-right: 1px solid #AAA;
-    padding-right: 0.3rem;
+    padding-right: 0.3em;
 }

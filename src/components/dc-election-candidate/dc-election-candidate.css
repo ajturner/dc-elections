@@ -4,12 +4,12 @@
 
 .fullname {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 .bio, .office {
   color: #444;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   font-weight: 300;  
 }
 
