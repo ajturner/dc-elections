@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { ISurveyQuestion, ISurveyQuestionType } from "./utils/response";
 export namespace Components {
     interface DcElectionCandidate {
         "bio": string;
@@ -13,16 +14,17 @@ export namespace Components {
         "photo": string;
     }
     interface DcElectionGallery {
-        "appearance": "grid" | "stack" | "narrow";
+        "appearance": "grid" | "stack" | "narrow"| "quote";
         "candidates": Array<any>;
     }
     interface DcElectionQuestion {
-        "question": string;
+        "question": ISurveyQuestion;
         /**
           * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
          */
         "responses": Array<any>;
         "showNoResponse": boolean;
+        "type": ISurveyQuestionType;
     }
     interface DcElectionSurvey {
         "filename": string;
@@ -68,16 +70,17 @@ declare namespace LocalJSX {
         "photo"?: string;
     }
     interface DcElectionGallery {
-        "appearance"?: "grid" | "stack" | "narrow";
+        "appearance"?: "grid" | "stack" | "narrow"| "quote";
         "candidates"?: Array<any>;
     }
     interface DcElectionQuestion {
-        "question"?: string;
+        "question"?: ISurveyQuestion;
         /**
           * Holds an Array of answers to candidates [    {response: "Yes", "candidates": ["C1", "C2"]},    {response: "No", "candidates": ["C3", "C4"]}  ]
          */
         "responses"?: Array<any>;
         "showNoResponse"?: boolean;
+        "type"?: ISurveyQuestionType;
     }
     interface DcElectionSurvey {
         "filename"?: string;

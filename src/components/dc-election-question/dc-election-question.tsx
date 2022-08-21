@@ -1,4 +1,5 @@
 import { Component, Host, h, Prop } from '@stencil/core';
+import { ISurveyQuestion, ISurveyQuestionType } from '../../utils/response';
 import { shuffle } from '../../utils/utils';
 @Component({
   tag: 'dc-election-question',
@@ -7,8 +8,9 @@ import { shuffle } from '../../utils/utils';
 })
 export class DcElectionQuestion {
 
-  @Prop() question: string = null;
-  @Prop() showNoResponse: boolean = false;e
+  @Prop() question: ISurveyQuestion = null;
+  @Prop() showNoResponse: boolean = false;
+  @Prop() type: ISurveyQuestionType = ISurveyQuestionType.Choice;
 
   /**
   * Holds an Array of answers to candidates
@@ -35,11 +37,48 @@ export class DcElectionQuestion {
       // remove numeric prefix like `1. answer` -> `answer`
       let formattedString = response.response.replace(/^[0-9]\.\s+/, '')
       
+      let appearance: "grid" | "stack" | "narrow" | "quote" = 'narrow';
+      switch (this.type) {
+        case ISurveyQuestionType.Choice:
+          appearance = responseCount > 3 ? 'narrow':'grid';
+          return (
+              <div class="response-gallery">
+                <dc-election-gallery 
+                    appearance={appearance} 
+                    candidates={shuffle(response.candidates, "Race")}
+                  >
+                  <div class="response">{formattedString}</div>
+                </dc-election-gallery>
+              </div>
+            )
+          // break;
+
+        case ISurveyQuestionType.Text:
+          return (
+              <div class="response-quote">
+                <dc-election-gallery 
+                    appearance={appearance} 
+                    candidates={shuffle(response.candidates, "Race")}
+                  >
+                </dc-election-gallery>
+                <div class="response">{formattedString}</div>
+              </div>
+            )        
+          // break;
+
+        case ISurveyQuestionType.Rank:
+          break;
+
+        default:
+          break;
+      }
+
       return (
-        <div class="response-gallery">
+        <div class={`response-gallery layout-${this.type.toLowerCase()}`}>
           <dc-election-gallery 
-              appearance={responseCount > 3 ? 'narrow':'grid'} 
-              candidates={shuffle(response.candidates, "Race")}>
+              appearance={appearance} 
+              candidates={shuffle(response.candidates, "Race")}
+            >
             <div class="response">{formattedString}</div>
           </dc-election-gallery>
         </div>
@@ -55,8 +94,8 @@ export class DcElectionQuestion {
 
     // otherwise no response;
   }
-  renderQuestion(question: string):string {
-    let formattedString = question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
+  renderQuestion(question: ISurveyQuestion):string {
+    let formattedString = question.Question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
 
     return (
       <div class="question" innerHTML={formattedString} />
@@ -64,11 +103,12 @@ export class DcElectionQuestion {
   }
 
   render() {
+    console.log("dc-election-question", {'question': this.question, responses: this.responses})
     return (
       <Host>
         <slot></slot>
         {this.renderQuestion(this.question)}
-        <div class="graphic">
+        <div class={`layout-${this.type.toLowerCase()}`}>
           {shuffle(this.responses, "response", "asc").map((response) => {
             return (
               this.renderResponse(response, this.responses.length)

@@ -7,11 +7,10 @@ import { Component, Host, h, Prop } from '@stencil/core';
 })
 export class DcElectionGallery {
   @Prop() candidates: Array<any> = [];
-  @Prop({mutable: true}) appearance: "grid" | "stack" | "narrow" = "grid";
-
+  @Prop({mutable: true}) appearance: "grid" | "stack" | "narrow"| "quote" = "grid";
+  
   private renderResponses() {
     let output = [];
-    console.log("Render Gallery", [this.candidates.length])
     if(this.candidates.length <= 0) {
       output.push(
         <em>no support</em>

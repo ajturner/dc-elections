@@ -33,14 +33,14 @@
 
 /* Graph */
 
-.graphic {
+.layout-choice {
   display: grid;
   grid-gap: 0.3em;
   grid-template-columns: repeat( auto-fit, minmax(400px, 1fr) );
 
 }
 
-.graphic .response {
+.layout-choice .response {
   /* font-size: 1em;
   font-weight: 400;
   height: 4em; */
@@ -51,4 +51,17 @@
 .response-gallery:not(:last-child) {
     border-right: 1px solid #AAA;
     padding-right: 0.3em;
+}
+
+.response-quote {  
+  display: grid;
+  grid-template-columns: 15% 85%;
+  padding: 1em 0;
+  border-bottom: thin solid #DDD;
+}
+
+.response-quote .response {
+  font-weight: 400;
+  font-size: 1em;
+  padding: 0;  
 }

@@ -1,8 +1,31 @@
 // Parse responses
 import * as Papa from 'papaparse';
 
+export enum ISurveyQuestionType {
+  Text = 'Text',
+  Rank = 'Rank',
+  Choice = 'Choice'
+}
+export interface ISurveyQuestion {
+  Question: string;
+  Type: ISurveyQuestionType
+}
+
+
+export interface ISurveyCandidate {
+  Photo: string;
+  Candidate: string;
+  Race?: string;
+  // Answers
+  [index: string]: string;
+}
+export interface ISurveyResponse {
+  question: ISurveyQuestion;
+  responses: Array<ISurveyCandidate>;
+}
+
 // Get survey and return array of responses and candidates
-export async function fetchResponses(filename: string): Promise<Array<any>> { 
+export async function fetchResponses(filename: string): Promise<Array<ISurveyResponse>> { 
   if(filename === null) {
     return [];
   }
@@ -10,11 +33,13 @@ export async function fetchResponses(filename: string): Promise<Array<any>> {
   const candidatesText = await candidatesFile.text();
   
   const responses = parseResponse(candidatesText);
+  console.log("Responses", responses);
+
   return responses;
 }
 
-
-function parseResponse(responseText: string): Array<any> {
+// 
+function parseResponse(responseText: string): Array<ISurveyResponse> {
 
   // TODO: make parse configuration a Prop option
   const parseConfig = {
@@ -36,7 +61,7 @@ function parseResponse(responseText: string): Array<any> {
 }
 
 // For responses files that have questions as columns and candidates in Rows
-function parseColumnQuestions( parseFile: any, parseData: any ):Array<any> {
+function parseColumnQuestions( parseFile: any, parseData: any ):Array<ISurveyResponse> {
 
   console.log("parseFile", [parseFile, parseFile.meta.fields]);
   console.log("parseData", [parseData, parseData]);
@@ -45,18 +70,46 @@ function parseColumnQuestions( parseFile: any, parseData: any ):Array<any> {
   // Skip first three columns: Photo, Candidate, Race
   questions = parseFile.meta.fields.slice(3).map((question) => {
     const responses = groupQuestionResponses(question, parseData);
-    return { question, responses }
+    return { question: { Question: question, Type: ISurveyQuestionType.Text }, responses }
   })
   return questions;
 }
 
 // For responses files that have questions as rows and candidates in Columns
-function parseRowQuestions(_parseFile: any, _parseData: any ):Array<any> {
+function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyResponse> {
   // const candidates = parseData.meta.fields.slice(3).map((candidate) => {
     
   // })
 
-  return [];
+  console.log("parseRowQuestions: [parseFile, parseData]", [parseFile, parseData]);
+  // Question #, Type, Question, Sub question, ...[candidate last names]
+  const candidates = parseFile.meta.fields.slice(4).map((candidate) => {
+    let formattedCandidate = {Candidate: candidate, Photo: `${candidate}.jpg`, Race: 'At-Large'};
+
+    // Each row is a question (or sub-question)
+    parseData.map((row) => {
+      const question = row['Question'];
+      formattedCandidate[question] = row[candidate]
+      // let responses = candidates.map((candidate) => {
+      //   return {response: row[candidate.Candidate], candidates: [ candidate ] }
+      // });
+      // questions.push(       
+      //   { question, responses }
+      // )
+    })
+
+    return formattedCandidate;
+  })
+
+  // Loop back over the questions and group
+  const questions = parseData.map((question) => {
+    const responses = groupQuestionResponses(question.Question, candidates);
+    return { question, responses }
+  });
+
+  console.log("parseRowQuestions: {candidates}", {candidates, questions})
+
+  return questions;
 }
 
 /** Always returns a valid answer
@@ -73,7 +126,7 @@ function validateAnswer( answer:string, defaultAswer:string = "No Response" ): s
 function groupQuestionResponses(question:string, candidates: Array<any>): Array<any> {
   const responses = [];
 
-  console.log("candidates", candidates)
+  console.log("groupQuestionResponses: candidates", {question, candidates})
   // For each candidate, lookup their response to a question,
   // then add to the groups responses
   candidates.map((candidate) => {
