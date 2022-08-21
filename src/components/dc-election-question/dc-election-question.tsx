@@ -66,23 +66,45 @@ export class DcElectionQuestion {
             )        
           // break;
 
+        // Parsing logic shows Rank as Option b/c it's the "last one"
         case ISurveyQuestionType.Rank:
-          break;
+        case ISurveyQuestionType.Option:
+          const options = formattedString.split('|');
+          formattedString = (
+            <ol class="rank-options">
+              {options.map((option) => {
+                return(
+                  <li innerHTML={this.omitOptions(option)}></li>
+                )
+              })}
+            </ol>  
+          )
+          return (
+              <div class="response-rank">
+                <dc-election-gallery 
+                    appearance={appearance} 
+                    candidates={shuffle(response.candidates, "Race")}
+                  >
+                </dc-election-gallery>
+                <div class="response">{formattedString}</div>
+              </div>
+            )            
+          // break;
 
         default:
           break;
       }
 
-      return (
-        <div class={`response-gallery layout-${this.type.toLowerCase()}`}>
-          <dc-election-gallery 
-              appearance={appearance} 
-              candidates={shuffle(response.candidates, "Race")}
-            >
-            <div class="response">{formattedString}</div>
-          </dc-election-gallery>
-        </div>
-      )
+      // return (
+      //   <div class={`response-gallery layout-${this.type.toLowerCase()}`}>
+      //     <dc-election-gallery 
+      //         appearance={appearance} 
+      //         candidates={shuffle(response.candidates, "Race")}
+      //       >
+      //       <div class="response">{formattedString}</div>
+      //     </dc-election-gallery>
+      //   </div>
+      // )
     } else if(this.showNoResponse) {
       const names = response.candidates.map((c) => {
         return (c?.Candidate)
@@ -94,6 +116,10 @@ export class DcElectionQuestion {
 
     // otherwise no response;
   }
+
+  omitOptions(s:string):string {
+    return s.replace(/\~([\w\s,-]+)\~/g, "<span class='omit'>$1</span>")
+  }
   renderQuestion(question: ISurveyQuestion):string {
     let formattedString = question.Question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
 
@@ -103,7 +129,7 @@ export class DcElectionQuestion {
   }
 
   render() {
-    console.log("dc-election-question", {'question': this.question, responses: this.responses})
+    console.debug("dc-election-question", {'question': this.question, responses: this.responses})
     return (
       <Host>
         <slot></slot>

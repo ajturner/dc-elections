@@ -53,15 +53,58 @@
     padding-right: 0.3em;
 }
 
-.response-quote {  
+.response-quote, .response-rank {  
   display: grid;
-  grid-template-columns: 15% 85%;
+  grid-template-columns: 0.1fr 1fr;
   padding: 1em 0;
   border-bottom: thin solid #DDD;
 }
-
+.response-rank .response {
+  font-weight: 300;
+  padding: 0;
+}
 .response-quote .response {
   font-weight: 400;
   font-size: 1em;
-  padding: 0;  
+  padding: 0.4em;
+  font-style: oblique;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+.response-quote .response:before {
+  content: open-quote;
+  color: #ccc;
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+.response-quote .response:after {
+  content: close-quote;
+  color: #ccc;
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+.rank-options {
+  padding: 0;
+  margin: 0;
+}
+.rank-options li {
+  list-style: none;
+  border: 1px solid #CCC;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+}
+.omit {
+  text-decoration: line-through; 
+}
+
+.omit::after {
+  display:inline-block;
+  text-decoration: unset;
+  content: "Won't pursue";
+  font-weight: 100;
+  font-style: italic;
 }

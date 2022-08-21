@@ -15,12 +15,11 @@ export class DcElectionSurvey {
 
   async componentWillLoad() {
     this.questions = await Response.fetchResponses(this.filename);
-    console.log("dc-election-survey", { questions: this.questions })
   }
   
   // Render differently depending on type
   renderQuestion(question: Response.ISurveyResponse) {
-    console.log("dc-election-survey: renderQuestion", {type: question.question.Type, question})
+    console.debug("dc-election-survey: renderQuestion", {type: question.question.Type, question})
     // switch (question.question.Type) {
     //   case Response.ISurveyQuestionType.Choice:
         return (
