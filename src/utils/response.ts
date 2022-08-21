@@ -70,7 +70,7 @@ function parseColumnQuestions( parseFile: any, parseData: any ):Array<ISurveyRes
   // Skip first three columns: Photo, Candidate, Race
   questions = parseFile.meta.fields.slice(3).map((question) => {
     const responses = groupQuestionResponses(question, parseData);
-    return { question: { Question: question, Type: ISurveyQuestionType.Text }, responses }
+    return { question: { Question: question, Type: ISurveyQuestionType.Choice }, responses }
   })
   return questions;
 }
