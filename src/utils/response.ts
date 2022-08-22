@@ -142,7 +142,9 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
     // We aggregated Rank + Options, so keep out of summary
     return question.Type !== ISurveyQuestionType.Option; 
   }).map((question) => {
-    const responses = groupQuestionResponses(question.Question, candidates);
+    // Don't group rank/options
+    const group = question.Type === ISurveyQuestionType.Rank ? false : true;
+    const responses = groupQuestionResponses(question.Question, candidates, group);
     return { question, responses }
   });
 
@@ -162,7 +164,7 @@ function validateAnswer( answer:string, defaultAswer:string = "No Response" ): s
   return answer;
 }
 // Create an index of responses to set of candidates
-function groupQuestionResponses(question:string, candidates: Array<any>): Array<any> {
+function groupQuestionResponses(question:string, candidates: Array<any>, group: boolean = true): Array<any> {
   const responses = [];
 
   // console.log("groupQuestionResponses: candidates", {question, candidates})
@@ -173,8 +175,13 @@ function groupQuestionResponses(question:string, candidates: Array<any>): Array<
     // Lookup the candidate's answer to a given question
     const answer = validateAnswer( candidate[question] );
 
-    // Find out if other candidates have provided this answer
-    let response = responses.find((_response) => { return _response.response === answer });
+
+    let response = null;
+    
+// Find out if other candidates have provided this answer
+    if(group) {
+      response = responses.find((_response) => { return _response.response === answer });
+    }
 
     // Add the response to the set if it doesn't exist yet.
     if(!response) {

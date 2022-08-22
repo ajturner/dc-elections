@@ -11,6 +11,11 @@
 .narrow {
   grid-template-columns: repeat(2, 1fr);
 }
+.gallery.grid {
+  margin-left: 2em;
+  padding: 0.5em 0 0 0.5em;
+  border-left: 3px solid #BBB;
+}
 
 .gallery dc-election-candidate {
   border: thin solid #eee;

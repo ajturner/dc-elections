@@ -13,15 +13,18 @@
 
 
 .question {
-  font-weight: 700;
-  font-size: 1em;
-  padding: 1em 0;
+  font-weight: 800;
+  font-size: 1.2em;
+  padding-top: 0.5em;
 }
 
 .response {
   font-weight: 600;
   font-size: 1em;
   padding: 1em 0;
+}
+.response-gallery .response::before {
+  content: "\203A"
 }
 
 .footnote {
@@ -44,14 +47,20 @@
   /* font-size: 1em;
   font-weight: 400;
   height: 4em; */
-  padding: 0 0.3em;
+  padding: 0 0.3em 0.3em 0.3em;
   vertical-align: bottom;
 }
 
+.response-gallery {
+  margin-top: 1em;
+  padding-top: 0.5em;
+}
+
+/* Removing in favor of a vertical line from answer
 .response-gallery:not(:last-child) {
     border-right: 1px solid #AAA;
     padding-right: 0.3em;
-}
+} */
 
 .response-quote, .response-rank {  
   display: grid;
