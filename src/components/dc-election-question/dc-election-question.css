@@ -90,21 +90,33 @@
 .rank-options {
   padding: 0;
   margin: 0;
+  font: italic 1em Georgia;
+  color: #666;
 }
 .rank-options li {
-  list-style: none;
   border: 1px solid #CCC;
   padding: 0.5em;
+  margin-left: 1.5em;
   margin-bottom: 0.5em;
 }
+.rank-options li.omit {
+  list-style: none;
+}
+.ranked span {
+  font: normal 1em Arial;
+  color: #000;  
+}
 .omit {
+  font: normal 1em Arial;
   text-decoration: line-through; 
+  color: #555;
 }
 
 .omit::after {
-  display:inline-block;
+  display: inline-block;
   text-decoration: unset;
-  content: "Won't pursue";
+  content: "would not vote for";
   font-weight: 100;
+  padding-left: 0.5em;
   font-style: italic;
 }

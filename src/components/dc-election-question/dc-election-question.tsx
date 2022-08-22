@@ -74,7 +74,7 @@ export class DcElectionQuestion {
             <ol class="rank-options">
               {options.map((option) => {
                 return(
-                  <li innerHTML={this.omitOptions(option)}></li>
+                  this.formatRankOptions(option)
                 )
               })}
             </ol>  
@@ -117,8 +117,13 @@ export class DcElectionQuestion {
     // otherwise no response;
   }
 
-  omitOptions(s:string):string {
-    return s.replace(/\~([\w\s,-]+)\~/g, "<span class='omit'>$1</span>")
+  // Block out Omit and wrap others in span
+  formatRankOptions(text:string):string {
+    const omit = text.match(/\~([\w\s,-]+)\~/g) ? true : false;
+    text = text.replace(/\~([\w\s,-]+)\~/g, '$1');
+
+    const output = <li class={omit ? 'omit': 'ranked'}><span>{text}</span></li>;
+    return output;
   }
   renderQuestion(question: ISurveyQuestion):string {
     let formattedString = question.Question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
