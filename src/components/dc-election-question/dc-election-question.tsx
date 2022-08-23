@@ -37,10 +37,10 @@ export class DcElectionQuestion {
       // remove numeric prefix like `1. answer` -> `answer`
       let formattedString = response.response.replace(/^[0-9]\.\s+/, '')
       
-      let appearance: "grid" | "stack" | "narrow" | "quote" = 'narrow';
+      let appearance: "grid" | "stack" | "narrow" | "quote" = 'grid';
       switch (this.type) {
         case ISurveyQuestionType.Choice:
-          appearance = responseCount > 3 ? 'narrow':'grid';
+          // appearance = responseCount > 3 ? 'narrow':'grid';
           return (
               <div class="response-gallery">
                 <dc-election-gallery 
@@ -54,6 +54,7 @@ export class DcElectionQuestion {
           // break;
 
         case ISurveyQuestionType.Text:
+          appearance = 'quote';
           return (
               <div class="response-quote">
                 <dc-election-gallery 
