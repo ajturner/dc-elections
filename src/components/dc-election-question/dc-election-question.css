@@ -115,16 +115,15 @@
   font: normal 1em Arial;
   color: #000;  
 }
-.omit {
+.omit .text {
   font: normal 1em Arial;
   text-decoration: line-through; 
   color: #555;
 }
 
-.omit::after {
+.omit .comment {
   display: inline-block;
   text-decoration: unset;
-  content: "would not vote for";
   font-weight: 100;
   padding-left: 0.5em;
   font-style: italic;

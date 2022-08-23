@@ -117,14 +117,25 @@ export class DcElectionQuestion {
     // otherwise no response;
   }
 
-  // Block out Omit and wrap others in span
+  // Logic for normal text and `~omit~ (comment)`
+  // example: <span><span class='text'>omit</span><span class='comment'>comment</span>
   formatRankOptions(text:string):string {
-    const omit = text.match(/\~([\w\s,-]+)\~/g) ? true : false;
-    text = text.replace(/\~([\w\s,-]+)\~/g, '$1');
-
-    const output = <li class={omit ? 'omit': 'ranked'}><span>{text}</span></li>;
+    // const omit = text.match(/\~([\w\s,-]+)\~/g) ? true : false;
+    let enumeration = 'ranked';
+    switch (true) {
+      case /\~([\w\s,'-]+)\~/g.test(text):
+        enumeration = 'omit'    
+        break;
+    
+      default:
+        break;
+    }
+    text = text.replace(/\~([\w\s,'-]+)\~ (\([\w\s]+\))/g, "<span class='text'>$1</span> <span class='comment'>$2</span>");
+    text = `<span>${text}</span>`;
+    const output = <li class={enumeration} innerHTML={text}></li>;
     return output;
   }
+
   renderQuestion(question: ISurveyQuestion):string {
     let formattedString = question.Question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
 

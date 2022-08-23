@@ -75,6 +75,13 @@ function parseColumnQuestions( parseFile: any, parseData: any ):Array<ISurveyRes
   return questions;
 }
 
+// return the last name, but ignore suffix (Sr, III)
+// Only works for last names with at least 4 characters
+function findLastName(fullName:string):string {
+  const matches = fullName.match(/\w+(?!.*[\w]{4,})/);
+  return !!matches ? matches[0] : '';
+}
+
 // For responses files that have questions as rows and candidates in Columns
 function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyResponse> {
 
@@ -82,11 +89,13 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
   // Question #, Type, Question, Sub question, ...[candidate last names]
   const candidates = parseFile.meta.fields.slice(4).map((candidate) => {
     // TODO: fix default candidate race from at-large to a candidate directory?
-    let formattedCandidate = {Candidate: candidate, Photo: `${candidate}.jpg`, Race: 'At-Large'};
+    let photo = findLastName(candidate);
+    let formattedCandidate = {Candidate: candidate, Photo: `${photo}.jpg`, Race: 'At-Large'};
 
     // RANKED OPTIONS
     // Flag if currently gathering Rank options
     let rankedOptions = [];
+    let rankedComment = null; // will be used from sub-question on rank question
     // ---
 
     // Each row is a question (or sub-question)
@@ -99,14 +108,15 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
       // TODO: move this into a function
       if(row['Type'] === ISurveyQuestionType.Rank) {
         rankedOptions = [];
+        rankedComment = row['Sub question'];
       
       } else if (row['Type'] === ISurveyQuestionType.Option) {
         // The candidate cell (question row/candidate column) will have a number 0-Number options
         // if 0, consider lowest ranked and mark "will not pursue" with a tilde ~
         let rankIndex = row[candidate];
         let rankOption = row['Sub question'];
-        if(rankIndex === '0' ) {
-          rankOption = '~' + rankOption + '~'; // + operator faster than other methods
+        if(rankIndex === '0'  || rankIndex === '') {
+          rankOption = `~${rankOption}~ (${rankedComment})`; // + operator faster than other methods
           rankIndex = 1000;
         } else if(rankIndex === '' ) {
           // When there was an unselected option
@@ -121,7 +131,8 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
           rankedOptions.push(rankOption)
         }
         // serialize the answer in case this is the last option
-        answer = rankedOptions.sort().map(s => {return s.replace(/\d\)/,'')}).join('|');
+        // remove the number prefix
+        answer = rankedOptions.sort().map((s)=> {return s.replace(/\d\)/,'')}).join('|');
       } else {
         // done processing
         answer = row[candidate];
