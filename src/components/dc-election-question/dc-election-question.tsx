@@ -142,16 +142,27 @@ export class DcElectionQuestion {
     return output;
   }
 
-  renderQuestion(question: ISurveyQuestion):string {
-    let formattedString = question.Question.replace(/_(.*)_/g, '<span class="preface">$1</span>');
+  renderQuestion(question: ISurveyQuestion) {
+    let match, preface = '', focus = question.Question;
 
-    return (
-      <div class="question" innerHTML={formattedString} />
-    );
+    try {
+      [match, preface, focus] = question.Question.match(/_(.*)_(.*)/);
+    } catch (error) {
+      // we'll just ignore...
+    }
+
+    // return (
+    //   <div class="question" innerHTML={formattedString} />
+    // );
+    const output = [
+      <span class="preface">{preface}</span>,
+      <span class="focus">{focus}</span>
+    ]
+    return output;
   }
 
   render() {
-    console.debug("dc-election-question", {'question': this.question, responses: this.responses})
+
     return (
       <Host>
         <slot></slot>

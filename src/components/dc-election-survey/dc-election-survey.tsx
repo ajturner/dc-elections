@@ -19,7 +19,7 @@ export class DcElectionSurvey {
   
   // Render differently depending on type
   renderQuestion(question: Response.ISurveyResponse) {
-    console.debug("dc-election-survey: renderQuestion", {type: question.question.Type, question})
+
     // switch (question.question.Type) {
     //   case Response.ISurveyQuestionType.Choice:
         return (
