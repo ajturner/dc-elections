@@ -30,7 +30,7 @@ export class DcElectionQuestion {
     )
   }
   
-  renderResponse(response, responseCount:number = 2) {
+  renderResponse(response, _responseCount:number = 2) {
     
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response") {
@@ -143,10 +143,10 @@ export class DcElectionQuestion {
   }
 
   renderQuestion(question: ISurveyQuestion) {
-    let match, preface = '', focus = question.Question;
+    let preface = '', focus = question.Question;
 
     try {
-      [match, preface, focus] = question.Question.match(/_(.*)_(.*)/);
+      [, preface, focus] = question.Question.match(/_(.*)_(.*)/);
     } catch (error) {
       // we'll just ignore...
     }
