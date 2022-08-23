@@ -124,7 +124,7 @@ export class DcElectionQuestion {
     // const omit = text.match(/\~([\w\s,-]+)\~/g) ? true : false;
     let enumeration = 'unranked';
     switch (true) {
-      case /\~([\w\s,'-]+)\~/g.test(text):
+      case /\~(.*)\~/g.test(text):
         enumeration = 'omit';
         break;
       case /^#/.test(text):
@@ -135,7 +135,7 @@ export class DcElectionQuestion {
       default:
         break;
     }
-    text = text.replace(/\~([\w\s,'-]+)\~ (\([\w\s]+\))/g, "<span class='text'>$1</span> <span class='comment'>$2</span>");
+    text = text.replace(/\~(.*)\~ (\([\w\s]+\))/g, "<span class='text'>$1</span> <span class='comment'>$2</span>");
     text = `<span>${text}</span>`;
     const output = <li class={enumeration} innerHTML={text}></li>;
     return output;
