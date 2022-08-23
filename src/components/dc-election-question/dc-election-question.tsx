@@ -121,10 +121,14 @@ export class DcElectionQuestion {
   // example: <span><span class='text'>omit</span><span class='comment'>comment</span>
   formatRankOptions(text:string):string {
     // const omit = text.match(/\~([\w\s,-]+)\~/g) ? true : false;
-    let enumeration = 'ranked';
+    let enumeration = 'unranked';
     switch (true) {
       case /\~([\w\s,'-]+)\~/g.test(text):
-        enumeration = 'omit'    
+        enumeration = 'omit';
+        break;
+      case /^#/.test(text):
+        enumeration = 'ranked';
+        text = text.replace(/^#/,'');
         break;
     
       default:

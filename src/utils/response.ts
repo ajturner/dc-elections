@@ -96,6 +96,7 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
     // Flag if currently gathering Rank options
     let rankedOptions = [];
     let rankedComment = null; // will be used from sub-question on rank question
+    let rankOrdered = false; // determine if the options were 'ordered' like 1,2,3.. or just chosen from list
     // ---
 
     // Each row is a question (or sub-question)
@@ -108,19 +109,24 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
       // TODO: move this into a function
       if(row['Type'] === ISurveyQuestionType.Rank) {
         rankedOptions = [];
-        rankedComment = row['Sub question'];
-      
+        let orderFlag = null;
+        // value like 'would not vote for|unordered'
+        [rankedComment,orderFlag] = row['Sub question'].split('|');
+        rankOrdered = !!orderFlag && orderFlag === 'ordered';
+
       } else if (row['Type'] === ISurveyQuestionType.Option) {
         // The candidate cell (question row/candidate column) will have a number 0-Number options
         // if 0, consider lowest ranked and mark "will not pursue" with a tilde ~
         let rankIndex = row[candidate];
         let rankOption = row['Sub question'];
+
+        // Candidate said they did not agree with this option
         if(rankIndex === '0'  || rankIndex === '') {
-          rankOption = `~${rankOption}~ (${rankedComment})`; // + operator faster than other methods
+          rankOption = `~${rankOption}~ (${rankedComment})`; 
           rankIndex = 1000;
-        } else if(rankIndex === '' ) {
-          // When there was an unselected option
-          rankOption = null;
+        } else if(rankOrdered) {
+          // the list should include numbers
+          rankOption = '#' + rankOption; // + Operator faster than regex or ``
         } else {
           rankOption = `${rankIndex}) ${rankOption}`;
         }
@@ -131,7 +137,7 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
           rankedOptions.push(rankOption)
         }
         // serialize the answer in case this is the last option
-        // remove the number prefix
+        // remove the number prefix, e.g. '4) My Answer' -> 'My Answer'
         answer = rankedOptions.sort().map((s)=> {return s.replace(/\d\)/,'')}).join('|');
       } else {
         // done processing

@@ -108,10 +108,11 @@
   margin-left: 1.5em;
   margin-bottom: 0.5em;
 }
-.rank-options li.omit {
+/* Remove numbers for unranked or omitted */
+.rank-options li.omit, .rank-options li.unranked {
   list-style: none;
 }
-.ranked span {
+.rank-options  span {
   font: normal 1em Arial;
   color: #000;  
 }
