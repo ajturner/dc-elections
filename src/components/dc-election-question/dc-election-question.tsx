@@ -70,6 +70,7 @@ export class DcElectionQuestion {
         // Parsing logic shows Rank as Option b/c it's the "last one"
         case ISurveyQuestionType.Rank:
         case ISurveyQuestionType.Option:
+          appearance = 'quote';
           const options = formattedString.split('|');
           formattedString = (
             <ol class="rank-options">
