@@ -132,8 +132,8 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
           rankOption = `~${rankOption}~ (${rankedComment})`; 
           rankIndex = 1000;
         } else if(rankOrdered) {
-          // the list should include numbers
-          rankOption = '#' + rankOption; // + Operator faster than regex or ``
+          // the list should include numbers: 3|#option
+          rankOption = `${rankIndex}|#${rankOption}`;
         } else {
           rankOption = `${rankIndex}|${rankOption}`;
         }
