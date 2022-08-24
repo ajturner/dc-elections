@@ -32,10 +32,13 @@ export class DcElectionQuestion {
   
   renderResponse(response, _responseCount:number = 2) {
     
+    if(response.response.match(/EVERYWHERE/)) {
+      console.debug("dc-election-question", response.response)
+    }
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response") {
       // remove numeric prefix like `1. answer` -> `answer`
-      let formattedString = response.response.replace(/^[0-9]\.\s+/, '')
+      let formattedString = response.response.replace(/^[0-9]\.\s+/, '').replace(/(?:\r\n|\r|\n)/g, '<br>');
       
       let appearance: "grid" | "stack" | "narrow" | "quote" = 'grid';
       switch (this.type) {
@@ -47,7 +50,7 @@ export class DcElectionQuestion {
                     appearance={appearance} 
                     candidates={shuffle(response.candidates, "Race")}
                   >
-                  <div class="response">{formattedString}</div>
+                  <div class="response" innerHTML={formattedString}></div>
                 </dc-election-gallery>
               </div>
             )
@@ -62,7 +65,7 @@ export class DcElectionQuestion {
                     candidates={shuffle(response.candidates, "Race")}
                   >
                 </dc-election-gallery>
-                <div class="response">{formattedString}</div>
+                  <div class="response" innerHTML={formattedString}></div>
               </div>
             )        
           // break;
@@ -143,10 +146,11 @@ export class DcElectionQuestion {
   }
 
   renderQuestion(question: ISurveyQuestion) {
-    let preface = '', focus = question.Question;
+    const q = question.Question.replace(/(?:\r\n|\r|\n)/g, '<br>')
+    let preface = '', focus = q;
 
     try {
-      [, preface, focus] = question.Question.match(/_(.*)_(.*)/);
+      [, preface, focus] = q.match(/_(.*)_(.*)/);
     } catch (error) {
       // we'll just ignore...
     }
@@ -155,8 +159,8 @@ export class DcElectionQuestion {
     //   <div class="question" innerHTML={formattedString} />
     // );
     const output = [
-      <span class="preface">{preface}</span>,
-      <span class="focus">{focus}</span>
+      <span class="preface" innerHTML={preface}>{}</span>,
+      <span class="focus" innerHTML={focus}></span>
     ]
     return output;
   }

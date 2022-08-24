@@ -2,9 +2,9 @@
 import * as Papa from 'papaparse';
 
 export enum ISurveyQuestionType {
-  Text = 'Text',
+  Text = 'Open-Ended Response',
+  Choice = 'Response',
   Rank = 'Rank',
-  Choice = 'Choice',
   Option = 'Option'
 }
 export interface ISurveyQuestion {
@@ -32,10 +32,16 @@ export async function fetchResponses(filename: string): Promise<Array<ISurveyRes
   }
   const candidatesFile = await fetch(filename);
   const candidatesText = await candidatesFile.text();
+  try {
+    
+    const responses = parseResponse(candidatesText);
+    return responses;  
+  } catch (error) {
+    console.error("Error parsing file: ", {filename, error})
+    console.error("test", candidatesText)
+  }
   
-  const responses = parseResponse(candidatesText);
 
-  return responses;
 }
 
 // 
@@ -51,10 +57,11 @@ function parseResponse(responseText: string): Array<ISurveyResponse> {
 
   if(parseFile.meta.fields[0] === "Photo") {
     return parseColumnQuestions(parseFile, parseData);
-  } else if (parseFile.meta.fields[0] === "Question #") {
+  } else if (parseFile.meta.fields[0] === "Question") {
     return parseRowQuestions(parseFile, parseData);
   } else {
-    throw "Unrecognized file";
+    console.debug("dc-election parseResponse: Unrecognized file type", {parseFile})
+    throw "dc-election parseResponse: Unrecognized file type";
   }
 
 
@@ -87,7 +94,7 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
 
   // console.log("parseRowQuestions: [parseFile, parseData]", [parseFile, parseData]);
   // Question #, Type, Question, Sub question, ...[candidate last names]
-  const candidates = parseFile.meta.fields.slice(4).map((candidate) => {
+  const candidates = parseFile.meta.fields.slice(3).map((candidate) => {
     // TODO: fix default candidate race from at-large to a candidate directory?
     let photo = findLastName(candidate);
     let formattedCandidate = {Candidate: candidate, Photo: `${photo}.jpg`, Race: 'At-Large'};
@@ -121,14 +128,14 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
         let rankOption = row['Sub question'];
 
         // Candidate said they did not agree with this option
-        if(rankIndex === '0'  || rankIndex === '') {
+        if(rankIndex === '0' || rankIndex === '' || rankIndex === 'N/A') {
           rankOption = `~${rankOption}~ (${rankedComment})`; 
           rankIndex = 1000;
         } else if(rankOrdered) {
           // the list should include numbers
           rankOption = '#' + rankOption; // + Operator faster than regex or ``
         } else {
-          rankOption = `${rankIndex}) ${rankOption}`;
+          rankOption = `${rankIndex}|${rankOption}`;
         }
 
         // If the option was not selected
@@ -137,8 +144,8 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
           rankedOptions.push(rankOption)
         }
         // serialize the answer in case this is the last option
-        // remove the number prefix, e.g. '4) My Answer' -> 'My Answer'
-        answer = rankedOptions.sort().map((s)=> {return s.replace(/\d\)/,'')}).join('|');
+        // remove the number prefix, e.g. '4|My Answer' -> 'My Answer'
+        answer = rankedOptions.sort().map((s)=> {return s.replace(/^.*\|/,'')}).join('|');
       } else {
         // done processing
         answer = row[candidate];
