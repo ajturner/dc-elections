@@ -2,3 +2,19 @@
   display: block;
   font-family: sans-serif;
 }
+
+ol {
+  /* margin: 0 0 0 1em; */
+  padding: 0;
+  font: italic 2em Georgia;
+  color: #666;
+  list-style-position: inside;
+}
+ol dc-election-question {
+  font: normal 16px Helvetica, Arial, Sans-Serif;
+  color: #000;  
+}
+ol li {
+  border-top: thin solid #444;
+  margin-top: 1em;
+}

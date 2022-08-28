@@ -1,8 +1,6 @@
 :host {
   display: block;
-  border-top: thin solid #444;
-  margin-bottom: 2em;
-  padding-top: 10px;
+  /* margin-bottom: 2em; */
 }
 
 .preface {
@@ -56,11 +54,6 @@
   padding: 0 0.3em 0.3em 0.3em;
   vertical-align: bottom;
 }
-
-.response-gallery {
-  padding-top: 0.5em;
-}
-
 /* Removing in favor of a vertical line from answer
 .response-gallery:not(:last-child) {
     border-right: 1px solid #AAA;
@@ -107,6 +100,11 @@
   font: italic 1em Georgia;
   color: #666;
 }
+.rank-options  span {
+  font: normal 1em Arial;
+  color: #000;  
+}
+
 .rank-options li {
   border: 1px solid #CCC;
   padding: 0.5em;
@@ -120,10 +118,7 @@
 .rank-options li.omit, .rank-options li.unranked {
   list-style: none;
 }
-.rank-options  span {
-  font: normal 1em Arial;
-  color: #000;  
-}
+
 .omit .text {
   font: normal 1em Arial;
   text-decoration: line-through; 

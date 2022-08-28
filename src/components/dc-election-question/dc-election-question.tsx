@@ -31,10 +31,7 @@ export class DcElectionQuestion {
   }
   
   renderResponse(response, _responseCount:number = 2) {
-    
-    if(response.response.match(/EVERYWHERE/)) {
-      console.debug("dc-election-question", response.response)
-    }
+
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response") {
       // remove numeric prefix like `1. answer` -> `answer`
