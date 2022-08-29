@@ -8,7 +8,8 @@ ol {
   padding: 0;
   font: italic 2em Georgia;
   color: #666;
-  list-style-position: inside;
+  list-style-position: outside;
+  padding-left: 1.5em;
 }
 ol dc-election-question {
   font: normal 16px Helvetica, Arial, Sans-Serif;
