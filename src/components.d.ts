@@ -28,6 +28,7 @@ export namespace Components {
     }
     interface DcElectionSurvey {
         "filename": string;
+        "format": string;
     }
 }
 declare global {
@@ -84,6 +85,7 @@ declare namespace LocalJSX {
     }
     interface DcElectionSurvey {
         "filename"?: string;
+        "format"?: string;
     }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;

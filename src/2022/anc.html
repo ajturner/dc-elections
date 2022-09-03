@@ -2,26 +2,28 @@
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>DC Elections for GGWash</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <script type="module" src="./build/dc-election.esm.js"></script>
-    <script nomodule src="./build/dc-election.js"></script>
+    <title>2022 DC ANC Elections | GGWash</title>
+
+    <script type="module" src="./../build/dc-election.esm.js"></script>
+    <script nomodule src="./../build/dc-election.js"></script>
   </head>
   <body>
-
-  <ul>
-    <li><a href="2022/primary_mayor.html">2022 Primary - Mayor</a></li>
-    <li><a href="2022/primary_council.html">2022 Primary - Council</a></li>
-    <li><a href="2022/atlarge.html">2022 Council - At Large</a></li>
-    <li><a href="2022/anc.html">2022 ANC</a></li>
-  </ul>
+  
+  <div class="navbar">
+  </div>  
+  <div class="main">
+    <dc-election-survey id="anc" filename="./../assets/2022_anc.csv" format="surveymonkey">
+      <h2 slot="title">DC ANC</h2>
+    </dc-election-survey>
+  </div>
   <style>
     body {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
-
+      overflow-x: hidden;
     }
 
     .navbar, .main {
@@ -34,7 +36,7 @@
       position: fixed; /* Set the navbar to fixed position */
       top: 0; /* Position the navbar at the top of the page */
       width: 100%; /* Full width */
-      box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+      box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);      
     }
 
     .navbar h1 {
@@ -64,11 +66,11 @@
 
     /* Main content */
     .main {
-      margin-top: 60px; /* Add a top margin to avoid content overlay */
+      margin-top: 0; /* Add a top margin to avoid content overlay */
     }
     dc-election-survey {
       scroll-margin-top: 60px;
-    }
+    }    
   </style>
   </body>
 </html>

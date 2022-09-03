@@ -10,6 +10,8 @@ export enum ISurveyQuestionType {
 export interface ISurveyQuestion {
   Question: string;
   Type: ISurveyQuestionType
+  Options?: Array<string>
+  Index?: string // Spreadsheet column/row index
 }
 
 
@@ -17,16 +19,22 @@ export interface ISurveyCandidate {
   Photo: string;
   Candidate: string;
   Race?: string;
-  // Answers
+  // Answers based on Question as a key
   [index: string]: string;
 }
+// TODO Change these to ISurveyQuestionAggregation + ISurveyResponse below
 export interface ISurveyResponse {
   question: ISurveyQuestion;
-  responses: Array<ISurveyCandidate>;
+  responses: Array<ISurveySummary>;
+}
+
+export interface ISurveySummary {
+  response: string
+  candidates: Array<ISurveyCandidate>
 }
 
 // Get survey and return array of responses and candidates
-export async function fetchResponses(filename: string): Promise<Array<ISurveyResponse>> { 
+export async function fetchResponses(filename: string, format: string = "column"): Promise<Array<ISurveyResponse>> { 
   if(filename === null) {
     return [];
   }
@@ -34,30 +42,32 @@ export async function fetchResponses(filename: string): Promise<Array<ISurveyRes
   const candidatesText = await candidatesFile.text();
   try {
     
-    const responses = parseResponse(candidatesText);
+    const responses = parseResponse(candidatesText, format);
     return responses;  
   } catch (error) {
     console.error("Error parsing file: ", {filename, error})
     console.error("test", candidatesText)
   }
-  
-
 }
 
 // 
-function parseResponse(responseText: string): Array<ISurveyResponse> {
+function parseResponse(responseText: string, format: string = "column"): Array<ISurveyResponse> {
 
   // TODO: make parse configuration a Prop option
   const parseConfig = {
-    header: true
+    header: (format !== "surveymonkey")
   }
 
   const parseFile = Papa.parse(responseText, parseConfig);
   const parseData = parseFile.data;
+  console.log("parseData", parseData);
 
-  if(parseFile.meta.fields[0] === "Photo") {
+  if (parseData[0][0] === "Respondent ID") {
+    // Default SurveyMoneky output
+      return parseSurveyMonkeyQuestions(parseFile, parseData);
+  } else if(parseFile.meta.fields && parseFile.meta.fields[0] === "Photo") {
     return parseColumnQuestions(parseFile, parseData);
-  } else if (parseFile.meta.fields[0] === "Question") {
+  } else if (parseFile.meta.fields && parseFile.meta.fields[0] === "Question") {
     return parseRowQuestions(parseFile, parseData);
   } else {
     console.debug("dc-election parseResponse: Unrecognized file type", {parseFile})
@@ -67,12 +77,90 @@ function parseResponse(responseText: string): Array<ISurveyResponse> {
 
 }
 
+// For responses files that are direct export from SurveyMonkey
+// Row 1: Respondent ID,Collector ID,Start Date,End Date,IP Address,Email Address,First Name,Last Name,Custom Data 1,Contact information,,,,Select the Advisory Neighborhood Commission in which you are running:,Select the SMD in which you are running:,"Please upload a photo of yourself, preferably a headshot, that GGWash has your permission to use in its materials related to the 2022 election and endorsements process in DC, which may include publication on our website, in emails, on social media, or in other formats.","Where in your Advisory Neighborhood Commission, not just your SMD, do you think density should be increased to accommodate the construction of new housing?If you do not think density should be increased in your ANC, please write, ""I do not think density should be increased in my ANC.”","The District’s inclusionary zoning law “requires that eight to 10 percent of the residential floor area be set-aside for affordable units in most new residential development projects of 10 or more units.” The cost of doing so is paid by a project’s developer. Because the number of IZ units is tied to floor-area ratio, the larger a building is, the more IZ units will be built. Conversely, if the initial density proposed by a developer is reduced during the approvals process, rather than maintained or increased, fewer IZ units will be built. ANC commissioners are likely to hear from some constituents concerned by a project’s potential impact—real or assumed—on traffic, parking, views, and property values and rents, and whether it fits the character of the neighborhood. While it is not a guarantee that a development proposal including IZ units will come before your ANC, if one does, what would you do, given the likelihood of at least some pushback?","Planned unit developments are projects in which developers are able to exceed the height and density allowed by the District’s zoning code up to the density allowed by its Future Land Use Map (typically a modest increase in scale) in exchange for a community benefits agreement. While it is not a guarantee that a PUD will be proposed in your ANC, if one is, the commission is likely to be the party negotiating that community benefits agreement with a developer.The following are examples of benefits that an ANC might push for in such an agreement. Please rank them in the order in which you would prioritize them. If you would not consider a particular benefit at all, please select N/A in that row.",,,,,,,,Should apartments be legal to build District-wide?,Which of these statements best describes your feelings about historic districts and landmarks in the District?,"The District is likely to begin a rewrite of its Comprehensive Plan, its foundational land-use document, in 2025. In a rewrite of the Comprehensive Plan, which of these three options would be your top priority?",Which statement do you agree with most? ,"My ANC, not just my SMD, has:","Do you think there are not enough cars, enough cars, or too many cars in the District?",Do you think inducing residents and visitors to drive less should be an explicit policy goal of the District?,"On-street parking occurs in public space. This means that an on-street parking spot does not belong to a specific individual, and people park in different places at different times. What do you consider a reasonable rule of thumb for deciding if a neighborhood has enough street parking?","Do you support the projects in the bus priority plan in your ANC and, if necessary, would you support removing parking or travel lanes so that they can be built?","Do you support the projects in the bicycle priority network plan in your ANC, and, if necessary, would you support removing parking or travel lanes so that they can be built?","If there are projects in either plan in your ANC, choose one—bus or bike—and discuss what you see as its benefits, weaknesses, or both. If there are no projects in your ANC, please write, “N/A.”","The District's goal to be carbon-free by 2050 requires most of the reduction of its transportation emissions to come from residents turning existing single-occupancy vehicle trips into transit, walking, and biking trips. Please describe at least one trip you currently take by car (even if you, yourself, are not driving) that you can commit to taking on foot, by bus, by train, via a mobility device, or by bike instead.","First, what do you feel is the biggest issue in your neighborhood, and what is your position on it? Second, given the limited scope of commissioners’ and commissions’ authority, what would you, most realistically, do about that issue if you are elected?",,Why do you think you are the right person to serve as an ANC commissioner for your SMD?
+// Row 2: ,,,,,,,,,Name,Email,Campaign-related social media accounts,"Fundraising link, if applicable (if not, please write ""N/A"")",Response,Response,Open-Ended Response,Open-Ended Response,Response,More inclusionary zoning units than are required by District law,Inclusionary zoning units restricted to lower income levels than initially proposed by the developer,Inclusionary zoning units with more than one bedroom,"Parks, landscaping, and/or public art",A Capital Bikeshare station,"Improvements or repairs to, or replacement of, streets and sidewalks","Direct cash payments to local organizations, such as civic associations and ANCs",Direct cash payments to local schools and youth programs,Response,Response,Response,Response,Response,Response,Response,Response,Response,Response,Open-Ended Response,Open-Ended Response,"I feel the biggest issue in my neighborhood is, and my position on it is:","If elected, I would:",Open-Ended Response
+function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISurveyResponse> {
+  let questions:Array<ISurveyQuestion> = [];
+
+  //// 
+  // indexes for working with spreadsheet
+  const questionColumnStart = 16;
+  const responseRowStart = 3;
+  const nameColumn = 9;
+  const ancColumn = 13; // TODO fix this hard-coding of the schema
+  const smdColumn = 14;
+  const photoColumn = 15;
+  
+  // Row 1 is questions, Row 2 is question metadata
+  const questionRow = 0;
+  const metaRow = 1;
+  ///
+
+  // Get array of structured questions
+  questions = parseData[questionRow].slice(questionColumnStart).reduce((questionArray, question, index) => {
+    const metaIndex = index + questionColumnStart;
+    let questionMeta = parseData[metaRow][metaIndex];
+
+    // Store the question, or add the Option to the previous Rank type question
+    if(question && question.length !== 0) {
+
+      // If this is a unique string it's a rank choice option
+      if(! Object.values(ISurveyQuestionType).includes(questionMeta)) {
+        questionMeta = ISurveyQuestionType.Rank;
+      }
+
+      let q = {
+        Question: question, 
+        Type: questionMeta, 
+        Options: [],
+        Index: metaIndex
+      };
+      questionArray.push(q)
+    } else {
+      // Rank question option. Add to array of previous question
+      const lastQuestion = questionArray[questionArray.length-1];
+      lastQuestion.Options.push(questionMeta)
+    }
+
+    return questionArray;
+  }, []);
+
+  console.log("questions", questions)
+  
+  // Now get candidates and their responses
+  const respondants = parseData.slice(responseRowStart).reduce((responseArray, response) =>  {
+    let candidate:ISurveyCandidate = {
+      Candidate: response[nameColumn],
+      Photo: "_blank.jpg", //response[photoColumn],
+      Race: response[ancColumn] + response[smdColumn]
+    }
+    console.log({candidate})
+    responseArray.push(candidate);
+    questions.map((question) => {
+      candidate[question.Question] = response[question.Index];
+    });
+
+    return responseArray;
+  }, []);
+
+  // TODO: determine if can be optimized to not double loop arra
+  const survey:Array<ISurveyResponse> = questions.map((question) => {
+    const responses = groupQuestionResponses(question.Question, respondants);
+    const surveyResponse:ISurveyResponse = { question, responses };
+    return surveyResponse;
+  })
+
+  return survey;
+}
+
+
 // For responses files that have questions as columns and candidates in Rows
 function parseColumnQuestions( parseFile: any, parseData: any ):Array<ISurveyResponse> {
 
   // console.log("parseFile", [parseFile, parseFile.meta.fields]);
   // console.log("parseData", [parseData, parseData]);
-  let questions = [];
+  let questions:Array<ISurveyResponse> = [];
 
   // Skip first three columns: Photo, Candidate, Race
   questions = parseFile.meta.fields.slice(3).map((question) => {
@@ -162,7 +250,7 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
   })
 
   // Loop back over the questions and group
-  const questions = parseData.filter((question) => {
+  const questions:Array<ISurveyResponse> = parseData.filter((question) => {
     // We aggregated Rank + Options, so keep out of summary
     return question.Type !== ISurveyQuestionType.Option; 
   }).map((question) => {
@@ -188,7 +276,7 @@ function validateAnswer( answer:string, defaultAswer:string = "No Response" ): s
   return answer;
 }
 // Create an index of responses to set of candidates
-function groupQuestionResponses(question:string, candidates: Array<any>, group: boolean = true): Array<any> {
+function groupQuestionResponses(question:string, candidates: Array<ISurveyCandidate>, group: boolean = true): Array<ISurveySummary> {
   const responses = [];
 
   // console.log("groupQuestionResponses: candidates", {question, candidates})
@@ -198,11 +286,9 @@ function groupQuestionResponses(question:string, candidates: Array<any>, group: 
 
     // Lookup the candidate's answer to a given question
     const answer = validateAnswer( candidate[question] );
-
-
     let response = null;
     
-// Find out if other candidates have provided this answer
+    // Find out if other candidates have provided this answer
     if(group) {
       response = responses.find((_response) => { return _response.response === answer });
     }

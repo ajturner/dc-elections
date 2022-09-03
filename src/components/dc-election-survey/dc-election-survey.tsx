@@ -8,13 +8,12 @@ import * as Response from '../../utils/response'
 })
 export class DcElectionSurvey {
   @Prop() filename:string = null;
-
+  @Prop() format:string = "column";
   @State() candidates: Array<any> = [];
   @State() questions: Array<any> = [];
 
-
   async componentWillLoad() {
-    this.questions = await Response.fetchResponses(this.filename);
+    this.questions = await Response.fetchResponses(this.filename, this.format);
     console.log("Hi! This is an open-source project by Andrew Turner - https://github.com/ajturner/dc-elections")
   }
   
