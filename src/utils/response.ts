@@ -136,7 +136,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
   const respondants = parseData.slice(responseRowStart).reduce((responseArray, response) =>  {
     let candidate:ISurveyCandidate = {
       Candidate: response[nameColumn],
-      Photo: "_blank.jpg", //response[photoColumn],
+      Photo: "blank.jpg", //response[photoColumn],
       Race: response[ancColumn] + response[smdColumn]
     }
     // console.debug({candidate})
