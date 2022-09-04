@@ -19,3 +19,10 @@ ol li {
   border-top: thin solid #444;
   margin-top: 1em;
 }
+
+input {
+  font-size: 1.2em;
+  height: 2em;
+  width: 12em;
+  margin: 0 1em;
+}

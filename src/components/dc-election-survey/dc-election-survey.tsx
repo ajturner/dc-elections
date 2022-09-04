@@ -31,25 +31,28 @@ export class DcElectionSurvey {
     state.filter = newValue;
   }
   filterHandler(event: Event) {
-    console.log("filterHandled", event)
     this.filter = (event.target as HTMLInputElement).value;
     state.filter = this.filter;
   }
   clearFilters() {
     this.filter = '';
     state.filter = '';
-    this.filterInput.value = ''
+    console.log("filterInput", this.filterInput)
+    if(this.filterInput) {
+      this.filterInput.value = '';  
+    }
+    
     return false; // prevent routing/actions
   }
 
-  renderFilter() {
+  renderFilter(filter:string) {
     if(this.showFilter) {
       return (
         <div class="filter">
           <slot name="filter"></slot>
           <input onChange={this.filterHandler} 
                  ref={(el) => this.filterInput = el} 
-                 value={this.filter} 
+                 value={filter} 
                  placeholder="Search by Ward or ANC"
             ></input>
           <a href='#' onClick={this.clearFilters}>clear</a>
@@ -73,7 +76,7 @@ export class DcElectionSurvey {
     return (
       <Host>
         <slot name="title"></slot>
-        {this.renderFilter()}
+        {this.renderFilter(this.filter)}
         <div class="questions">
         <ol>
           {this.questions.map((question) => {
