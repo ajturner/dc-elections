@@ -8,12 +8,23 @@
 
     <script type="module" src="./../build/dc-election.esm.js"></script>
     <script nomodule src="./../build/dc-election.js"></script>
+
+<!-- <script src="https://js.arcgis.com/4.24/" data-esri-loader="loaded"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css"> -->
+<link rel='stylesheet' type='text/css' href='https://unpkg.com/@esri/calcite-components@1.0.0-next.292/dist/calcite/calcite.css' />
+<script type='module' src='https://unpkg.com/@esri/hub-components@4.0.0-beta.341/dist/hub-components/hub-components.esm.js'></script>
   </head>
   <body>
   
   <div class="navbar">
   </div>  
   <div class="main">
+      <arcgis-hub-map
+        style='height: 400px; width: 400px'
+        zoom="10"
+        center="-77.05,38.9"
+        basemap="gray-vector"
+    ></arcgis-hub-map>  
     <dc-election-survey 
         id="anc" 
         filename="./../assets/2022_anc.csv" 
@@ -77,6 +88,130 @@
     dc-election-survey {
       scroll-margin-top: 60px;
     }    
+
   </style>
+
+  <script>
+    
+    const $surveyEl = document.querySelector('dc-election-survey');
+    function changeFilter( filter ) {
+      $surveyEl.filter = filter;
+    }
+
+    const $mapEl = document.querySelector('arcgis-hub-map');
+    $mapEl.addEventListener('arcgisHubMapViewReady', function (event) {
+        const { detail: { view, loadModules } } = event;
+        loadModules([
+            'esri/layers/FeatureLayer',
+            "esri/layers/support/LabelClass",
+            'esri/widgets/Search'
+        ])
+            .then( ([FeatureLayer, LabelClass, Search]) => {
+                // Add ANC Boundaries
+                let ancStyle = {
+                  type: "simple",
+                  symbol: { type: "simple-fill" }
+                }
+                const ancLabels = new LabelClass({
+                  labelExpressionInfo: { expression: "$feature.NAME" },
+                  symbol: {
+                    type: "text",  // autocasts as new TextSymbol()
+                    color: "black",
+                    haloSize: 1,
+                    haloColor: "white"
+                  }
+                });
+
+                const ancLayer = new FeatureLayer({
+                    url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/54",
+                    renderer: ancStyle
+                });
+                ancLayer.labelingInfo = [ ancLabels ];
+
+                view.map.add(ancLayer);
+
+                view.highlightOptions = {color: "orange"}
+
+                const sources = [{
+                  layer: ancLayer,
+                  placeholder: "Search ANC",
+                  maxResults: 5,
+                  searchFields: ["NAME"],
+                  displayField: "NAME",
+                  name: "DC ANC"
+                }];
+                const searchWidget = new Search({
+                  view: view,
+                  sources: sources
+                });
+
+                // Adds the search widget below other elements in
+                // the top left corner of the view
+                view.ui.add(searchWidget, {
+                  position: "top-right",
+                  index: 2
+                });
+
+              view
+                  .when()
+                  .then(() => {
+                    return ancLayer.when();
+                  })
+                  .then((layer) => {
+                    // const renderer = layer.renderer.clone();
+                    // renderer.symbol.width = 4;
+                    // renderer.symbol.color = [128, 128, 128, 0.8];
+                    // layer.renderer = renderer;
+
+                    // Set up an event handler for pointer-down (mobile)
+                    // and pointer-move events (mouse)
+                    // and retrieve the screen x, y coordinates
+
+                    return view.whenLayerView(layer);
+                  })
+                  .then((layerView) => {
+                    view.on("pointer-move",mapHoverHandler);
+                    view.on("pointer-down",mapClickHandler);
+                    function mapHoverHandler(event) {
+                      // only include graphics from hurricanesLayer in the hitTest
+                      const opts = {
+                        include: ancLayer
+                      }
+                      view.hitTest(event, opts).then(highlightFeature);                      
+                    }
+                    function mapClickHandler(event) {
+                      console.log("selected ANC", {currentANCName})
+                      changeFilter(currentANCName);
+                    }                    
+
+                    // view.on("click", function(event){
+                    //   // event is the event handle returned after the event fires.
+                    //   console.log("Map Click", event.mapPoint);
+                    // });
+                    let highlight, currentANCName;
+                    function highlightFeature(response) {
+                        // check if a feature is returned from the hurricanesLayer
+                        if (response.results.length) {
+                          const graphic = response.results[0].graphic;
+                          // do something with the graphic
+                          const attributes = graphic.attributes;
+                          const objectid = attributes.OBJECTID;
+                          const name = attributes.NAME;
+                          const query = layerView.createQuery();
+                          query.where = "OBJECTID = " + objectid;
+                          layerView.queryObjectIds(query).then((ids) => {
+                            if (highlight) {
+                              highlight.remove();
+                            }
+                            highlight = layerView.highlight(ids);
+                            currentANCName = name;
+                          }); 
+                        }
+                    }
+                  })
+
+        });
+    });  
+  </script>
   </body>
 </html>

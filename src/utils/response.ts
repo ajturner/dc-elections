@@ -142,7 +142,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
     // console.debug({candidate})
     responseArray.push(candidate);
     questions.map((question) => {
-
+      
       if (question.Type === ISurveyQuestionType.Rank) {
         // for Rank questions, build array of answers as CSV string: "1|#option,2|#option,3|#option"
         let rankedOptions = [];

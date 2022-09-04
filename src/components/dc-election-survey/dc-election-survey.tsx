@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, State } from '@stencil/core';
+import { Component, Host, h, Prop, State, Watch } from '@stencil/core';
 import * as Response from '../../utils/response'
 import state from '../../utils/store';
 @Component({
@@ -9,11 +9,13 @@ import state from '../../utils/store';
 export class DcElectionSurvey {
   @Prop() filename:string = null;
   @Prop() format:string = "column";
-  @Prop() filter:string = null;
+  @Prop({ mutable: true, reflect: true }) filter:string = null;
   @Prop() showFilter:boolean = false;
 
   @State() candidates: Array<any> = [];
   @State() questions: Array<any> = [];
+
+  filterInput!: HTMLInputElement;
 
   async componentWillLoad() {
     this.questions = await Response.fetchResponses(this.filename, this.format);
@@ -24,15 +26,29 @@ export class DcElectionSurvey {
     console.log("Hi! This is an open-source project by Andrew Turner - https://github.com/ajturner/dc-elections")
   }
 
-  filterChanged(event: Event) {
-    state.filter = (event.target as HTMLInputElement).value;
+  @Watch('filter')
+  filterChanged(newValue: string) {
+    state.filter = newValue;
   }
+  filterHandler(event: Event) {
+    console.log("filterHandled", event)
+    this.filter = (event.target as HTMLInputElement).value;
+    state.filter = this.filter;
+  }
+  clearFilters() {
+    this.filter = '';
+    state.filter = '';
+    this.filterInput.value = ''
+    return false; // prevent routing/actions
+  }
+
   renderFilter() {
     if(this.showFilter) {
       return (
         <div class="filter">
           <label>Filter</label>
-          <input onBlur={this.filterChanged} value={this.filter}></input>
+          <input onChange={this.filterHandler} ref={(el) => this.filterInput = el} value={this.filter}></input>
+          <a href='#' onClick={this.clearFilters}>clear</a>
         </div>
       )
     }
