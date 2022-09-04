@@ -6,9 +6,9 @@ import { Component, Host, h, Prop } from '@stencil/core';
   shadow: true,
 })
 export class DcElectionGallery {
-  @Prop() candidates: Array<any> = [];
+  @Prop({mutable: true, reflect: true}) candidates: Array<any> = [];
   @Prop({mutable: true}) appearance: "grid" | "stack" | "narrow"| "quote" = "grid";
-  
+
   private renderResponses() {
     let output = [];
     if(this.candidates.length <= 0) {

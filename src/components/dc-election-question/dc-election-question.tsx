@@ -1,6 +1,8 @@
 import { Component, Host, h, Prop } from '@stencil/core';
-import { ISurveyQuestion, ISurveyQuestionType } from '../../utils/response';
+import { ISurveyCandidate, ISurveyQuestion, ISurveyQuestionType } from '../../utils/response';
 import { shuffle } from '../../utils/utils';
+import state from '../../utils/store'; // for passing filter
+
 @Component({
   tag: 'dc-election-question',
   styleUrl: 'dc-election-question.css',
@@ -21,19 +23,22 @@ export class DcElectionQuestion {
   */
   @Prop() responses: Array<any> = [];
 
-  renderCandidates(candidates: Array<any> ) {
+  applyFilters(candidates: Array<ISurveyCandidate>):Array<ISurveyCandidate> {  
+    if(state.filter && state.filter.length !== 0) {
 
-    return (
-       shuffle(candidates, "Race").map((candidate) => {
-        return (<dc-election-candidate photo={candidate.Photo} fullname={candidate.Candidate} office={candidate.Race}></dc-election-candidate>)
+      let filteredCandidates = candidates.filter((candidate) => {
+        return candidate.Race.match(state.filter);
       })
-    )
+      // console.debug("dc-election-question: applyFilters", {filter: state.filter, question: this.question, filteredCandidates})
+      return filteredCandidates;
+    }
+    return candidates;
   }
-  
   renderResponse(response, _responseCount:number = 2) {
+    const filteredCandidates = this.applyFilters(response.candidates);
 
     // TODO: remove the prior change of this default response.
-    if(response.response !== "No Response") {
+    if(response.response !== "No Response" && filteredCandidates.length !== 0) {
       // remove numeric prefix like `1. answer` -> `answer`
       let formattedString = response.response.replace(/^[0-9]\.\s+/, '').replace(/(?:\r\n|\r|\n)/g, '<br>');
       
@@ -45,7 +50,7 @@ export class DcElectionQuestion {
               <div class="response-gallery">
                 <dc-election-gallery 
                     appearance={appearance} 
-                    candidates={shuffle(response.candidates, "Race")}
+                    candidates={shuffle(filteredCandidates, "Race")}
                   >
                   <div class="response" innerHTML={formattedString}></div>
                 </dc-election-gallery>
@@ -59,7 +64,7 @@ export class DcElectionQuestion {
               <div class="response-quote">
                 <dc-election-gallery 
                     appearance={appearance} 
-                    candidates={shuffle(response.candidates, "Race")}
+                    candidates={shuffle(filteredCandidates, "Race")}
                   >
                 </dc-election-gallery>
                   <div class="response" innerHTML={formattedString}></div>
@@ -85,7 +90,7 @@ export class DcElectionQuestion {
               <div class="response-rank">
                 <dc-election-gallery 
                     appearance={appearance} 
-                    candidates={shuffle(response.candidates, "Race")}
+                    candidates={shuffle(filteredCandidates, "Race")}
                   >
                 </dc-election-gallery>
                 <div class="response">{formattedString}</div>
