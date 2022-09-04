@@ -28,6 +28,7 @@ export namespace Components {
     }
     interface DcElectionSurvey {
         "filename": string;
+        "filter": string;
         "format": string;
     }
 }
@@ -85,6 +86,7 @@ declare namespace LocalJSX {
     }
     interface DcElectionSurvey {
         "filename"?: string;
+        "filter"?: string;
         "format"?: string;
     }
     interface IntrinsicElements {

@@ -37,6 +37,7 @@
     "papaparse": "^5.3.2"
   },
   "devDependencies": {
+    "@stencil/store": "^2.0.0",
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5",
     "jest-cli": "^27.4.5",

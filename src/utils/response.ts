@@ -60,7 +60,7 @@ function parseResponse(responseText: string, format: string = "column"): Array<I
 
   const parseFile = Papa.parse(responseText, parseConfig);
   const parseData = parseFile.data;
-  console.log("parseData", parseData);
+  // console.debug("parseData", parseData);
 
   if (parseData[0][0] === "Respondent ID") {
     // Default SurveyMoneky output
@@ -126,7 +126,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
     return questionArray;
   }, []);
 
-  console.log("questions", questions)
+  // console.debug("questions", questions)
   
   // Now get candidates and their responses
   const respondants = parseData.slice(responseRowStart).reduce((responseArray, response) =>  {
@@ -135,7 +135,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
       Photo: "_blank.jpg", //response[photoColumn],
       Race: response[ancColumn] + response[smdColumn]
     }
-    console.log({candidate})
+    // console.debug({candidate})
     responseArray.push(candidate);
     questions.map((question) => {
       candidate[question.Question] = response[question.Index];
