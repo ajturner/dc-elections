@@ -10,6 +10,7 @@ export class DcElectionSurvey {
   @Prop() filename:string = null;
   @Prop() format:string = "column";
   @Prop() filter:string = null;
+  @Prop() showFilter:boolean = false;
 
   @State() candidates: Array<any> = [];
   @State() questions: Array<any> = [];
@@ -27,12 +28,15 @@ export class DcElectionSurvey {
     state.filter = (event.target as HTMLInputElement).value;
   }
   renderFilter() {
-    return (
-      <div class="filter">
-        <label>Filter</label>
-        <input onBlur={this.filterChanged} value={this.filter}></input>
-      </div>
-    )
+    if(this.showFilter) {
+      return (
+        <div class="filter">
+          <label>Filter</label>
+          <input onBlur={this.filterChanged} value={this.filter}></input>
+        </div>
+      )
+    }
+    
   }
   
   // Render differently depending on type

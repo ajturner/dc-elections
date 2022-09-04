@@ -25,11 +25,11 @@ export class DcElectionQuestion {
 
   applyFilters(candidates: Array<ISurveyCandidate>):Array<ISurveyCandidate> {  
     if(state.filter && state.filter.length !== 0) {
-      console.debug("dc-election-question: applyFilters", state.filter)
 
       let filteredCandidates = candidates.filter((candidate) => {
         return candidate.Race.match(state.filter);
       })
+      console.debug("dc-election-question: applyFilters", {filter: state.filter, question: this.question, filteredCandidates})
       return filteredCandidates;
     }
     return candidates;

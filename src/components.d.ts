@@ -30,6 +30,7 @@ export namespace Components {
         "filename": string;
         "filter": string;
         "format": string;
+        "showFilter": boolean;
     }
 }
 declare global {
@@ -88,6 +89,7 @@ declare namespace LocalJSX {
         "filename"?: string;
         "filter"?: string;
         "format"?: string;
+        "showFilter"?: boolean;
     }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;
