@@ -29,7 +29,7 @@ export class DcElectionQuestion {
       let filteredCandidates = candidates.filter((candidate) => {
         return candidate.Race.match(state.filter);
       })
-      console.debug("dc-election-question: applyFilters", {filter: state.filter, question: this.question, filteredCandidates})
+      // console.debug("dc-election-question: applyFilters", {filter: state.filter, question: this.question, filteredCandidates})
       return filteredCandidates;
     }
     return candidates;

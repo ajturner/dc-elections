@@ -86,7 +86,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
   //// 
   // indexes for working with spreadsheet
   const questionColumnStart = 16;
-  const responseRowStart = 3;
+  const responseRowStart = 2;
   const nameColumn = 9;
   const ancColumn = 13; // TODO fix this hard-coding of the schema
   const smdColumn = 14;
@@ -100,27 +100,31 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
   // Get array of structured questions
   questions = parseData[questionRow].slice(questionColumnStart).reduce((questionArray, question, index) => {
     const metaIndex = index + questionColumnStart;
-    let questionMeta = parseData[metaRow][metaIndex];
+    let questionType = parseData[metaRow][metaIndex];
+    let options = [];
 
     // Store the question, or add the Option to the previous Rank type question
     if(question && question.length !== 0) {
 
       // If this is a unique string it's a rank choice option
-      if(! Object.values(ISurveyQuestionType).includes(questionMeta)) {
-        questionMeta = ISurveyQuestionType.Rank;
+      if(! Object.values(ISurveyQuestionType).includes(questionType)) {
+        // If second row has text it is a ranking option. Save this to the options and set the type to Rank
+        options.push(questionType);
+        questionType = ISurveyQuestionType.Rank;
       }
 
       let q = {
         Question: question, 
-        Type: questionMeta, 
-        Options: [],
+        Type: questionType, 
+        Options: options,
         Index: metaIndex
       };
+      
       questionArray.push(q)
     } else {
       // Rank question option. Add to array of previous question
       const lastQuestion = questionArray[questionArray.length-1];
-      lastQuestion.Options.push(questionMeta)
+      lastQuestion.Options.push(questionType)
     }
 
     return questionArray;
@@ -137,14 +141,35 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
     }
     // console.debug({candidate})
     responseArray.push(candidate);
-    questions.map((question) => {
-      candidate[question.Question] = response[question.Index];
+    questions.map((question, questionIndex) => {
+
+      if (question.Type === ISurveyQuestionType.Rank) {
+        // for Rank questions, build array of answers as CSV string: "1|#option,2|#option,3|#option"
+        let rankedOptions = [];
+        
+        // loop through options until next question
+        // 
+        const optionIndexBegin:number = +question.Index;
+        question.Options.map((rankOption, optionIndex) => {
+          const rankIndex = response[optionIndex+optionIndexBegin];
+          
+          rankOption = formatRankOption(rankOption, "would not prioritize", rankIndex.toString(), true)
+          console.log("looping", {optionIndex, optionIndexBegin, rankIndex, rankOption, options: question.Options, response})
+          rankedOptions.push(rankOption);
+
+        })
+        
+        candidate[question.Question] = compileRankedOptions(rankedOptions);
+      } else {
+        candidate[question.Question] = response[question.Index];
+      }
+      
     });
 
     return responseArray;
   }, []);
 
-  // TODO: determine if can be optimized to not double loop arra
+  // TODO: determine if can be optimized to not double loop array
   const survey:Array<ISurveyResponse> = questions.map((question) => {
     const responses = groupQuestionResponses(question.Question, respondants);
     const surveyResponse:ISurveyResponse = { question, responses };
@@ -175,6 +200,26 @@ function parseColumnQuestions( parseFile: any, parseData: any ):Array<ISurveyRes
 function findLastName(fullName:string):string {
   const matches = fullName.match(/\w+(?!.*[\w]{4,})/);
   return !!matches ? matches[0] : '';
+}
+
+function compileRankedOptions(rankedOptions:Array<string>) {
+  return rankedOptions.sort().map((s)=> {return s.replace(/^.*\|/,'')}).join('|');
+}
+
+function formatRankOption(rankOption:string, rankedComment:string, rankIndex:string, rankOrdered:boolean):string {
+  let rankOutput = "";
+  // Candidate said they did not agree with this option
+  if(rankIndex === '0' || rankIndex === '' || rankIndex === 'N/A') {
+    rankOutput = `~${rankOption}~ (${rankedComment})`; 
+    rankIndex = '1000';
+  } else if(rankOrdered) {
+    // the list should include numbers: 3|#option
+    rankOutput = `${rankIndex}|#${rankOption}`;
+  } else {
+    rankOutput = `${rankIndex}|${rankOption}`;
+  }
+
+  return rankOutput;
 }
 
 // For responses files that have questions as rows and candidates in Columns
@@ -215,17 +260,8 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
         let rankIndex = row[candidate];
         let rankOption = row['Sub question'];
 
-        // Candidate said they did not agree with this option
-        if(rankIndex === '0' || rankIndex === '' || rankIndex === 'N/A') {
-          rankOption = `~${rankOption}~ (${rankedComment})`; 
-          rankIndex = 1000;
-        } else if(rankOrdered) {
-          // the list should include numbers: 3|#option
-          rankOption = `${rankIndex}|#${rankOption}`;
-        } else {
-          rankOption = `${rankIndex}|${rankOption}`;
-        }
-
+        rankOption = formatRankOption(rankOption, rankedComment, rankIndex, rankOrdered);
+        
         // If the option was not selected
         if(!!rankOption) {
           // Add index and then sort
@@ -233,7 +269,7 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
         }
         // serialize the answer in case this is the last option
         // remove the number prefix, e.g. '4|My Answer' -> 'My Answer'
-        answer = rankedOptions.sort().map((s)=> {return s.replace(/^.*\|/,'')}).join('|');
+        answer = compileRankedOptions(rankedOptions);
       } else {
         // done processing
         answer = row[candidate];
