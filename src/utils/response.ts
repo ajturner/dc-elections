@@ -141,7 +141,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
     }
     // console.debug({candidate})
     responseArray.push(candidate);
-    questions.map((question, questionIndex) => {
+    questions.map((question) => {
 
       if (question.Type === ISurveyQuestionType.Rank) {
         // for Rank questions, build array of answers as CSV string: "1|#option,2|#option,3|#option"
@@ -154,9 +154,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
           const rankIndex = response[optionIndex+optionIndexBegin];
           
           rankOption = formatRankOption(rankOption, "would not prioritize", rankIndex.toString(), true)
-          console.log("looping", {optionIndex, optionIndexBegin, rankIndex, rankOption, options: question.Options, response})
           rankedOptions.push(rankOption);
-
         })
         
         candidate[question.Question] = compileRankedOptions(rankedOptions);
