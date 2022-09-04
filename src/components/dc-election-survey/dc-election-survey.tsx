@@ -46,8 +46,12 @@ export class DcElectionSurvey {
     if(this.showFilter) {
       return (
         <div class="filter">
-          <label>Filter</label>
-          <input onChange={this.filterHandler} ref={(el) => this.filterInput = el} value={this.filter}></input>
+          <slot name="filter"></slot>
+          <input onChange={this.filterHandler} 
+                 ref={(el) => this.filterInput = el} 
+                 value={this.filter} 
+                 placeholder="Search by Ward or ANC"
+            ></input>
           <a href='#' onClick={this.clearFilters}>clear</a>
         </div>
       )
