@@ -19,20 +19,24 @@
   <div class="navbar">
   </div>  
   <div class="main">
-      <arcgis-hub-map
-        style='height: 400px; width: 400px'
-        zoom="10"
-        center="-77.05,38.9"
-        basemap="gray-vector"
-    ></arcgis-hub-map>  
+      
     <dc-election-survey 
         id="anc" 
         filename="./../assets/2022_anc.csv" 
         format="surveymonkey"
         show-filter=true
-        filter="1C2"
+        filter=""
       >
       <h2 slot="title">DC ANC</h2>
+      <div slot="filter">
+      <h3>Filter by your neighborhood</h3>
+      <arcgis-hub-map
+          style='height: 400px; width: 100%'
+          zoom="10"
+          center="-77.05,38.9"
+          basemap="gray-vector"
+      ></arcgis-hub-map>  
+    </div>
     </dc-election-survey>
   </div>
   <style>
