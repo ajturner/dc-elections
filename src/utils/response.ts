@@ -90,7 +90,7 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
   const nameColumn = 9;
   const ancColumn = 13; // TODO fix this hard-coding of the schema
   const smdColumn = 14;
-  const photoColumn = 15;
+  // const photoColumn = 15;
   
   // Row 1 is questions, Row 2 is question metadata
   const questionRow = 0;
