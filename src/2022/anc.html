@@ -112,7 +112,7 @@
         ])
             .then( ([FeatureLayer, LabelClass, Search]) => {
                 // Add ANC Boundaries
-                let ancStyle = {
+                const ancStyle = {
                   type: "simple",
                   symbol: { type: "simple-fill" }
                 }
@@ -122,16 +122,48 @@
                     type: "text",  // autocasts as new TextSymbol()
                     color: "black",
                     haloSize: 1,
-                    haloColor: "white"
+                    haloColor: "white",
+                    size: 16,
+                    weight: "bold"
                   }
                 });
 
                 const ancLayer = new FeatureLayer({
                     url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/54",
-                    renderer: ancStyle
+                    renderer: ancStyle,
+                    labelingInfo: [ ancLabels ]
                 });
-                ancLayer.labelingInfo = [ ancLabels ];
 
+                const smdStyle = {
+                  type: "simple",
+                  symbol: { 
+                    type: "simple-fill",
+                    opacity: 0,
+                    outline: {  // autocasts as new SimpleLineSymbol()
+                      width: 1,
+                      color: "white"
+                    }
+                  }
+                }
+                const smdLabels = new LabelClass({
+                  labelExpressionInfo: { expression: "$feature.SMD_ID" },
+                  symbol: {
+                    type: "text",  // autocasts as new TextSymbol()
+                    color: "black",
+                    haloSize: 1,
+                    haloColor: "white",
+                    size: 12,
+                    maxScale: 0,
+                    minScale: 2000,
+                  }
+                });
+                const smdLayer = new FeatureLayer({
+                  url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/55",
+                  renderer: smdStyle,
+                  labelingInfo: [ smdLabels ]
+                })
+
+                view.map.add(smdLayer);
                 view.map.add(ancLayer);
 
                 view.highlightOptions = {

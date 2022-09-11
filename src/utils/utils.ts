@@ -23,11 +23,21 @@ export function sortShuffle(array: Array<any>, attribute:string = "Race", order:
   const orderResp = order === "asc" ? 1 : -1;
 
   return array.sort((a, b) => {
-    return a[attribute] > b[attribute] ? orderResp : -orderResp;
+    let alpha = a[attribute];
+    let beta = b[attribute];
+    if(alpha === undefined && a['candidates'] &&  alpha['candidates'][attribute] !== undefined ) {
+      alpha = alpha['candidates'][attribute];
+      beta = beta['candidates'][attribute];
+    }
+    // console.debug(`compare: [${alpha > beta}] ${a[attribute]} > ${b[attribute]}`, {a, b, alpha, beta, attribute})
+    
+    return alpha > beta ? orderResp : -orderResp;
   })
 }
 
 // TODO: add option for what type of shuffle: sort | random, and attribute
 export function shuffle(array: Array<any>, _attribute?:string, _order?:string): Array<any> {
-  return sortShuffle(array, _attribute, _order);
+  
+  const response = sortShuffle(array, _attribute, _order);
+  return response;
 }

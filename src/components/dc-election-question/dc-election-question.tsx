@@ -60,11 +60,13 @@ export class DcElectionQuestion {
 
         case ISurveyQuestionType.Text:
           appearance = 'quote';
+          const candidates = shuffle(filteredCandidates, "Race", "desc");
+
           return (
               <div class="response-quote">
                 <dc-election-gallery 
                     appearance={appearance} 
-                    candidates={shuffle(filteredCandidates, "Race")}
+                    candidates={candidates}
                   >
                 </dc-election-gallery>
                   <div class="response" innerHTML={formattedString}></div>
@@ -168,13 +170,14 @@ export class DcElectionQuestion {
   }
 
   render() {
+    const responses = this.responses; //shuffle(this.responses, "Race", "desc");
 
     return (
       <Host>
         <slot></slot>
         {this.renderQuestion(this.question)}
         <div class={`layout-${this.type.toLowerCase()}`}>
-          {shuffle(this.responses, "response", "asc").map((response) => {
+          {responses.map((response) => {
             return (
               this.renderResponse(response, this.responses.length)
             )
