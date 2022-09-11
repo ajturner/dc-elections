@@ -32,6 +32,8 @@ export namespace Components {
         "format": string;
         "showFilter": boolean;
     }
+    interface DcLoader {
+    }
 }
 declare global {
     interface HTMLDcElectionCandidateElement extends Components.DcElectionCandidate, HTMLStencilElement {
@@ -58,11 +60,18 @@ declare global {
         prototype: HTMLDcElectionSurveyElement;
         new (): HTMLDcElectionSurveyElement;
     };
+    interface HTMLDcLoaderElement extends Components.DcLoader, HTMLStencilElement {
+    }
+    var HTMLDcLoaderElement: {
+        prototype: HTMLDcLoaderElement;
+        new (): HTMLDcLoaderElement;
+    };
     interface HTMLElementTagNameMap {
         "dc-election-candidate": HTMLDcElectionCandidateElement;
         "dc-election-gallery": HTMLDcElectionGalleryElement;
         "dc-election-question": HTMLDcElectionQuestionElement;
         "dc-election-survey": HTMLDcElectionSurveyElement;
+        "dc-loader": HTMLDcLoaderElement;
     }
 }
 declare namespace LocalJSX {
@@ -91,11 +100,14 @@ declare namespace LocalJSX {
         "format"?: string;
         "showFilter"?: boolean;
     }
+    interface DcLoader {
+    }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;
         "dc-election-gallery": DcElectionGallery;
         "dc-election-question": DcElectionQuestion;
         "dc-election-survey": DcElectionSurvey;
+        "dc-loader": DcLoader;
     }
 }
 export { LocalJSX as JSX };
@@ -106,6 +118,7 @@ declare module "@stencil/core" {
             "dc-election-gallery": LocalJSX.DcElectionGallery & JSXBase.HTMLAttributes<HTMLDcElectionGalleryElement>;
             "dc-election-question": LocalJSX.DcElectionQuestion & JSXBase.HTMLAttributes<HTMLDcElectionQuestionElement>;
             "dc-election-survey": LocalJSX.DcElectionSurvey & JSXBase.HTMLAttributes<HTMLDcElectionSurveyElement>;
+            "dc-loader": LocalJSX.DcLoader & JSXBase.HTMLAttributes<HTMLDcLoaderElement>;
         }
     }
 }

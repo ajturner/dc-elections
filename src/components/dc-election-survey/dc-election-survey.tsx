@@ -17,7 +17,7 @@ export class DcElectionSurvey {
 
   filterInput!: HTMLInputElement;
 
-  async componentWillLoad() {
+  async componentDidLoad() {
     this.questions = await Response.fetchResponses(this.filename, this.format);
     
     // set the filter state
@@ -72,18 +72,25 @@ export class DcElectionSurvey {
       ></dc-election-question>
     )
   }
+  renderBody() {
+    return (
+      <div class="questions">
+        {this.renderFilter(this.filter)}
+
+      <ol>
+        {this.questions.map((question) => {
+          return (<li>{this.renderQuestion(question)}</li>);  
+        })}
+      </ol>
+      </div>
+    )
+  }
   render() {
     return (
       <Host>
         <slot name="title"></slot>
-        {this.renderFilter(this.filter)}
-        <div class="questions">
-        <ol>
-          {this.questions.map((question) => {
-           return (<li>{this.renderQuestion(question)}</li>);  
-          })}
-        </ol>
-        </div>
+        {this.questions.length === 0 ? <dc-loader></dc-loader> : this.renderBody() }
+        
       </Host>
     );
   }
