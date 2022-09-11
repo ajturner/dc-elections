@@ -2,9 +2,16 @@
   display: block;
 }
 
+.message {
+  font-weight: 400;
+  font-style: italic;
+  color: #444;
+  text-align: center;
+}
+
 #arrowAnim {
   width: 100vw;
-  height: 100vh;
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;

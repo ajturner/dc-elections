@@ -10,7 +10,7 @@ export class DcLoader {
   render() {
     return (
       <Host>
-        <slot></slot>
+        <div class="message"><slot></slot></div>
         <div id="arrowAnim">
           <div class="arrowSliding">
             <div class="arrow"></div>
@@ -25,7 +25,6 @@ export class DcLoader {
             <div class="arrow"></div>
           </div>
         </div>
-
       </Host>
     );
   }

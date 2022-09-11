@@ -89,7 +89,7 @@ export class DcElectionSurvey {
     return (
       <Host>
         <slot name="title"></slot>
-        {this.questions.length === 0 ? <dc-loader></dc-loader> : this.renderBody() }
+        {this.questions.length === 0 ? <dc-loader>Loading survey responses...</dc-loader> : this.renderBody() }
         
       </Host>
     );
