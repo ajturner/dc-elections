@@ -34,6 +34,14 @@ export class DcElectionQuestion {
     }
     return candidates;
   }
+  renderNoResponse() {
+    return (
+      <div>
+        We did not receive any responses from candidates in this jurisdiction
+      </div>
+    )
+  }
+
   renderResponse(response, _responseCount:number = 2) {
     const filteredCandidates = this.applyFilters(response.candidates);
 
@@ -171,12 +179,14 @@ export class DcElectionQuestion {
 
   render() {
     const responses = this.responses; //shuffle(this.responses, "Race", "desc");
-
+    console.debug("responses", responses);
     return (
       <Host>
         <slot></slot>
         {this.renderQuestion(this.question)}
-        <div class={`layout-${this.type.toLowerCase()}`}>
+        <div class={`response layout-${this.type.toLowerCase()}`}>
+          {responses.length === 0 ? this.renderNoResponse() : null }
+            
           {responses.map((response) => {
             return (
               this.renderResponse(response, this.responses.length)

@@ -21,6 +21,12 @@
   display: block;
 }
 
+.response:empty::before {
+  content: "No response to this question.";
+  font-style: italic;
+  font-weight: 400;
+}
+
 .response {
   font-weight: 600;
   font-size: 1em;
