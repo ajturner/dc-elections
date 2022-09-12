@@ -97,6 +97,7 @@
     
     const $surveyEl = document.querySelector('dc-election-survey');
     function changeFilter( filter ) {
+      console.log("changeFilter", {filter})
       $surveyEl.filter = filter;
     }
 
@@ -218,10 +219,10 @@
                   position: "top-right",
                   index: 2
                 });
-                searchWidget.on("search-complete", function(event){
-                  // The results are stored in the event Object[]
-                  console.log("Results of the search: ", event);
-                });
+                // searchWidget.on("search-complete", function(event){
+                //   // The results are stored in the event Object[]
+                //   console.log("Results of the search: ", event);
+                // });
 
               view
                   .when()
@@ -229,55 +230,47 @@
                     return ancLayer.when();
                   })
                   .then((layer) => {
-                    // const renderer = layer.renderer.clone();
-                    // renderer.symbol.width = 4;
-                    // renderer.symbol.color = [128, 128, 128, 0.8];
-                    // layer.renderer = renderer;
-
-                    // Set up an event handler for pointer-down (mobile)
-                    // and pointer-move events (mouse)
-                    // and retrieve the screen x, y coordinates
-
                     return view.whenLayerView(layer);
                   })
                   .then((layerView) => {
-                    view.on("pointer-move",mapHoverHandler);
-                    view.on("pointer-down",mapClickHandler);
-                    function mapHoverHandler(event) {
-                      // only include graphics from hurricanesLayer in the hitTest
+                    let highlight, currentFilter;
+
+                    view.on("pointer-move",mapMouseHandler);
+                    view.on("pointer-down",mapMouseHandler);
+
+                    function mapMouseHandler(event) {
                       const opts = {
                         include: ancLayer
                       }
-                      view.hitTest(event, opts).then(highlightFeature);                      
-                    }
-                    function mapClickHandler(event) {
-                      console.log("selected ANC", {currentANCName})
-                      changeFilter(currentANCName);
+
+                      view.hitTest(event, opts).then((response) => {
+                        if (response.results.length) {
+                          const feature = response.results[0].graphic;
+                          highlightFeature(feature)
+                          // currentANCName = response.results[0].graphic.attributes["NAME"];
+                          if(event.type === "pointer-down") {
+                            changeFilter(currentFilter);  
+                          }
+                        }
+                      });   
+                      
                     }                    
 
-                    // view.on("click", function(event){
-                    //   // event is the event handle returned after the event fires.
-                    //   console.log("Map Click", event.mapPoint);
-                    // });
-                    let highlight, currentANCName;
-                    function highlightFeature(response) {
-                        // check if a feature is returned from the hurricanesLayer
-                        if (response.results.length) {
-                          const graphic = response.results[0].graphic;
-                          // do something with the graphic
-                          const attributes = graphic.attributes;
-                          const objectid = attributes.OBJECTID;
-                          const name = attributes.NAME;
-                          const query = layerView.createQuery();
-                          query.where = "OBJECTID = " + objectid;
-                          layerView.queryObjectIds(query).then((ids) => {
-                            if (highlight) {
-                              highlight.remove();
-                            }
-                            highlight = layerView.highlight(ids);
-                            currentANCName = name;
-                          }); 
+                    function highlightFeature(feature) {
+                      
+                      const objectid = feature.attributes.OBJECTID;
+                      
+                      // Current Filter by Name
+                      currentFilter = feature.attributes.NAME;
+
+                      const query = layerView.createQuery();
+                      query.where = "OBJECTID = " + objectid;
+                      layerView.queryObjectIds(query).then((ids) => {
+                        if (highlight) {
+                          highlight.remove();
                         }
+                        highlight = layerView.highlight(ids);
+                      }); 
                     }
                   })
 
