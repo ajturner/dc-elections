@@ -105,11 +105,12 @@
     $mapEl.addEventListener('arcgisHubMapViewReady', function (event) {
         const { detail: { view, loadModules } } = event;
         loadModules([
+            'esri/geometry/Extent',
             'esri/layers/FeatureLayer',
             "esri/layers/support/LabelClass",
             'esri/widgets/Search'
         ])
-            .then( ([FeatureLayer, LabelClass, Search]) => {
+            .then( ([Extent, FeatureLayer, LabelClass, Search]) => {
                 // Add ANC Boundaries
                 const ancStyle = {
                   type: "simple",
@@ -169,16 +170,35 @@
                   color: "#0f9535"
                 }
 
+                const theExtent = new Extent({
+                  xmin:-8584947.85844689,
+                  ymin:4691862.387048862,
+                  xmax:-8561472.787091771,
+                  ymax:4721095.072076196,
+                  spatialReference: {
+                    wkid: 3857
+                  }
+                });
+
+                const searchExtent = {
+                  geometry: theExtent
+                };
                 const sources = [{
-                  layer: ancLayer,
-                  placeholder: "Search ANC",
-                  maxResults: 5,
-                  searchFields: ["NAME"],
-                  displayField: "NAME",
-                  name: "DC ANC"
-                }];
+                    url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+                    name: "DC Address Search",
+                    zoomScale: 50000,
+                    filter: searchExtent
+                  },{
+                    layer: ancLayer,
+                    placeholder: "Search ANC",
+                    maxResults: 5,
+                    searchFields: ["NAME"],
+                    displayField: "NAME",
+                    name: "DC ANC"
+                  }];
                 const searchWidget = new Search({
                   view: view,
+                  includeDefaultSources: false,
                   sources: sources
                 });
 
@@ -187,6 +207,10 @@
                 view.ui.add(searchWidget, {
                   position: "top-right",
                   index: 2
+                });
+                searchWidget.on("search-complete", function(event){
+                  // The results are stored in the event Object[]
+                  console.log("Results of the search: ", event);
                 });
 
               view
