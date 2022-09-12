@@ -179,7 +179,7 @@ export class DcElectionQuestion {
 
   render() {
     const responses = this.responses; //shuffle(this.responses, "Race", "desc");
-    console.debug("responses", responses);
+
     return (
       <Host>
         <slot></slot>

@@ -1,6 +1,11 @@
-import { Component, Host, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Host, h, Prop, State, Watch, Listen } from '@stencil/core';
 import * as Response from '../../utils/response'
 import state from '../../utils/store';
+// @ts-ignore
+import HTMLCalciteComboboxElement from "@esri/calcite-components/dist/components/calcite-combobox";
+// @ts-ignore
+import HTMLDcFilterElement from '../dc-filter';
+
 @Component({
   tag: 'dc-election-survey',
   styleUrl: 'dc-election-survey.css',
@@ -14,25 +19,32 @@ export class DcElectionSurvey {
 
   @State() candidates: Array<any> = [];
   @State() questions: Array<any> = [];
+  @State() loading: boolean = true;
 
   filterInput!: HTMLInputElement;
-
+  filterDropdown: HTMLDcFilterElement;
+  
   async componentDidLoad() {
     this.questions = await Response.fetchResponses(this.filename, this.format);
-    
     // set the filter state
     state.filter = this.filter;
 
+    this.loading = false;
     console.log("Hi! This is an open-source project by Andrew Turner - https://github.com/ajturner/dc-elections")
   }
 
-  @Watch('filter')
-  filterChanged(newValue: string) {
-    state.filter = newValue;
-  }
-  filterHandler(event: Event) {
-    this.filter = (event.target as HTMLInputElement).value;
+  @Listen("filterChanged")
+  filterHandler(event) {
+    console.log("dc-election-survey: filterChanged", {event})
+    this.filter = event.detail.value;
     state.filter = this.filter;
+  }
+
+  @Watch('filter')
+  filterPropChanged(newValue: string) {
+    console.log("dc-election-survey: filterPropChanged", newValue);
+    this.filterDropdown.value = newValue;
+    state.filter = newValue;
   }
   clearFilters() {
     this.filter = '';
@@ -50,12 +62,17 @@ export class DcElectionSurvey {
       return (
         <div class="filter">
           <slot name="filter"></slot>
-          <input onChange={this.filterHandler} 
+          <dc-filter
+            ref={(el) => this.filterDropdown = el}
+            filter={filter}
+          ></dc-filter>
+
+          {/* <input onChange={this.filterHandler} 
                  ref={(el) => this.filterInput = el} 
                  value={filter} 
                  placeholder="Search by Ward or ANC"
             ></input>
-          <a href='#' onClick={this.clearFilters}>clear</a>
+          <a href='#' onClick={this.clearFilters}>clear</a> */}
         </div>
       )
     }
@@ -85,11 +102,14 @@ export class DcElectionSurvey {
       </div>
     )
   }
+  renderLoader() {
+    return (<dc-loader>Loading survey responses...</dc-loader>);
+  }
   render() {
     return (
       <Host>
         <slot name="title"></slot>
-        {this.questions.length === 0 ? <dc-loader>Loading survey responses...</dc-loader> : this.renderBody() }
+        {this.loading || this.questions.length === 0 ? this.renderLoader() : this.renderBody() }
         
       </Host>
     );

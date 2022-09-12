@@ -2,7 +2,9 @@
   display: block;
   font-family: sans-serif;
 }
-
+.filter {
+  width: 50vw;
+}
 ol {
   /* margin: 0 0 0 1em; */
   padding: 0;
