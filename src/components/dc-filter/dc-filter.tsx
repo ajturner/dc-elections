@@ -11,6 +11,8 @@ import "@esri/calcite-components/dist/calcite/calcite.css";
 })
 export class DcFilter {
   @Prop({ mutable: true, reflect: true }) filter:string = "";
+  @Prop() url: string = "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/55/query?where=1%3D1&text=&objectIds=&time=&timeRelation=esriTimeRelationOverlaps&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=ANC_ID%2CSMD_ID&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&returnIdsOnly=false&returnCountOnly=false&orderByFields=SMD_ID&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&returnExtentOnly=false&sqlFormat=none&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&featureEncoding=esriDefault&f=json";
+  
   @Event({ cancelable: false })  filterChanged: EventEmitter<any>;
 
   @State() m_filterOptions:Array<any> = [];
@@ -21,10 +23,10 @@ export class DcFilter {
     this.fetchOptions();
   }
 
+  // TODO: extract hard-coded ANC_ID, SMD_ID attribute names to @Prop
   async fetchOptions() {
-    const url = "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/55/query?where=1%3D1&text=&objectIds=&time=&timeRelation=esriTimeRelationOverlaps&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=ANC_ID%2CSMD_ID&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&returnIdsOnly=false&returnCountOnly=false&orderByFields=SMD_ID&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&returnExtentOnly=false&sqlFormat=none&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&featureEncoding=esriDefault&f=json";
     const filters = [];
-    const response = await fetch(url);
+    const response = await fetch(this.url);
     const json = await response.json();
     json.features.map((feature) => {
       filters.push({ANC_ID: feature.attributes.ANC_ID, SMD_ID: feature.attributes.SMD_ID});
@@ -43,21 +45,20 @@ export class DcFilter {
 
   @Listen("calciteComboboxChange")
   dropdownChangedHandler(_event) {
-    console.log("dropdownChanged", {_event, value: this.m_dropdownEl.value})
     this.filterChanged.emit({ value: this.m_dropdownEl.value });
   }
   @Watch('filter')
   filterPropChanged(newValue: string) {
-    console.log("dc-filter: filterPropChanged", newValue);
     this.m_dropdownEl.value = newValue;
   }
 
-  renderOption(option: string) {
+  renderOption(option: string, slot:string = null) {
       return (<calcite-combobox-item 
                   value={option} 
                   textLabel={option}
                   selected={option === this.filter}
                   >
+                  {slot}
                 </calcite-combobox-item>
       )
   }
@@ -70,14 +71,8 @@ export class DcFilter {
         return this.renderOption(sub['SMD_ID']);
       })
       filterOptions.push (
-        <calcite-combobox-item 
-          value={filter} 
-          textLabel={filter}
-          selected={filter === this.filter}
-          >
-        {subFilters}          
-        </calcite-combobox-item>
-        );
+        this.renderOption(filter, subFilters)
+      );
     }
     return (
       <Host>

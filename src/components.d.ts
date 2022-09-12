@@ -34,6 +34,7 @@ export namespace Components {
     }
     interface DcFilter {
         "filter": string;
+        "url": string;
     }
     interface DcLoader {
     }
@@ -117,6 +118,7 @@ declare namespace LocalJSX {
     interface DcFilter {
         "filter"?: string;
         "onFilterChanged"?: (event: DcFilterCustomEvent<any>) => void;
+        "url"?: string;
     }
     interface DcLoader {
     }

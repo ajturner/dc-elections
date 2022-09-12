@@ -35,14 +35,12 @@ export class DcElectionSurvey {
 
   @Listen("filterChanged")
   filterHandler(event) {
-    console.log("dc-election-survey: filterChanged", {event})
     this.filter = event.detail.value;
     state.filter = this.filter;
   }
 
   @Watch('filter')
   filterPropChanged(newValue: string) {
-    console.log("dc-election-survey: filterPropChanged", newValue);
     this.filterDropdown.value = newValue;
     state.filter = newValue;
   }
