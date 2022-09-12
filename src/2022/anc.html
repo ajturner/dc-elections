@@ -97,6 +97,7 @@
     
     const $surveyEl = document.querySelector('dc-election-survey');
     function changeFilter( filter ) {
+      console.log("changeFilter", {filter})
       $surveyEl.filter = filter;
     }
 
@@ -241,6 +242,8 @@
                     return view.whenLayerView(layer);
                   })
                   .then((layerView) => {
+                    let highlight, currentFilter;
+
                     view.on("pointer-move",mapHoverHandler);
                     view.on("pointer-down",mapClickHandler);
                     function mapHoverHandler(event) {
@@ -251,23 +254,35 @@
                       view.hitTest(event, opts).then(highlightFeature);                      
                     }
                     function mapClickHandler(event) {
-                      console.log("selected ANC", {currentANCName})
-                      changeFilter(currentANCName);
+                      const opts = {
+                        include: ancLayer
+                      }
+                      view.hitTest(event, opts).then(highlightFeature);                      
+                      changeFilter(currentFilter);
+
+                      view.hitTest(event, opts).then((response) => {
+                        console.log("mapClickHandler: hitTest", {feature: response.results[0].graphic.attributes, response})
+                        highlightFeature(response)
+                        // currentANCName = response.results[0].graphic.attributes["NAME"];
+                        changeFilter(currentFilter);
+                      });   
+                      
                     }                    
 
                     // view.on("click", function(event){
                     //   // event is the event handle returned after the event fires.
                     //   console.log("Map Click", event.mapPoint);
                     // });
-                    let highlight, currentANCName;
                     function highlightFeature(response) {
                         // check if a feature is returned from the hurricanesLayer
                         if (response.results.length) {
                           const graphic = response.results[0].graphic;
-                          // do something with the graphic
                           const attributes = graphic.attributes;
                           const objectid = attributes.OBJECTID;
-                          const name = attributes.NAME;
+                          
+                          // Current Filter by Name
+                          currentFilter = attributes.NAME;
+
                           const query = layerView.createQuery();
                           query.where = "OBJECTID = " + objectid;
                           layerView.queryObjectIds(query).then((ids) => {
@@ -275,9 +290,9 @@
                               highlight.remove();
                             }
                             highlight = layerView.highlight(ids);
-                            currentANCName = name;
                           }); 
                         }
+
                     }
                   })
 
