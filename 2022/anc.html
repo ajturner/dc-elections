@@ -19,7 +19,6 @@
   <div class="navbar">
   </div>  
   <div class="main">
-      
     <dc-election-survey 
         id="anc" 
         filename="./../assets/2022_anc.csv" 
@@ -29,14 +28,13 @@
       >
       <h2 slot="title">DC ANC</h2>
       <div slot="filter">
-      <h3>Filter by your neighborhood</h3>
-      <arcgis-hub-map
-          style='height: 400px; width: 100%'
-          zoom="10"
-          center="-77.05,38.9"
-          basemap="gray-vector"
-      ></arcgis-hub-map>  
-    </div>
+        <arcgis-hub-map
+            style='height: 400px;'
+            zoom="10"
+            center="-77.05,38.9"
+            basemap="gray-vector"
+        ></arcgis-hub-map>
+      </div>
     </dc-election-survey>
   </div>
   <style>
@@ -106,13 +104,14 @@
     $mapEl.addEventListener('arcgisHubMapViewReady', function (event) {
         const { detail: { view, loadModules } } = event;
         loadModules([
+            'esri/geometry/Extent',
             'esri/layers/FeatureLayer',
             "esri/layers/support/LabelClass",
             'esri/widgets/Search'
         ])
-            .then( ([FeatureLayer, LabelClass, Search]) => {
+            .then( ([Extent, FeatureLayer, LabelClass, Search]) => {
                 // Add ANC Boundaries
-                let ancStyle = {
+                const ancStyle = {
                   type: "simple",
                   symbol: { type: "simple-fill" }
                 }
@@ -120,34 +119,85 @@
                   labelExpressionInfo: { expression: "$feature.NAME" },
                   symbol: {
                     type: "text",  // autocasts as new TextSymbol()
-                    color: "black",
-                    haloSize: 1,
-                    haloColor: "white"
+                    color: "#0f9535",
+                    haloSize: 0.5,
+                    haloColor: "black",
+                    font: {size: 12},
+                    weight: "bold"
                   }
                 });
 
                 const ancLayer = new FeatureLayer({
                     url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/54",
-                    renderer: ancStyle
+                    renderer: ancStyle,
+                    labelingInfo: [ ancLabels ]
                 });
-                ancLayer.labelingInfo = [ ancLabels ];
 
+                const smdStyle = {
+                  type: "simple",
+                  symbol: { 
+                    type: "simple-fill",
+                    opacity: 0,
+                    outline: {  // autocasts as new SimpleLineSymbol()
+                      width: 1,
+                      color: "white"
+                    }
+                  }
+                }
+                const smdLabels = new LabelClass({
+                  labelExpressionInfo: { expression: "$feature.SMD_ID" },
+                  symbol: {
+                    type: "text",  // autocasts as new TextSymbol()
+                    color: "white",
+                    haloSize: 0.5,
+                    haloColor: "black",
+                    font: {size: 8},
+                    maxScale: 0,
+                    minScale: 1000000,
+                  }
+                });
+                const smdLayer = new FeatureLayer({
+                  url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/55",
+                  renderer: smdStyle,
+                  labelingInfo: [ smdLabels ]
+                })
+
+                view.map.add(smdLayer);
                 view.map.add(ancLayer);
 
                 view.highlightOptions = {
                   color: "#0f9535"
                 }
 
+                const theExtent = new Extent({
+                  xmin:-8584947.85844689,
+                  ymin:4691862.387048862,
+                  xmax:-8561472.787091771,
+                  ymax:4721095.072076196,
+                  spatialReference: {
+                    wkid: 3857
+                  }
+                });
+
+                const searchExtent = {
+                  geometry: theExtent
+                };
                 const sources = [{
-                  layer: ancLayer,
-                  placeholder: "Search ANC",
-                  maxResults: 5,
-                  searchFields: ["NAME"],
-                  displayField: "NAME",
-                  name: "DC ANC"
-                }];
+                    url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+                    name: "DC Address Search",
+                    zoomScale: 50000,
+                    filter: searchExtent
+                  },{
+                    layer: ancLayer,
+                    placeholder: "Search ANC",
+                    maxResults: 5,
+                    searchFields: ["NAME"],
+                    displayField: "NAME",
+                    name: "DC ANC"
+                  }];
                 const searchWidget = new Search({
                   view: view,
+                  includeDefaultSources: false,
                   sources: sources
                 });
 
@@ -156,6 +206,10 @@
                 view.ui.add(searchWidget, {
                   position: "top-right",
                   index: 2
+                });
+                searchWidget.on("search-complete", function(event){
+                  // The results are stored in the event Object[]
+                  console.log("Results of the search: ", event);
                 });
 
               view
