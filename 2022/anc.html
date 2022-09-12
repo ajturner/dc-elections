@@ -113,17 +113,25 @@
                 // Add ANC Boundaries
                 const ancStyle = {
                   type: "simple",
-                  symbol: { type: "simple-fill" }
+                  symbol: { type: "simple-fill",
+                  opacity: 0,
+                    outline: {  // autocasts as new SimpleLineSymbol()
+                      width: 1,
+                      color: [30,30,30,0.5]
+                    } 
+                  }
                 }
                 const ancLabels = new LabelClass({
                   labelExpressionInfo: { expression: "$feature.NAME" },
                   symbol: {
                     type: "text",  // autocasts as new TextSymbol()
-                    color: "#0f9535",
+                    color: "white",
                     haloSize: 0.5,
                     haloColor: "black",
-                    font: {size: 12},
-                    weight: "bold"
+                    font: {
+                      size: 12,
+                      weight: "bold"
+                    }
                   }
                 });
 
@@ -139,7 +147,7 @@
                     type: "simple-fill",
                     opacity: 0,
                     outline: {  // autocasts as new SimpleLineSymbol()
-                      width: 1,
+                      width: 0.5,
                       color: "white"
                     }
                   }
@@ -151,7 +159,10 @@
                     color: "white",
                     haloSize: 0.5,
                     haloColor: "black",
-                    font: {size: 8},
+                    font: {
+                      size: 8,
+                      style: "italic"
+                    },
                     maxScale: 0,
                     minScale: 1000000,
                   }
