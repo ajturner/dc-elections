@@ -87,16 +87,26 @@ export class DcElectionSurvey {
       ></dc-election-question>
     )
   }
-  renderBody() {
+  renderHelp() {
     return (
-      <div class="questions">
-        {this.renderFilter(this.filter)}
-
+      <div class="help">
+        Filter to local candidates by clicking on the map, search by address, or select ANC or SMD.
+      </div>
+    )
+  }
+  renderBody() {
+    const questions = (
       <ol>
         {this.questions.map((question) => {
           return (<li>{this.renderQuestion(question)}</li>);  
         })}
-      </ol>
+      </ol>)
+
+    return (
+      <div class="questions">
+        {this.renderFilter(this.filter)}
+
+      {this.filter !== undefined && this.filter.length !== 0 ? questions : this.renderHelp()}
       </div>
     )
   }

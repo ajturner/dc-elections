@@ -82,7 +82,7 @@ export class DcFilter {
             ref={(el) => this.m_dropdownEl = el}
             label="search"
             placeholder="Search by ANC"
-            selection-mode="multi"
+            selection-mode="single"
             scale="m"
             max-items="0"
           >

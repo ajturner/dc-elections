@@ -3,8 +3,15 @@
   font-family: sans-serif;
 }
 .filter {
-  width: 50vw;
+  max-width: 800px;
 }
+.help {
+  margin: 1em 0;
+  padding: 1em 0 1em 1em;
+  border: thin solid #0f9535;
+  max-width: 780px;
+}
+
 ol {
   /* margin: 0 0 0 1em; */
   padding: 0;
