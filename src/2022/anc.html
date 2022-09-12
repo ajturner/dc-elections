@@ -189,6 +189,12 @@
                     wkid: 3857
                   }
                 });
+                view.constraints = {
+                  geometry: theExtent,
+                  minScale: 500000, 
+                  maxScale: 10000, 
+                  rotationEnabled: false
+                };
 
                 const searchExtent = {
                   geometry: theExtent
