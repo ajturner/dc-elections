@@ -30,7 +30,6 @@ export class DcElectionSurvey {
     state.filter = this.filter;
 
     this.loading = false;
-    console.log("Hi! This is an open-source project by Andrew Turner - https://github.com/ajturner/dc-elections")
   }
 
   @Listen("filterChanged")
@@ -47,9 +46,8 @@ export class DcElectionSurvey {
   clearFilters() {
     this.filter = '';
     state.filter = '';
-    console.log("filterInput", this.filterInput)
     if(this.filterInput) {
-      this.filterInput.value = '';  
+      this.filterInput.value = '';
     }
     
     return false; // prevent routing/actions
