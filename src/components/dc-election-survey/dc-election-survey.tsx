@@ -104,7 +104,7 @@ export class DcElectionSurvey {
       <div class="questions">
         {this.renderFilter(this.filter)}
 
-      {this.filter !== undefined && this.filter.length !== 0 ? questions : this.renderHelp()}
+      {this.filter === null || this.filter.length !== 0 ? questions : this.renderHelp()}
       </div>
     )
   }
