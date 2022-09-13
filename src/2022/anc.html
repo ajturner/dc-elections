@@ -97,14 +97,14 @@
     
     const $surveyEl = document.querySelector('dc-election-survey');
     $surveyEl.addEventListener('filterChanged', (event => {
-      console.log("HTML filter changed", event)
+      // console.log("HTML filter changed", event)
       let filter = event.detail.value;
       filter = filter.slice(0,2);
       setFilter(filter);
     }))
 
     function setFilter( filter ) {
-      console.log("setFilter", {filter})
+      // console.log("setFilter", {filter})
       $surveyEl.filter = filter;
       selectFeature({ attributes: { NAME: filter } })
     }
@@ -253,10 +253,8 @@
               let feature = event.results[0].results[0].feature;
               let query = m_layerView.createQuery();
               query.geometry = feature.geometry;
-              console.log("Results of the search: ", {query, feature, event});
               
               smdLayer.queryFeatures(query).then((result) => {
-                console.log("query", result);
                 let resultFeature = result.features[0];
                 setFilter(resultFeature.attributes.SMD_ID);
               });
@@ -305,7 +303,7 @@
           highlight.remove();
         }
         let feature = result.features[0];
-        console.debug("selectFeature", feature.attributes)
+        // console.debug("selectFeature", feature.attributes)
         highlight = m_layerView.highlight(feature.attributes.OBJECTID);
         m_view.goTo(
           {
