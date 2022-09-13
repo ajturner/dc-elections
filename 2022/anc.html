@@ -99,13 +99,13 @@
     $surveyEl.addEventListener('filterChanged', (event => {
       // console.log("HTML filter changed", event)
       let filter = event.detail.value;
-      filter = filter.slice(0,2);
       setFilter(filter);
     }))
 
     function setFilter( filter ) {
       // console.log("setFilter", {filter})
       $surveyEl.filter = filter;
+      filter = filter.slice(0,2);
       selectFeature({ attributes: { NAME: filter } })
     }
     
