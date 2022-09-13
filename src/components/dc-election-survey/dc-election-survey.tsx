@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, State, Watch, Listen } from '@stencil/core';
+import { Component, Event, EventEmitter, Host, h, Prop, State, Watch, Listen } from '@stencil/core';
 import * as Response from '../../utils/response'
 import state from '../../utils/store';
 // @ts-ignore
@@ -17,6 +17,9 @@ export class DcElectionSurvey {
   @Prop({ mutable: true, reflect: true }) filter:string = null;
   @Prop() showFilter:boolean = false;
 
+  // TODO: can this move to the state handler?
+  @Event({ cancelable: false })  filterChanged: EventEmitter<any>;
+
   @State() candidates: Array<any> = [];
   @State() questions: Array<any> = [];
   @State() loading: boolean = true;
@@ -26,9 +29,12 @@ export class DcElectionSurvey {
   
   async componentDidLoad() {
     this.questions = await Response.fetchResponses(this.filename, this.format);
-    // set the filter state
-    state.filter = this.filter;
-
+    if(!!this.filter) {
+      // set the filter state
+      state.filter = this.filter;
+      // TODO: this fires before the map has loaded in HTML
+      // this.filterChanged.emit({ value: this.filter});
+    }
     this.loading = false;
   }
 
@@ -104,7 +110,7 @@ export class DcElectionSurvey {
       <div class="questions">
         {this.renderFilter(this.filter)}
 
-      {this.filter === null || this.filter.length !== 0 ? questions : this.renderHelp()}
+      {this.filter === null || (this.filter && this.filter.length !== 0) ? questions : this.renderHelp()}
       </div>
     )
   }

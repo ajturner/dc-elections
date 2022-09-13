@@ -39,6 +39,10 @@ export namespace Components {
     interface DcLoader {
     }
 }
+export interface DcElectionSurveyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLDcElectionSurveyElement;
+}
 export interface DcFilterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLDcFilterElement;
@@ -113,6 +117,7 @@ declare namespace LocalJSX {
         "filename"?: string;
         "filter"?: string;
         "format"?: string;
+        "onFilterChanged"?: (event: DcElectionSurveyCustomEvent<any>) => void;
         "showFilter"?: boolean;
     }
     interface DcFilter {
