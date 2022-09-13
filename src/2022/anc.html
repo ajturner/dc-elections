@@ -99,15 +99,20 @@
     $surveyEl.addEventListener('filterChanged', (event => {
       // console.log("HTML filter changed", event)
       let filter = event.detail.value;
-      setFilter(filter);
+      setFilter(filter, true);
     }))
 
-    function setFilter( filter ) {
-      // console.log("setFilter", {filter})
-      $surveyEl.filter = filter;
-      filter = filter.slice(0,2);
-      selectFeature({ attributes: { NAME: filter } })
+    function setFilter( filter, fromSurvey = false ) {
+      // hack to prevent attempt to double-filter (which blocks goTo zooming)
+      if(!fromSurvey) {
+        $surveyEl.filter = filter;
+      } else {
+        filter = filter.slice(0,2);
+        selectFeature({ attributes: { NAME: filter } })
+      }
+      
     }
+
     
     let m_view, m_layerView, ancLayer, smdLayer;
     let highlight, currentFilter;
@@ -128,11 +133,12 @@
             // Add ANC Boundaries
             const ancStyle = {
               type: "simple",
-              symbol: { type: "simple-fill",
-              opacity: 0,
+              symbol: { 
+                type: "simple-fill",
+                opacity: 1,
                 outline: {  // autocasts as new SimpleLineSymbol()
                   width: 1,
-                  color: [30,30,30,0.5]
+                  color: [60,60,60, 0.5 ]
                 } 
               }
             }
@@ -303,7 +309,7 @@
           highlight.remove();
         }
         let feature = result.features[0];
-        // console.debug("selectFeature", feature.attributes)
+        console.debug("selectFeature", feature.attributes)
         highlight = m_layerView.highlight(feature.attributes.OBJECTID);
         m_view.goTo(
           {
@@ -333,16 +339,13 @@
     }
     function highlightFeature(feature) {
       currentFilter = feature.attributes.NAME;
-
-      const query = m_layerView.createQuery();
-      query.where = `NAME = '${feature.attributes.NAME}'`;
+      console.log("highlightFeature", feature.attributes)
       ancLayer.featureEffect = {
         filter: {
           where: `NAME = '${feature.attributes.NAME}'`
         },
         excludedLabelsVisible: true,
-        includedEffects: "brightness(5) hue-rotate(270deg) contrast(200%)",
-        excludedEffects: "invert(30%)"
+        includedEffect: "brightness(5) hue-rotate(270deg) contrast(200%)"
       }
       // m_layerView.queryFeatures(query).then((ids) => {
       //   if (highlight) {
