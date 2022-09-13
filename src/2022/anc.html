@@ -221,6 +221,7 @@
                 url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
                 name: "DC Address Search",
                 zoomScale: 50000,
+                popupEnabled: false,
                 filter: searchExtent
               },{
                 layer: ancLayer,
@@ -254,10 +255,10 @@
               query.geometry = feature.geometry;
               console.log("Results of the search: ", {query, feature, event});
               
-              ancLayer.queryFeatures(query).then((result) => {
+              smdLayer.queryFeatures(query).then((result) => {
                 console.log("query", result);
                 let resultFeature = result.features[0];
-                setFilter(resultFeature.attributes.NAME);
+                setFilter(resultFeature.attributes.SMD_ID);
               });
             });
 
@@ -304,6 +305,7 @@
           highlight.remove();
         }
         let feature = result.features[0];
+        console.debug("selectFeature", feature.attributes)
         highlight = m_layerView.highlight(feature.attributes.OBJECTID);
         m_view.goTo(
           {
