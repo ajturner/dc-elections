@@ -11,6 +11,10 @@
   border: thin solid #0f9535;
   max-width: 780px;
 }
+dc-map {
+  height: 400px;
+  width: 400px;
+}
 
 ol {
   /* margin: 0 0 0 1em; */

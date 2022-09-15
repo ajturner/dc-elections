@@ -38,6 +38,8 @@ export namespace Components {
     }
     interface DcLoader {
     }
+    interface DcMap {
+    }
 }
 export interface DcElectionSurveyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -46,6 +48,10 @@ export interface DcElectionSurveyCustomEvent<T> extends CustomEvent<T> {
 export interface DcFilterCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLDcFilterElement;
+}
+export interface DcMapCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLDcMapElement;
 }
 declare global {
     interface HTMLDcElectionCandidateElement extends Components.DcElectionCandidate, HTMLStencilElement {
@@ -84,6 +90,12 @@ declare global {
         prototype: HTMLDcLoaderElement;
         new (): HTMLDcLoaderElement;
     };
+    interface HTMLDcMapElement extends Components.DcMap, HTMLStencilElement {
+    }
+    var HTMLDcMapElement: {
+        prototype: HTMLDcMapElement;
+        new (): HTMLDcMapElement;
+    };
     interface HTMLElementTagNameMap {
         "dc-election-candidate": HTMLDcElectionCandidateElement;
         "dc-election-gallery": HTMLDcElectionGalleryElement;
@@ -91,6 +103,7 @@ declare global {
         "dc-election-survey": HTMLDcElectionSurveyElement;
         "dc-filter": HTMLDcFilterElement;
         "dc-loader": HTMLDcLoaderElement;
+        "dc-map": HTMLDcMapElement;
     }
 }
 declare namespace LocalJSX {
@@ -127,6 +140,9 @@ declare namespace LocalJSX {
     }
     interface DcLoader {
     }
+    interface DcMap {
+        "onFilterChanged"?: (event: DcMapCustomEvent<any>) => void;
+    }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;
         "dc-election-gallery": DcElectionGallery;
@@ -134,6 +150,7 @@ declare namespace LocalJSX {
         "dc-election-survey": DcElectionSurvey;
         "dc-filter": DcFilter;
         "dc-loader": DcLoader;
+        "dc-map": DcMap;
     }
 }
 export { LocalJSX as JSX };
@@ -146,6 +163,7 @@ declare module "@stencil/core" {
             "dc-election-survey": LocalJSX.DcElectionSurvey & JSXBase.HTMLAttributes<HTMLDcElectionSurveyElement>;
             "dc-filter": LocalJSX.DcFilter & JSXBase.HTMLAttributes<HTMLDcFilterElement>;
             "dc-loader": LocalJSX.DcLoader & JSXBase.HTMLAttributes<HTMLDcLoaderElement>;
+            "dc-map": LocalJSX.DcMap & JSXBase.HTMLAttributes<HTMLDcMapElement>;
         }
     }
 }

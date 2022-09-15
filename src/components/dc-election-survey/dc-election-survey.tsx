@@ -9,7 +9,7 @@ import HTMLDcFilterElement from '../dc-filter';
 @Component({
   tag: 'dc-election-survey',
   styleUrl: 'dc-election-survey.css',
-  shadow: true,
+  shadow: false,
 })
 export class DcElectionSurvey {
   @Prop() filename:string = null;
@@ -64,6 +64,7 @@ export class DcElectionSurvey {
       return (
         <div class="filter">
           <slot name="filter"></slot>
+          <dc-map></dc-map>
           <dc-filter
             ref={(el) => this.filterDropdown = el}
             filter={filter}
