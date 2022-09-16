@@ -202,19 +202,13 @@ export class DcMap {
     });
 
   }
-  setFilter(filter, fromSurvey = false) {
-    // hack to prevent attempt to double-filter (which blocks goTo zooming)
-    // if (fromSurvey) {
-    //   // $surveyEl.filter = filter;
-    // } else {
-    
+  setFilter(filter) {
     filter = filter.slice(0, 2);
     this.selectFeature({ attributes: { NAME: filter } })
-    // }
-
+    
     this.filterChanged.emit({ value: filter })
-
   }
+
   selectFeature(feature) {
     const query = this.m_layerView.createQuery();
     query.where = `NAME = '${feature.attributes.NAME}'`;
