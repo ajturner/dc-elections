@@ -54,6 +54,8 @@ export class DcElectionQuestion {
       switch (this.type) {
         case ISurveyQuestionType.Choice:
           // appearance = responseCount > 3 ? 'narrow':'grid';
+          // console.debug("dc-election-question: choice", {formattedString, filteredCandidates})
+
           return (
               <div class="response-gallery">
                 <dc-election-gallery 
@@ -69,6 +71,7 @@ export class DcElectionQuestion {
         case ISurveyQuestionType.Text:
           appearance = 'quote';
           const candidates = shuffle(filteredCandidates, "Race", "desc");
+          // console.debug("dc-election-question: text", {formattedString, filteredCandidates})
 
           return (
               <div class="response-quote">
@@ -86,6 +89,7 @@ export class DcElectionQuestion {
         case ISurveyQuestionType.Rank:
         case ISurveyQuestionType.Option:
           appearance = 'quote';
+          // console.debug("dc-election-question", {formattedString, filteredCandidates})
           const options = formattedString.split('|');
           formattedString = (
             <ol class="rank-options">
@@ -178,8 +182,8 @@ export class DcElectionQuestion {
   }
 
   render() {
-    const responses = this.responses; //shuffle(this.responses, "Race", "desc");
-
+    const responses = shuffle(this.responses, "response", "asc");
+    // console.debug("dc-election-question: render", {q: this.question, responses})
     return (
       <Host>
         <slot></slot>

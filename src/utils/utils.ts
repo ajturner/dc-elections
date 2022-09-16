@@ -25,7 +25,7 @@ export function sortShuffle(array: Array<any>, attribute:string = "Race", order:
   return array.sort((a, b) => {
     let alpha = a[attribute];
     let beta = b[attribute];
-    if(alpha === undefined && a['candidates'] &&  alpha['candidates'][attribute] !== undefined ) {
+    if(alpha === undefined && a['candidates'] && alpha['candidates'][attribute] !== undefined ) {
       alpha = alpha['candidates'][attribute];
       beta = beta['candidates'][attribute];
     }

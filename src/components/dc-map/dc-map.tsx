@@ -217,7 +217,7 @@ export class DcMap {
         this.m_highlight.remove();
       }
       let feature = result.features[0];
-      console.debug("selectFeature", feature.attributes)
+      // console.debug("selectFeature", feature.attributes)
       this.m_highlight = this.m_layerView.highlight(feature.attributes.OBJECTID);
       this.m_view.goTo(
         {
