@@ -29,6 +29,7 @@ export class DcMap {
   async handleMapViewReady(event: CustomEvent<any>): Promise<void> {
     const { detail: { view, loadModules } } = event;
     this.m_view = view;
+    this.m_view.map.basemap = "streets-vector";
 
     loadModules([
       'esri/geometry/Extent',
@@ -94,9 +95,8 @@ export class DcMap {
             haloColor: "white",
             font: {
               size: 8
-            },
-            maxScale: 0,
-            minScale: 1000000,
+            }
+
           }
         });
         // from https://opendata.dc.gov
@@ -104,12 +104,43 @@ export class DcMap {
           url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/55",
           outFields: ["*"],
           renderer: smdStyle,
+          maxScale: 0,
+          minScale: 1000000,
           labelingInfo: [smdLabels]
         })
 
         this.m_view.map.add(this.m_layers['ancLayer']);
         this.m_view.map.add(this.m_layers['smdLayer']);
 
+        //////////
+        // Masking
+        ////
+        const boundaryUrl = "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/Washington_DC_Boundary/FeatureServer";
+        // const boundaryStyle = {
+        //   type: "simple",
+        //   symbol: {
+        //     type: "simple-fill",
+        //     opacity: 1,
+        //     color: [0,0,0,0],
+        //     outline: {  // autocasts as new SimpleLineSymbol()
+        //       width: 0.5,
+        //       color: [255,255,255,0.8]
+        //     }
+        //   }
+        // }
+        this.m_layers['boundaryLayer'] = new FeatureLayer({
+          url: boundaryUrl,
+          blendMode: "destination-in",
+          maxScale: 0,
+          minScale: 1000000,          
+          // renderer: boundaryStyle
+        })
+        this.m_view.map.add(this.m_layers['boundaryLayer']);
+
+
+        //////////
+        // Map interaction: highlight, controls, limits
+        ////
         this.m_view.highlightOptions = {
           color: "#0f9535"
         }
