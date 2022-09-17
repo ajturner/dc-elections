@@ -38,8 +38,13 @@ export class DcElectionSurvey {
     this.loading = false;
   }
 
+  @Listen("featureSelected")
+  featureSelected(event) {
+    console.log("featureSelected", event.detail.feature.attributes);
+  }
   @Listen("filterChanged")
   filterHandler(event) {
+    console.log("filterChanged", event.detail.value)
     this.filter = event.detail.value;
     state.filter = this.filter;
   }

@@ -141,6 +141,7 @@ declare namespace LocalJSX {
     interface DcLoader {
     }
     interface DcMap {
+        "onFeatureSelected"?: (event: DcMapCustomEvent<any>) => void;
         "onFilterChanged"?: (event: DcMapCustomEvent<any>) => void;
     }
     interface IntrinsicElements {

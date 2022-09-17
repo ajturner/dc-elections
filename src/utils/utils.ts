@@ -27,7 +27,6 @@ function getShuffleComparisons(a, b, attribute): Array<any> {
       alpha = a['candidates'][0][attribute];
       beta = b['candidates'][0][attribute];
     }
-    console.debug("getShuffleComparisons", {attribute, alpha, beta, a, b})
 
     return [alpha, beta]
 } 
@@ -40,7 +39,6 @@ export function sortShuffle(array: Array<any>, sort:Array<ISurveySort>): Array<a
     let attribute = sort[0].attribute;
     
     let [alpha, beta] = getShuffleComparisons(a,b, attribute)
-    console.debug("sortShuffle 0", {attribute, alpha, beta, a, b})
     let index = 1;
 
     // iterate through 
@@ -48,7 +46,6 @@ export function sortShuffle(array: Array<any>, sort:Array<ISurveySort>): Array<a
       orderResp = sort[index].order === "asc" ? 1 : -1;
       attribute = sort[index].attribute;
       [alpha, beta] = getShuffleComparisons(a,b, attribute)
-      console.debug(`sortShuffle ${index}`, {attribute, alpha, beta, a, b})
       index++;
     }
     // console.debug(`compare: [${alpha > beta}] ${a[attribute]} > ${b[attribute]}`, {a, b, alpha, beta, attribute})
