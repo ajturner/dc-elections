@@ -14,5 +14,8 @@
 }
 
 img {
+  font-weight: 200; /* alt text */
+  font-size: 0.6em;
+  font-style: italic;
   width: 100px;
 }

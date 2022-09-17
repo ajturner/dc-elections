@@ -11,7 +11,7 @@ export interface ISurveyQuestion {
   Question: string;
   Type: ISurveyQuestionType
   Options?: Array<string>
-  Sort?: ISurveySort // sort option on responses
+  Sort?: Array<ISurveySort> // sort option on responses
   Index?: string // Spreadsheet column/row index
 }
 export interface ISurveySort {
@@ -184,17 +184,18 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
 }
 
 // Determines sort attribute + order of responses by type
-function sortQuestionByType(questionType:string): ISurveySort {
+function sortQuestionByType(questionType:string): Array<ISurveySort> {
   switch(questionType) {
     case ISurveyQuestionType.Text:
-      return {attribute: 'Race', order: 'desc'};
+      return [{attribute: 'Race', order: 'asc'}, {attribute: 'Candidate', order: 'asc'}];
 
     // all use this default for now 
     case ISurveyQuestionType.Rank:
+      return [{attribute: 'Race', order: 'asc'}, {attribute: 'Candidate', order: 'asc'}];
     case ISurveyQuestionType.Option:
     case ISurveyQuestionType.Choice:
     default: 
-      return {attribute: 'response', order: 'asc'};
+      return [{attribute: 'response', order: 'asc'}, {attribute: 'Race', order: 'asc'}, {attribute: 'Candidate', order: 'asc'}];
   }
 
 }
@@ -209,7 +210,12 @@ function parseColumnQuestions( parseFile: any, parseData: any ):Array<ISurveyRes
   // Skip first three columns: Photo, Candidate, Race
   questions = parseFile.meta.fields.slice(3).map((question) => {
     const responses = groupQuestionResponses(question, parseData);
-    return { question: { Question: question, Type: ISurveyQuestionType.Choice }, responses }
+
+    return { question: { 
+      Question: question, 
+      Type: ISurveyQuestionType.Choice,
+      Sort: sortQuestionByType(ISurveyQuestionType.Choice)
+    }, responses }
   })
   return questions;
 }
@@ -312,6 +318,9 @@ function parseRowQuestions(parseFile: any, parseData: any ):Array<ISurveyRespons
     // Don't group rank/options
     const group = question.Type === ISurveyQuestionType.Rank ? false : true;
     const responses = groupQuestionResponses(question.Question, candidates, group);
+
+    
+    question.Sort = sortQuestionByType(question.Type);
     return { question, responses }
   });
 

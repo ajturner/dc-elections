@@ -1,3 +1,5 @@
+import { ISurveySort } from "./response";
+
 // Fisher-Yates (Knuth) array shuffle from http://sedition.com/perl/javascript-fy.html
 export function randomShuffle(array: Array<any>): Array<any> {
   let currentIndex = array.length,  randomIndex;
@@ -17,19 +19,37 @@ export function randomShuffle(array: Array<any>): Array<any> {
   return array;
 }
 
-export function sortShuffle(array: Array<any>, attribute:string = "Race", order:string = "asc"): Array<any> {
-  
-  // For the ternary below we want to use order to create a boolean
-  const orderResp = order === "asc" ? 1 : -1;
-
-  return array.sort((a, b) => {
-    // console.debug("sortShuffle", {a, b, attribute, order})
+function getShuffleComparisons(a, b, attribute): Array<any> {
 
     let alpha = a[attribute];
     let beta = b[attribute];
-    if(alpha === undefined && a['candidates'] && a['candidates'][attribute] !== undefined ) {
-      alpha = a['candidates'][attribute];
-      beta = b['candidates'][attribute];
+    if(alpha === undefined && a['candidates'] && a['candidates'][0] && a['candidates'][0][attribute] !== undefined ) {
+      alpha = a['candidates'][0][attribute];
+      beta = b['candidates'][0][attribute];
+    }
+    console.debug("getShuffleComparisons", {attribute, alpha, beta, a, b})
+
+    return [alpha, beta]
+} 
+export function sortShuffle(array: Array<any>, sort:Array<ISurveySort>): Array<any> {
+  
+  return array.sort((a, b) => {
+    // console.debug("sortShuffle", {a, b, attribute, order})
+    // For the ternary below we want to use order to create a boolean
+    let orderResp = sort[0].order === "asc" ? 1 : -1;
+    let attribute = sort[0].attribute;
+    
+    let [alpha, beta] = getShuffleComparisons(a,b, attribute)
+    console.debug("sortShuffle 0", {attribute, alpha, beta, a, b})
+    let index = 1;
+
+    // iterate through 
+    while(alpha === beta && sort[index] !== undefined) {
+      orderResp = sort[index].order === "asc" ? 1 : -1;
+      attribute = sort[index].attribute;
+      [alpha, beta] = getShuffleComparisons(a,b, attribute)
+      console.debug(`sortShuffle ${index}`, {attribute, alpha, beta, a, b})
+      index++;
     }
     // console.debug(`compare: [${alpha > beta}] ${a[attribute]} > ${b[attribute]}`, {a, b, alpha, beta, attribute})
     
@@ -38,8 +58,8 @@ export function sortShuffle(array: Array<any>, attribute:string = "Race", order:
 }
 
 // TODO: add option for what type of shuffle: sort | random, and attribute
-export function shuffle(array: Array<any>, _attribute?:string, _order?:string): Array<any> {
-  
-  const response = sortShuffle(array, _attribute, _order);
+export function shuffle(array: Array<any>, sort:Array<ISurveySort>): Array<any> {
+
+  const response = sortShuffle(array, sort);
   return response;
 }

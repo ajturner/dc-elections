@@ -60,7 +60,7 @@ export class DcElectionQuestion {
               <div class="response-gallery">
                 <dc-election-gallery 
                     appearance={appearance} 
-                    candidates={shuffle(filteredCandidates, "Race")}
+                    candidates={filteredCandidates}
                   >
                   <div class="response" innerHTML={formattedString}></div>
                 </dc-election-gallery>
@@ -70,7 +70,7 @@ export class DcElectionQuestion {
 
         case ISurveyQuestionType.Text:
           appearance = 'quote';
-          const candidates = shuffle(filteredCandidates, "Race", "desc");
+          const candidates = filteredCandidates;
           // console.debug("dc-election-question: text", {formattedString, filteredCandidates})
 
           return (
@@ -104,7 +104,7 @@ export class DcElectionQuestion {
               <div class="response-rank">
                 <dc-election-gallery 
                     appearance={appearance} 
-                    candidates={shuffle(filteredCandidates, "Race")}
+                    candidates={filteredCandidates}
                   >
                 </dc-election-gallery>
                 <div class="response">{formattedString}</div>
@@ -116,22 +116,12 @@ export class DcElectionQuestion {
           break;
       }
 
-      // return (
-      //   <div class={`response-gallery layout-${this.type.toLowerCase()}`}>
-      //     <dc-election-gallery 
-      //         appearance={appearance} 
-      //         candidates={shuffle(response.candidates, "Race")}
-      //       >
-      //       <div class="response">{formattedString}</div>
-      //     </dc-election-gallery>
-      //   </div>
-      // )
     } else if(this.showNoResponse) {
       const names = response.candidates.map((c) => {
         return (c?.Candidate)
       })
       return (
-        <div class="footnote">No response from {shuffle(names).join(', ')}</div>
+        <div class="footnote">No response from {names.join(', ')}</div>
       )
     }
 
@@ -182,7 +172,7 @@ export class DcElectionQuestion {
   }
 
   render() {
-    const responses = shuffle(this.responses, this.question.Sort.attribute, this.question.Sort.order);
+    const responses = shuffle(this.responses, this.question.Sort);
     // console.debug("dc-election-question: render", {q: this.question, responses})
     return (
       <Host>
