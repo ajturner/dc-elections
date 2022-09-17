@@ -11,9 +11,13 @@ export interface ISurveyQuestion {
   Question: string;
   Type: ISurveyQuestionType
   Options?: Array<string>
+  Sort?: ISurveySort // sort option on responses
   Index?: string // Spreadsheet column/row index
 }
-
+export interface ISurveySort {
+  order:string
+  attribute: string
+}
 
 export interface ISurveyCandidate {
   Photo: string;
@@ -116,7 +120,8 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
 
       let q = {
         Question: question, 
-        Type: questionType, 
+        Type: questionType,
+        Sort: sortQuestionByType(questionType),
         Options: options,
         Index: metaIndex
       };
@@ -178,6 +183,21 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
   return survey;
 }
 
+// Determines sort attribute + order of responses by type
+function sortQuestionByType(questionType:string): ISurveySort {
+  switch(questionType) {
+    case ISurveyQuestionType.Text:
+      return {attribute: 'Race', order: 'desc'};
+
+    // all use this default for now 
+    case ISurveyQuestionType.Rank:
+    case ISurveyQuestionType.Option:
+    case ISurveyQuestionType.Choice:
+    default: 
+      return {attribute: 'response', order: 'asc'};
+  }
+
+}
 
 // For responses files that have questions as columns and candidates in Rows
 function parseColumnQuestions( parseFile: any, parseData: any ):Array<ISurveyResponse> {

@@ -182,7 +182,7 @@ export class DcElectionQuestion {
   }
 
   render() {
-    const responses = shuffle(this.responses, "response", "asc");
+    const responses = shuffle(this.responses, this.question.Sort.attribute, this.question.Sort.order);
     // console.debug("dc-election-question: render", {q: this.question, responses})
     return (
       <Host>

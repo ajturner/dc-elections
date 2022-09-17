@@ -23,11 +23,13 @@ export function sortShuffle(array: Array<any>, attribute:string = "Race", order:
   const orderResp = order === "asc" ? 1 : -1;
 
   return array.sort((a, b) => {
+    // console.debug("sortShuffle", {a, b, attribute, order})
+
     let alpha = a[attribute];
     let beta = b[attribute];
-    if(alpha === undefined && a['candidates'] && alpha['candidates'][attribute] !== undefined ) {
-      alpha = alpha['candidates'][attribute];
-      beta = beta['candidates'][attribute];
+    if(alpha === undefined && a['candidates'] && a['candidates'][attribute] !== undefined ) {
+      alpha = a['candidates'][attribute];
+      beta = b['candidates'][attribute];
     }
     // console.debug(`compare: [${alpha > beta}] ${a[attribute]} > ${b[attribute]}`, {a, b, alpha, beta, attribute})
     
