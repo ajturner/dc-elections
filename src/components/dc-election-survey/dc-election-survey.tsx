@@ -12,9 +12,28 @@ import HTMLDcFilterElement from '../dc-filter';
   shadow: false,
 })
 export class DcElectionSurvey {
+  /**
+   * URL to Survey responses
+   */
   @Prop() filename:string = null;
+
+  /**
+   * Format of the Survey: column | row | surveymonkey
+   */
   @Prop() format:string = "column";
+  
+  /**
+  * Optional URL to CSV to candidates: Race,Name,Website
+  */
+  @Prop() candidatesFile:string = null;
+
+  /** String to filter Race
+   */
   @Prop({ mutable: true, reflect: true }) filter:string = null;
+
+  /**
+   * Option to show or hide the Map + dropdown
+   */
   @Prop() showFilter:boolean = false;
 
   // TODO: can this move to the state handler?
@@ -31,6 +50,12 @@ export class DcElectionSurvey {
 
   async componentDidLoad() {
     this.questions = await Response.fetchResponses(this.filename, this.format);
+
+    // Optionally load a CSV of Candidates (Race,Name,Website)
+    if(!!this.candidatesFile) {
+      this.candidates = await Response.fetchCandidates( this.candidatesFile )
+    }
+    
     if(!!this.filter) {
       // set the filter state
       state.filter = this.filter;
@@ -42,13 +67,13 @@ export class DcElectionSurvey {
 
   @Listen("featureSelected")
   featureSelected(event) {
-    console.log("featureSelected", event.detail.feature.attributes);
+    // console.debug("featureSelected", event.detail.feature.attributes);
     this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
     this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
   }
   @Listen("filterChanged")
   filterHandler(event) {
-    console.log("dc-election-survey: filterChanged", event.detail.value)
+    // console.debug("dc-election-survey: filterChanged", event.detail.value)
 
     // Quick fix to hide ANC based filter
     this.featureSummaryEl.race = event.detail.value;
@@ -82,6 +107,7 @@ export class DcElectionSurvey {
             ref={(el) => this.mapEl = el}
           ></dc-map>
           <dc-feature-summary
+            candidates={this.candidates}
             ref={(el) => this.featureSummaryEl = el}
           ></dc-feature-summary>
           <dc-filter

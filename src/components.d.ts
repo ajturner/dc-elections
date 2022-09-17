@@ -27,12 +27,29 @@ export namespace Components {
         "type": ISurveyQuestionType;
     }
     interface DcElectionSurvey {
+        /**
+          * Optional URL to CSV to candidates: Race,Name,Website
+         */
+        "candidatesFile": string;
+        /**
+          * URL to Survey responses
+         */
         "filename": string;
+        /**
+          * String to filter Race
+         */
         "filter": string;
+        /**
+          * Format of the Survey: column | row | surveymonkey
+         */
         "format": string;
+        /**
+          * Option to show or hide the Map + dropdown
+         */
         "showFilter": boolean;
     }
     interface DcFeatureSummary {
+        "candidates": any;
         "race": string;
         "website": string;
     }
@@ -139,13 +156,30 @@ declare namespace LocalJSX {
         "type"?: ISurveyQuestionType;
     }
     interface DcElectionSurvey {
+        /**
+          * Optional URL to CSV to candidates: Race,Name,Website
+         */
+        "candidatesFile"?: string;
+        /**
+          * URL to Survey responses
+         */
         "filename"?: string;
+        /**
+          * String to filter Race
+         */
         "filter"?: string;
+        /**
+          * Format of the Survey: column | row | surveymonkey
+         */
         "format"?: string;
         "onFilterChanged"?: (event: DcElectionSurveyCustomEvent<any>) => void;
+        /**
+          * Option to show or hide the Map + dropdown
+         */
         "showFilter"?: boolean;
     }
     interface DcFeatureSummary {
+        "candidates"?: any;
         "race"?: string;
         "website"?: string;
     }

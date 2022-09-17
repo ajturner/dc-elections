@@ -23,7 +23,7 @@ export interface ISurveyCandidate {
   Photo: string;
   Candidate: string;
   Race?: string;
-  Email?: string
+  Website?: string
   // Answers based on Question as a key
   [index: string]: string;
 }
@@ -51,17 +51,17 @@ export async function fetchCandidates(filename:string):Promise<any> {
 
   // parseFile.meta.fields
   const response = parseData.reduce((candidateIndex, candidate) => {
-    console.debug('fetchCandidates', candidate);
-    if(candidateIndex[candidate['SMD']] === undefined) {
-      candidateIndex[candidate['SMD']] = {
-        race: candidate['SMD'],
+
+    if(candidateIndex[candidate['Race']] === undefined) {
+      candidateIndex[candidate['Race']] = {
+        race: candidate['Race'],
         candidates: []
       }
     }
-    candidateIndex[candidate['SMD']].candidates.push({
-      Race: candidate['SMD'],
+    candidateIndex[candidate['Race']].candidates.push({
+      Race: candidate['Race'],
       Candidate: candidate['Name'],
-      Email: candidate['Email']
+      Website: candidate['Website']
     })
     return candidateIndex;
 

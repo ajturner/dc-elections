@@ -193,10 +193,10 @@ export class DcMap {
     let feature = event.results[0].results[0].feature;
     let query = this.m_layerView.createQuery();
     query.geometry = feature.geometry;
-    console.log("search-complete", query)
+    // console.debug("search-complete", query)
     this.m_layers['smdLayer'].queryFeatures(query).then((result) => {
       let resultFeature = result.features[0];
-      console.log("search-complete: resultFeature", resultFeature)
+      // console.debug("search-complete: resultFeature", resultFeature)
       this.setFilter(resultFeature.attributes.SMD_ID);
     });
   }
@@ -251,7 +251,7 @@ export class DcMap {
   }
   highlightFeature(feature) {
     this.m_currentFilter = feature.attributes.SMD_ID;
-    console.log("highlightFeature", {filter: this.m_currentFilter, attr:feature.attributes})
+    // console.debug("highlightFeature", {filter: this.m_currentFilter, attr:feature.attributes})
     this.m_layers['smdLayer'].featureEffect = {
       filter: {
         where: `SMD_ID = '${feature.attributes.SMD_ID}'`

@@ -1,5 +1,4 @@
-import { Component, Host, h, Prop, State } from '@stencil/core';
-import { fetchCandidates } from '../../utils/response';
+import { Component, Host, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'dc-feature-summary',
@@ -10,17 +9,15 @@ export class DcFeatureSummary {
 
   @Prop({ }) race: string = null;
   @Prop({ }) website: string = "";
-  @State() candidates: any;
+  @Prop() candidates: any;
 
   async componentWillLoad() {
-    this.candidates = await fetchCandidates('/assets/2022_anc_candidates.csv')
-    console.debug("dc-feature-summary", this.candidates)
   }
 
   renderWebsite(website:string) {
     console.log("renderWebsite", website)
     if(!!website && website.length > 0) {
-      return (<span>Website: <a href={website}>{website}</a></span>)
+      return (<span>Website: <a target="_new" href={website}>{website}</a></span>)
     } else {
       return "";
     }
@@ -33,7 +30,7 @@ export class DcFeatureSummary {
       output = (
           <ul>
         {candidates.map((candidate) =>{
-          return <li>{candidate['Candidate']} <a href={`mailto:${candidate['Email']}`}>email</a></li>
+          return <li>{candidate['Candidate']} <a href={candidate['Website']}>email</a></li>
         })}
       </ul>
       )
