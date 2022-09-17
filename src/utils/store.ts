@@ -8,7 +8,7 @@ const { state, onChange } = createStore({
 
 onChange('filter', value => {
   // state.filter = value ** 2;
-  console.log("filter changed: ", value)
+  console.log("store: filter changed: ", value)
 });
 
 export default state;

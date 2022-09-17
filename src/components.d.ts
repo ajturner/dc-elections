@@ -32,6 +32,10 @@ export namespace Components {
         "format": string;
         "showFilter": boolean;
     }
+    interface DcFeatureSummary {
+        "race": string;
+        "website": string;
+    }
     interface DcFilter {
         "filter": string;
         "url": string;
@@ -39,6 +43,7 @@ export namespace Components {
     interface DcLoader {
     }
     interface DcMap {
+        "setFilter": (filter: any) => Promise<void>;
     }
 }
 export interface DcElectionSurveyCustomEvent<T> extends CustomEvent<T> {
@@ -78,6 +83,12 @@ declare global {
         prototype: HTMLDcElectionSurveyElement;
         new (): HTMLDcElectionSurveyElement;
     };
+    interface HTMLDcFeatureSummaryElement extends Components.DcFeatureSummary, HTMLStencilElement {
+    }
+    var HTMLDcFeatureSummaryElement: {
+        prototype: HTMLDcFeatureSummaryElement;
+        new (): HTMLDcFeatureSummaryElement;
+    };
     interface HTMLDcFilterElement extends Components.DcFilter, HTMLStencilElement {
     }
     var HTMLDcFilterElement: {
@@ -101,6 +112,7 @@ declare global {
         "dc-election-gallery": HTMLDcElectionGalleryElement;
         "dc-election-question": HTMLDcElectionQuestionElement;
         "dc-election-survey": HTMLDcElectionSurveyElement;
+        "dc-feature-summary": HTMLDcFeatureSummaryElement;
         "dc-filter": HTMLDcFilterElement;
         "dc-loader": HTMLDcLoaderElement;
         "dc-map": HTMLDcMapElement;
@@ -133,6 +145,10 @@ declare namespace LocalJSX {
         "onFilterChanged"?: (event: DcElectionSurveyCustomEvent<any>) => void;
         "showFilter"?: boolean;
     }
+    interface DcFeatureSummary {
+        "race"?: string;
+        "website"?: string;
+    }
     interface DcFilter {
         "filter"?: string;
         "onFilterChanged"?: (event: DcFilterCustomEvent<any>) => void;
@@ -149,6 +165,7 @@ declare namespace LocalJSX {
         "dc-election-gallery": DcElectionGallery;
         "dc-election-question": DcElectionQuestion;
         "dc-election-survey": DcElectionSurvey;
+        "dc-feature-summary": DcFeatureSummary;
         "dc-filter": DcFilter;
         "dc-loader": DcLoader;
         "dc-map": DcMap;
@@ -162,6 +179,7 @@ declare module "@stencil/core" {
             "dc-election-gallery": LocalJSX.DcElectionGallery & JSXBase.HTMLAttributes<HTMLDcElectionGalleryElement>;
             "dc-election-question": LocalJSX.DcElectionQuestion & JSXBase.HTMLAttributes<HTMLDcElectionQuestionElement>;
             "dc-election-survey": LocalJSX.DcElectionSurvey & JSXBase.HTMLAttributes<HTMLDcElectionSurveyElement>;
+            "dc-feature-summary": LocalJSX.DcFeatureSummary & JSXBase.HTMLAttributes<HTMLDcFeatureSummaryElement>;
             "dc-filter": LocalJSX.DcFilter & JSXBase.HTMLAttributes<HTMLDcFilterElement>;
             "dc-loader": LocalJSX.DcLoader & JSXBase.HTMLAttributes<HTMLDcLoaderElement>;
             "dc-map": LocalJSX.DcMap & JSXBase.HTMLAttributes<HTMLDcMapElement>;

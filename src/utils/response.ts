@@ -23,6 +23,7 @@ export interface ISurveyCandidate {
   Photo: string;
   Candidate: string;
   Race?: string;
+  Email?: string
   // Answers based on Question as a key
   [index: string]: string;
 }
@@ -37,6 +38,36 @@ export interface ISurveySummary {
   candidates: Array<ISurveyCandidate>
 }
 
+// Get candidates from DC BOEE list
+export async function fetchCandidates(filename:string):Promise<any> {
+  const file = await fetch(filename);
+  const responseText = await file.text();
+  const parseConfig = {
+    header: true
+  }
+
+  const parseFile = Papa.parse(responseText, parseConfig);
+  const parseData = parseFile.data;
+
+  // parseFile.meta.fields
+  const response = parseData.reduce((candidateIndex, candidate) => {
+    console.debug('fetchCandidates', candidate);
+    if(candidateIndex[candidate['SMD']] === undefined) {
+      candidateIndex[candidate['SMD']] = {
+        race: candidate['SMD'],
+        candidates: []
+      }
+    }
+    candidateIndex[candidate['SMD']].candidates.push({
+      Race: candidate['SMD'],
+      Candidate: candidate['Name'],
+      Email: candidate['Email']
+    })
+    return candidateIndex;
+
+  }, {});
+  return response;
+}
 // Get survey and return array of responses and candidates
 export async function fetchResponses(filename: string, format: string = "column"): Promise<Array<ISurveyResponse>> { 
   if(filename === null) {

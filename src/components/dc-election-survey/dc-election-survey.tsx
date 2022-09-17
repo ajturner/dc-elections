@@ -25,8 +25,10 @@ export class DcElectionSurvey {
   @State() loading: boolean = true;
 
   filterInput!: HTMLInputElement;
-  filterDropdown: HTMLDcFilterElement;
-  
+  filterDropdownEl: HTMLDcFilterElement;
+  featureSummaryEl: HTMLDcFeatureSummaryElement;
+  mapEl: HTMLDcMapElement;
+
   async componentDidLoad() {
     this.questions = await Response.fetchResponses(this.filename, this.format);
     if(!!this.filter) {
@@ -41,17 +43,24 @@ export class DcElectionSurvey {
   @Listen("featureSelected")
   featureSelected(event) {
     console.log("featureSelected", event.detail.feature.attributes);
+    this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
+    this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
   }
   @Listen("filterChanged")
   filterHandler(event) {
-    console.log("filterChanged", event.detail.value)
+    console.log("dc-election-survey: filterChanged", event.detail.value)
+
+    // Quick fix to hide ANC based filter
+    this.featureSummaryEl.race = event.detail.value;
     this.filter = event.detail.value;
     state.filter = this.filter;
   }
 
   @Watch('filter')
   filterPropChanged(newValue: string) {
-    this.filterDropdown.value = newValue;
+    this.filterDropdownEl.value = newValue;
+    this.mapEl.setFilter( newValue );
+    
     state.filter = newValue;
   }
   clearFilters() {
@@ -69,9 +78,14 @@ export class DcElectionSurvey {
       return (
         <div class="filter">
           <slot name="filter"></slot>
-          <dc-map></dc-map>
+          <dc-map
+            ref={(el) => this.mapEl = el}
+          ></dc-map>
+          <dc-feature-summary
+            ref={(el) => this.featureSummaryEl = el}
+          ></dc-feature-summary>
           <dc-filter
-            ref={(el) => this.filterDropdown = el}
+            ref={(el) => this.filterDropdownEl = el}
             filter={filter}
           ></dc-filter>
 

@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Host, h, Listen, State } from '@stencil/core';
+import { Component, Event, EventEmitter, Host, h, Listen, State, Method } from '@stencil/core';
 
 @Component({
   tag: 'dc-map',
@@ -15,6 +15,15 @@ export class DcMap {
 
   @Event({ cancelable: false })  filterChanged: EventEmitter<any>;
   @Event({ cancelable: false })  featureSelected: EventEmitter<any>;
+
+  @Method()
+  public async setFilter(filter) {
+    // filter = filter.slice(0, 2);
+    this.selectFeature({ attributes: { SMD_ID: filter } })
+    
+    this.filterChanged.emit({ value: filter })
+  }
+
 
   @Listen('arcgisHubMapViewReady')
   async handleMapViewReady(event: CustomEvent<any>): Promise<void> {
@@ -208,12 +217,6 @@ export class DcMap {
     });
 
   }
-  setFilter(filter) {
-    // filter = filter.slice(0, 2);
-    this.selectFeature({ attributes: { SMD_ID: filter } })
-    
-    this.filterChanged.emit({ value: filter })
-  }
 
   selectFeature(feature) {
     const query = this.m_layerView.createQuery();
@@ -223,36 +226,28 @@ export class DcMap {
       if (this.m_highlight) {
         this.m_highlight.remove();
       }
-      const foundFeature = result.features[0];
-      // console.debug("selectFeature", {feature, query, result, foundFeature})
-      
-      this.m_highlight = this.m_layerView.highlight(foundFeature.attributes.OBJECTID);
-      this.m_view.goTo(
-        {
-          target: foundFeature.geometry,
-          zoom: 16
-        },
-        {
-          duration: 2000,
-          easing: "in-out-expo"
-        }
-      )
+      if(!!result && result.features.length > 0) {
+
+        
+        const foundFeature = result.features[0];
+        // console.debug("selectFeature", {feature, query, result, foundFeature})
+        
+        this.featureSelected.emit({ feature: foundFeature })
+
+        this.m_highlight = this.m_layerView.highlight(foundFeature.attributes.OBJECTID);
+        this.m_view.goTo(
+          {
+            target: foundFeature.geometry,
+            zoom: 16
+          },
+          {
+            duration: 2000,
+            easing: "in-out-expo"
+          }
+        )
+
+      }
     });
-    // this.m_layerView.featureEffect = {
-    //   filter: {
-    //     where: `NAME = '${feature.attributes.NAME}'`
-    //   },
-    //   includedEffects: [
-    //     {
-    //       value: "invert(75%)"
-    //     },
-    //   ],
-    //   excludedEffects: [
-    //     {
-    //       value: "opacity(0%)"
-    //     },
-    //   ]
-    // }
   }
   highlightFeature(feature) {
     this.m_currentFilter = feature.attributes.SMD_ID;
@@ -264,7 +259,6 @@ export class DcMap {
       excludedLabelsVisible: true,
       includedEffect: "brightness(5) hue-rotate(270deg) contrast(100%) saturate(150%) "
     }
-    this.featureSelected.emit({ feature })
 
     // this.m_layerView.queryFeatures(query).then((ids) => {
     //   if (highlight) {
