@@ -22,7 +22,7 @@
 }
 
 .response:empty::before {
-  content: "No response to this question.";
+  content: "No candidates submitted responses in this ANC.";
   font-style: italic;
   font-weight: 400;
 }
