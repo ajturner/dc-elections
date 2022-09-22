@@ -1,3 +1,6 @@
 :host {
   display: block;
 }
+arcgis-hub-map {
+  border: thin solid #BBB;
+}

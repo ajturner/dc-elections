@@ -1,3 +1,19 @@
 :host {
   display: block;
 }
+#summary {
+  border: thin solid #BBB;
+  padding: 5px;
+}
+#summary-race {
+  font-weight: 600;
+  font-size: 1.2em;
+}
+#summary-candidates ul {
+  margin: 0 0 0 20px;
+  padding-left: 0;
+}
+h4 {
+  padding: 0;
+  margin: 5px 0 0 0;
+}

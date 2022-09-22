@@ -46,11 +46,14 @@ export class DcFeatureSummary {
 
     const candidates = info.candidates.filter(c => c['Candidate'] !== '')
     return (
-      <div>
-        <h3>{info.race}</h3>
-        {this.renderWebsite(this.website)}
-      <br/><strong>Candidates</strong>
-        {this.renderCandidates(candidates)}
+      <div id="summary">
+        <div id="summary-race">{info.race}</div>
+        <div id="summary-website">{this.renderWebsite(this.website)}</div>
+        <div id="summary-candidates">
+          <h4>Candidates</h4>
+
+          {this.renderCandidates(candidates)}
+        </div>
       </div>
     )
   }

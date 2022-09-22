@@ -71,15 +71,15 @@ export class DcElectionSurvey {
     this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
     this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
     this.filter = event.detail.feature.attributes.ANC_ID;
+    state.filter = this.filter;
   }
   @Listen("filterChanged")
   filterChangedHandler(event) {
     console.debug("dc-election-survey: filterChangedHandler", event.detail.value)
+    // this.filter = event.detail.value;
 
     // Quick fix to hide ANC based filter
-    this.featureSummaryEl.race = event.detail.value;
-    this.filter = event.detail.value;
-    state.filter = this.filter;
+    // this.featureSummaryEl.race = event.detail.value;
   }
 
   @Watch('filter')

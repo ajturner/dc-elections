@@ -18,7 +18,7 @@ dc-map {
 dc-feature-summary {
   position:absolute;
   top: 200px;
-  background-color: rgba(255,255,255, 0.5);
+  background-color: rgba(255,255,255, 0.8);
   width: 300px;
 }
 
