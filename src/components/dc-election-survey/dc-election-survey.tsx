@@ -66,14 +66,15 @@ export class DcElectionSurvey {
   }
 
   @Listen("featureSelected")
-  featureSelected(event) {
-    console.debug("dc-election-survey: featureSelected", event.detail.feature.attributes);
+  featureSelectedHandler(event) {
+    console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
     this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
     this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
+    this.filter = event.detail.feature.attributes.ANC_ID;
   }
   @Listen("filterChanged")
-  filterHandler(event) {
-    console.debug("dc-election-survey: filterHandler", event.detail.value)
+  filterChangedHandler(event) {
+    console.debug("dc-election-survey: filterChangedHandler", event.detail.value)
 
     // Quick fix to hide ANC based filter
     this.featureSummaryEl.race = event.detail.value;
@@ -86,7 +87,9 @@ export class DcElectionSurvey {
     console.debug("dc-election-survey: filterPropChanged")
     // TODO move these to reactive props on elements
     this.filterDropdownEl.value = newValue;
-    this.mapEl.setFilter( newValue );    
+
+    // TODO Fix to highlight map when drop-down chosen
+    // this.mapEl.selectFeature( newValue );    
     state.filter = newValue;
   }
   clearFilters() {

@@ -11,17 +11,15 @@ export class DcMap {
   @State() m_layerViews = {};
   @State() m_layers = {};
   @State() m_highlight;
-  @State() m_currentFilter;
 
-  @Event({ cancelable: false })  filterChanged: EventEmitter<any>;
   @Event({ cancelable: false })  featureSelected: EventEmitter<any>;
 
   @Method()
-  public async setFilter(filter) {
+  public async selectFeature(feature) {
     // filter = filter.slice(0, 2);
-    this.selectFeature({ attributes: { ANC_ID: filter } })
-    
-    this.filterChanged.emit({ value: filter })
+    console.log("dc-map: selectFeature", {feature})
+    this.highlightFeature({ attributes: { ANC_ID: feature.attributes.ANC_ID } })
+    this.featureSelected.emit({ feature: feature })
   }
 
 
@@ -210,17 +208,19 @@ export class DcMap {
             return this.m_view.whenLayerView(layer);
           })
           .then((layerView) => {
-            console.log("m_layerView 1", `${layerView.url}/${layerView.layerId}`);
             this.m_layerViews['smdLayer'] = layerView;
             
             this.m_view.on("pointer-move", (event) => {this.mapMouseHandler(event)});
             this.m_view.on("pointer-down", (event) => {this.mapMouseHandler(event)});
           })
+          // Get ANC Layer definitions
           .then(() => {
             return this.m_layers['ancLayer'].when();
           })
+          .then((layer) => {
+            return this.m_view.whenLayerView(layer);
+          })
           .then((layerView) => {
-            console.log("m_layerView2", `${layerView.url}/${layerView.layerId}`);
             this.m_layerViews['ancLayer'] = layerView;
           })
 
@@ -235,7 +235,7 @@ export class DcMap {
     this.m_layers['smdLayer'].queryFeatures(query).then((result) => {
       let resultFeature = result.features[0];
       // console.debug("search-complete: resultFeature", resultFeature)
-      this.setFilter(resultFeature.attributes.ANC_ID);
+      this.selectFeature(resultFeature);
     });
   }
   mapMouseHandler(event) {
@@ -246,19 +246,20 @@ export class DcMap {
     this.m_view.hitTest(event, opts).then((response) => {
       if (response.results.length) {
         const feature = response.results[0].graphic;
-        this.highlightFeature(feature)
-        this.m_currentFilter = feature.attributes.ANC_ID;
+        this.outlineFeature(feature)
 
         // currentANCName = response.results[0].graphic.attributes["NAME"];
         if (event.type === "pointer-down") {
-          this.setFilter(this.m_currentFilter);
+          console.debug("dc-map: mapMouseHandler", {feature})
+          this.selectFeature(feature);
         }
       }
     });
 
   }
 
-  selectFeature(feature) {
+  // Feature clicked on
+  highlightFeature(feature) {
     const query = this.m_layerViews['ancLayer'].createQuery();
     query.where = `NAME = '${feature.attributes.ANC_ID}'`;
     this.m_layerViews['ancLayer'].queryFeatures(query).then((result) => {
@@ -271,28 +272,27 @@ export class DcMap {
 
         
         const foundFeature = result.features[0];
-        console.debug("selectFeature", {feature, query, result, foundFeature})
-        console.debug("selectFeature: viewLayer", this.m_layerViews['ancLayer'])
+        // console.debug("selectFeature", {feature, query, result, foundFeature})
+        // console.debug("selectFeature: viewLayer", this.m_layerViews['ancLayer'])
         
-        this.featureSelected.emit({ feature: foundFeature })
-
         this.m_view.goTo(
           {
-            target: foundFeature.geometry,
-            zoom: 16
+            target: foundFeature.geometry
           },
           {
             duration: 2000,
             easing: "in-out-expo"
           }
         )
+        console.debug("dc-map: highlightFeature", {lv: this.m_layerViews, an: this.m_layerViews['ancLayer'], hl: this.m_layerViews['ancLayer'].highlight})
         this.m_highlight = this.m_layerViews['ancLayer'].highlight(foundFeature.attributes.OBJECTID);
 
       }
     });
   }
-  highlightFeature(feature) {
-    // console.debug("highlightFeature", {filter: this.m_currentFilter, attr:feature.attributes})
+
+  // Feature hovered
+  outlineFeature(feature) {
     this.m_layers['smdLayer'].featureEffect = {
       filter: {
         where: `SMD_ID = '${feature.attributes.SMD_ID}'`

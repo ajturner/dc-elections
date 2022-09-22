@@ -60,7 +60,7 @@ export namespace Components {
     interface DcLoader {
     }
     interface DcMap {
-        "setFilter": (filter: any) => Promise<void>;
+        "selectFeature": (feature: any) => Promise<void>;
     }
 }
 export interface DcElectionSurveyCustomEvent<T> extends CustomEvent<T> {
@@ -192,7 +192,6 @@ declare namespace LocalJSX {
     }
     interface DcMap {
         "onFeatureSelected"?: (event: DcMapCustomEvent<any>) => void;
-        "onFilterChanged"?: (event: DcMapCustomEvent<any>) => void;
     }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;
