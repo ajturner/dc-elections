@@ -8,7 +8,7 @@ import { Component, Event, EventEmitter, Host, h, Listen, State, Method } from '
 export class DcMap {
 
   @State() m_view;
-  @State() m_layerView;
+  @State() m_layerViews = {};
   @State() m_layers = {};
   @State() m_highlight;
   @State() m_currentFilter;
@@ -19,7 +19,7 @@ export class DcMap {
   @Method()
   public async setFilter(filter) {
     // filter = filter.slice(0, 2);
-    this.selectFeature({ attributes: { SMD_ID: filter } })
+    this.selectFeature({ attributes: { ANC_ID: filter } })
     
     this.filterChanged.emit({ value: filter })
   }
@@ -203,7 +203,6 @@ export class DcMap {
           .when()
           .then(() => {
             // console.log("when view", [this.m_layers, this.m_layers['ancLayer']]);
-
             return this.m_layers['smdLayer'].when();
           })
           .then((layer) => {
@@ -211,24 +210,32 @@ export class DcMap {
             return this.m_view.whenLayerView(layer);
           })
           .then((layerView) => {
-            this.m_layerView = layerView;
-            // console.log("m_layerView", this.m_layerView);
-
+            console.log("m_layerView 1", `${layerView.url}/${layerView.layerId}`);
+            this.m_layerViews['smdLayer'] = layerView;
+            
             this.m_view.on("pointer-move", (event) => {this.mapMouseHandler(event)});
             this.m_view.on("pointer-down", (event) => {this.mapMouseHandler(event)});
           })
+          .then(() => {
+            return this.m_layers['ancLayer'].when();
+          })
+          .then((layerView) => {
+            console.log("m_layerView2", `${layerView.url}/${layerView.layerId}`);
+            this.m_layerViews['ancLayer'] = layerView;
+          })
+
       });
   }
   searchCompleteHandler (event) {
     // The results are stored in the event Object[]
     let feature = event.results[0].results[0].feature;
-    let query = this.m_layerView.createQuery();
+    let query = this.m_layerViews['smdLayer'].createQuery();
     query.geometry = feature.geometry;
     // console.debug("search-complete", query)
     this.m_layers['smdLayer'].queryFeatures(query).then((result) => {
       let resultFeature = result.features[0];
       // console.debug("search-complete: resultFeature", resultFeature)
-      this.setFilter(resultFeature.attributes.SMD_ID);
+      this.setFilter(resultFeature.attributes.ANC_ID);
     });
   }
   mapMouseHandler(event) {
@@ -240,6 +247,8 @@ export class DcMap {
       if (response.results.length) {
         const feature = response.results[0].graphic;
         this.highlightFeature(feature)
+        this.m_currentFilter = feature.attributes.ANC_ID;
+
         // currentANCName = response.results[0].graphic.attributes["NAME"];
         if (event.type === "pointer-down") {
           this.setFilter(this.m_currentFilter);
@@ -250,9 +259,10 @@ export class DcMap {
   }
 
   selectFeature(feature) {
-    const query = this.m_layerView.createQuery();
-    query.where = `SMD_ID = '${feature.attributes.SMD_ID}'`;
-    this.m_layerView.queryFeatures(query).then((result) => {
+    const query = this.m_layerViews['ancLayer'].createQuery();
+    query.where = `NAME = '${feature.attributes.ANC_ID}'`;
+    this.m_layerViews['ancLayer'].queryFeatures(query).then((result) => {
+      console.debug("selectFeature 1", {feature, where: query.where, result})
 
       if (this.m_highlight) {
         this.m_highlight.remove();
@@ -261,11 +271,11 @@ export class DcMap {
 
         
         const foundFeature = result.features[0];
-        // console.debug("selectFeature", {feature, query, result, foundFeature})
+        console.debug("selectFeature", {feature, query, result, foundFeature})
+        console.debug("selectFeature: viewLayer", this.m_layerViews['ancLayer'])
         
         this.featureSelected.emit({ feature: foundFeature })
 
-        this.m_highlight = this.m_layerView.highlight(foundFeature.attributes.OBJECTID);
         this.m_view.goTo(
           {
             target: foundFeature.geometry,
@@ -276,12 +286,12 @@ export class DcMap {
             easing: "in-out-expo"
           }
         )
+        this.m_highlight = this.m_layerViews['ancLayer'].highlight(foundFeature.attributes.OBJECTID);
 
       }
     });
   }
   highlightFeature(feature) {
-    this.m_currentFilter = feature.attributes.SMD_ID;
     // console.debug("highlightFeature", {filter: this.m_currentFilter, attr:feature.attributes})
     this.m_layers['smdLayer'].featureEffect = {
       filter: {
@@ -291,11 +301,11 @@ export class DcMap {
       includedEffect: "brightness(5) hue-rotate(270deg) contrast(100%) saturate(150%) "
     }
 
-    // this.m_layerView.queryFeatures(query).then((ids) => {
+    // this.m_layerViews['smdLayer'].queryFeatures(query).then((ids) => {
     //   if (highlight) {
     //     highlight.remove();
     //   }
-    //   // highlight = this.m_layerView.highlight(ids.features[0].attributes.OBJECTID);
+    //   // highlight = this.m_layerViews['smdLayer'].highlight(ids.features[0].attributes.OBJECTID);
     // }); 
   }
 

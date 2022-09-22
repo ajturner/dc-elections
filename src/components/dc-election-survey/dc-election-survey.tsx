@@ -67,13 +67,13 @@ export class DcElectionSurvey {
 
   @Listen("featureSelected")
   featureSelected(event) {
-    // console.debug("featureSelected", event.detail.feature.attributes);
+    console.debug("dc-election-survey: featureSelected", event.detail.feature.attributes);
     this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
     this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
   }
   @Listen("filterChanged")
   filterHandler(event) {
-    // console.debug("dc-election-survey: filterChanged", event.detail.value)
+    console.debug("dc-election-survey: filterHandler", event.detail.value)
 
     // Quick fix to hide ANC based filter
     this.featureSummaryEl.race = event.detail.value;
@@ -83,9 +83,10 @@ export class DcElectionSurvey {
 
   @Watch('filter')
   filterPropChanged(newValue: string) {
+    console.debug("dc-election-survey: filterPropChanged")
+    // TODO move these to reactive props on elements
     this.filterDropdownEl.value = newValue;
-    this.mapEl.setFilter( newValue );
-    
+    this.mapEl.setFilter( newValue );    
     state.filter = newValue;
   }
   clearFilters() {
