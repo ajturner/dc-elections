@@ -51,6 +51,7 @@ export class DcElectionQuestion {
       let formattedString = response.response.replace(/^[0-9]\.\s+/, '').replace(/(?:\r\n|\r|\n)/g, '<br>');
       
       let appearance: "grid" | "stack" | "narrow" | "quote" = 'grid';
+      console.debug("dc-election-question: renderREsponse", {type: this.type, formattedString, filteredCandidates})
       switch (this.type) {
         case ISurveyQuestionType.Choice:
           // appearance = responseCount > 3 ? 'narrow':'grid';

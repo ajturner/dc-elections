@@ -37,6 +37,7 @@ export class DcElectionGallery {
     return output;
   }
   render() {
+    console.debug("dc-election-gallery", this.candidates)
     return (
       <Host>
         <slot></slot>
