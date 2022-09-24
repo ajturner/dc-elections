@@ -17,6 +17,9 @@ export namespace Components {
         "appearance": "grid" | "stack" | "narrow"| "quote";
         "candidates": Array<any>;
     }
+    interface DcElectionQuery {
+        "question": ISurveyQuestion;
+    }
     interface DcElectionQuestion {
         "question": ISurveyQuestion;
         /**
@@ -62,6 +65,9 @@ export namespace Components {
     interface DcMap {
         "selectFeature": (feature: any) => Promise<void>;
     }
+    interface DcSurveySummary {
+        "questions": any;
+    }
 }
 export interface DcElectionSurveyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -87,6 +93,12 @@ declare global {
     var HTMLDcElectionGalleryElement: {
         prototype: HTMLDcElectionGalleryElement;
         new (): HTMLDcElectionGalleryElement;
+    };
+    interface HTMLDcElectionQueryElement extends Components.DcElectionQuery, HTMLStencilElement {
+    }
+    var HTMLDcElectionQueryElement: {
+        prototype: HTMLDcElectionQueryElement;
+        new (): HTMLDcElectionQueryElement;
     };
     interface HTMLDcElectionQuestionElement extends Components.DcElectionQuestion, HTMLStencilElement {
     }
@@ -124,15 +136,23 @@ declare global {
         prototype: HTMLDcMapElement;
         new (): HTMLDcMapElement;
     };
+    interface HTMLDcSurveySummaryElement extends Components.DcSurveySummary, HTMLStencilElement {
+    }
+    var HTMLDcSurveySummaryElement: {
+        prototype: HTMLDcSurveySummaryElement;
+        new (): HTMLDcSurveySummaryElement;
+    };
     interface HTMLElementTagNameMap {
         "dc-election-candidate": HTMLDcElectionCandidateElement;
         "dc-election-gallery": HTMLDcElectionGalleryElement;
+        "dc-election-query": HTMLDcElectionQueryElement;
         "dc-election-question": HTMLDcElectionQuestionElement;
         "dc-election-survey": HTMLDcElectionSurveyElement;
         "dc-feature-summary": HTMLDcFeatureSummaryElement;
         "dc-filter": HTMLDcFilterElement;
         "dc-loader": HTMLDcLoaderElement;
         "dc-map": HTMLDcMapElement;
+        "dc-survey-summary": HTMLDcSurveySummaryElement;
     }
 }
 declare namespace LocalJSX {
@@ -145,6 +165,9 @@ declare namespace LocalJSX {
     interface DcElectionGallery {
         "appearance"?: "grid" | "stack" | "narrow"| "quote";
         "candidates"?: Array<any>;
+    }
+    interface DcElectionQuery {
+        "question"?: ISurveyQuestion;
     }
     interface DcElectionQuestion {
         "question"?: ISurveyQuestion;
@@ -193,15 +216,20 @@ declare namespace LocalJSX {
     interface DcMap {
         "onFeatureSelected"?: (event: DcMapCustomEvent<any>) => void;
     }
+    interface DcSurveySummary {
+        "questions"?: any;
+    }
     interface IntrinsicElements {
         "dc-election-candidate": DcElectionCandidate;
         "dc-election-gallery": DcElectionGallery;
+        "dc-election-query": DcElectionQuery;
         "dc-election-question": DcElectionQuestion;
         "dc-election-survey": DcElectionSurvey;
         "dc-feature-summary": DcFeatureSummary;
         "dc-filter": DcFilter;
         "dc-loader": DcLoader;
         "dc-map": DcMap;
+        "dc-survey-summary": DcSurveySummary;
     }
 }
 export { LocalJSX as JSX };
@@ -210,12 +238,14 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "dc-election-candidate": LocalJSX.DcElectionCandidate & JSXBase.HTMLAttributes<HTMLDcElectionCandidateElement>;
             "dc-election-gallery": LocalJSX.DcElectionGallery & JSXBase.HTMLAttributes<HTMLDcElectionGalleryElement>;
+            "dc-election-query": LocalJSX.DcElectionQuery & JSXBase.HTMLAttributes<HTMLDcElectionQueryElement>;
             "dc-election-question": LocalJSX.DcElectionQuestion & JSXBase.HTMLAttributes<HTMLDcElectionQuestionElement>;
             "dc-election-survey": LocalJSX.DcElectionSurvey & JSXBase.HTMLAttributes<HTMLDcElectionSurveyElement>;
             "dc-feature-summary": LocalJSX.DcFeatureSummary & JSXBase.HTMLAttributes<HTMLDcFeatureSummaryElement>;
             "dc-filter": LocalJSX.DcFilter & JSXBase.HTMLAttributes<HTMLDcFilterElement>;
             "dc-loader": LocalJSX.DcLoader & JSXBase.HTMLAttributes<HTMLDcLoaderElement>;
             "dc-map": LocalJSX.DcMap & JSXBase.HTMLAttributes<HTMLDcMapElement>;
+            "dc-survey-summary": LocalJSX.DcSurveySummary & JSXBase.HTMLAttributes<HTMLDcSurveySummaryElement>;
         }
     }
 }
