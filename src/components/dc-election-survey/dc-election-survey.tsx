@@ -144,8 +144,16 @@ export class DcElectionSurvey {
   }
   renderHelp() {
     return (
-      <div class="help">
-        Filter to local candidates by clicking on the map, search by address, or select ANC or SMD.
+      <div>
+        <div class="help">
+          Filter to local candidates by clicking on the map, search by address, or select ANC or SMD.
+        </div>
+
+        <dc-survey-summary
+          class="summary"
+          questions={this.questions}
+        ></dc-survey-summary>
+
       </div>
     )
   }

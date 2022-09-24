@@ -1,0 +1,96 @@
+:host {
+  display: block;
+  --label-width: 300px;
+  --label-height: 60px;
+}
+
+.no-summary {
+  display: none;
+}
+dl {
+  font-size: 0.9rem;
+  border-top: thin solid #888;
+  padding-top: 0.7em;
+}
+dl dd {
+  font-size: 0.9rem;
+}
+
+dl {
+  display: flex;
+  background-color: white;
+  flex-direction: column;
+  width: 100%;
+  max-width: 700px;
+  position: relative;
+  padding: 20px;
+}
+
+dt {
+  align-self: flex-start;
+  width: 100%;
+  font-weight: 700;
+  display: block;
+  font-size: 1.2em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  // margin-left: var(--label-width);
+}
+
+.text {
+  font-weight: 600;
+  display: flex;
+  text-align: right;;
+  align-items: center;
+  height: var(--label-height);
+  width: var(--label-width);
+  background-color: white;
+  position: absolute;
+  left: 0;
+  justify-content: flex-end;
+}
+
+.percentage {
+  font-size: .8em;
+  line-height: 1;
+  // text-transform: uppercase;
+  width: 100%;
+  height: var(--label-height);
+  margin-left: var(--label-width);
+  background: repeating-linear-gradient(
+  to right,
+  #ddd,
+  #ddd 1px,
+  #fff 1px,
+  #fff 5%
+);
+  
+  &:after {
+    content: "";
+    display: block;
+    background-color: #3d9970;
+    width: 50px;
+    margin-bottom: 10px;
+    height: 90%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: background-color .3s ease;
+    cursor: pointer;
+  }
+  &:hover,
+  &:focus {
+    &:after {
+       background-color: #aaa; 
+    }
+  }
+}
+
+@for $i from 1 through 100 {
+  .percentage-#{$i} {
+    &:after {
+      $value: ($i * 1%);
+      width: $value;
+    }
+  }
+}
