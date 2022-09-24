@@ -62,6 +62,7 @@ export class DcElectionSurvey {
       // TODO: this fires before the map has loaded in HTML
       // this.filterChanged.emit({ value: this.filter});
     }
+    console.debug("dc-election-survey", {candidates: this.candidates, questions: this.questions})
     this.loading = false;
   }
 
