@@ -1,5 +1,6 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
 import { ISurveyQuestionType } from '../../utils/response';
+import { shuffle } from '../../utils/utils';
 
 @Component({
   tag: 'dc-survey-summary',
@@ -15,12 +16,14 @@ export class DcSurveySummary {
     return Math.ceil(value / this.numberResponses * 100)
   }
   renderEnumerationSummary(question) {
+    console.debug("dc-survey-summary: renderEnumeration", {question});
+    const responses = shuffle(question.responses, question.question.Sort);
     return (
       <dl>
         <dt class="question"><dc-election-query question={question.question}></dc-election-query></dt>
-        {question.responses.map((response) => {
+        {responses.map((response) => {
           return (<dd class={`percentage percentage-${this.calculatePercentage(response.candidates.length)}`}>
-            <span class="text">{response.response}: {response.candidates.length}</span>
+            <span class="text">{response.response.replace(/^\d+\./,'')}: {response.candidates.length}</span>
           </dd>)
         })}
       </dl>
