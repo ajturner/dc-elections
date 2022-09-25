@@ -1,3 +1,18 @@
 :host {
   display: block;
 }
+
+.filters {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.filter {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  max-width: 20vw;
+  padding-right: 2em;
+}

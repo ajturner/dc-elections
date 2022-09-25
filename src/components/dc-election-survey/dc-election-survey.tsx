@@ -77,10 +77,10 @@ export class DcElectionSurvey {
   @Listen("filterChanged")
   filterChangedHandler(event) {
     console.debug("dc-election-survey: filterChangedHandler", event.detail.value)
-    // this.filter = event.detail.value;
+    this.filter = event.detail.value;
 
     // Quick fix to hide ANC based filter
-    // this.featureSummaryEl.race = event.detail.value;
+    this.featureSummaryEl.race = event.detail.value;
   }
 
   @Watch('filter')
@@ -148,31 +148,34 @@ export class DcElectionSurvey {
         <div class="help">
           Filter to local candidates by clicking on the map, search by address, or select ANC or SMD.
         </div>
-
-        <dc-survey-summary
-          class="summary"
-          questions={this.questions}
-        ></dc-survey-summary>
-
+        {this.renderSummary()}
       </div>
     )
   }
-  renderBody() {
+  renderSummary() {
+    return (
+      <dc-survey-summary
+        class="summary"
+        questions={this.questions}
+      ></dc-survey-summary>      
+    )
+  }
+  renderBody(filter:string) {
     const questions = (
       <ol>
         {this.questions.map((question) => {
           return (<li>{this.renderQuestion(question)}</li>);  
         })}
       </ol>)
-
+    console.debug("dc-election-survey: renderBody", {filter})
     return (
       <div class="questions">
-        {this.renderFilter(this.filter)}
-
-      {this.filter === null || (this.filter && this.filter.length !== 0) ? questions : this.renderHelp()}
+        {this.renderFilter(filter)}
+        {filter === null || (filter && filter.length !== 0) ? questions : this.renderHelp()}
       </div>
     )
   }
+
   renderLoader() {
     return (<dc-loader>Loading survey responses...</dc-loader>);
   }
@@ -180,7 +183,8 @@ export class DcElectionSurvey {
     return (
       <Host>
         <slot name="title"></slot>
-        {this.loading || this.questions.length === 0 ? this.renderLoader() : this.renderBody() }
+        
+        {this.loading || this.questions.length === 0 ? this.renderLoader() : this.renderBody(this.filter) }
         
       </Host>
     );

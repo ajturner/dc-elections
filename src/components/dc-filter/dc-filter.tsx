@@ -62,6 +62,23 @@ export class DcFilter {
                 </calcite-combobox-item>
       )
   }
+  resetButton() {
+    return (
+        <calcite-button
+          class="filter"
+          alignment="start"
+          appearance="solid"
+          color="blue"
+          scale="m"
+          href=""
+          type="button"
+          width="auto"
+          onClick={() => this.filter = null}
+        >
+          Back to Summary
+        </calcite-button>      
+    )    
+  }  
   render() {
     const filterDisplay = this.groupBy(this.m_filterOptions, 'ANC_ID');
 
@@ -77,8 +94,9 @@ export class DcFilter {
     return (
       <Host>
         <slot></slot>
-        <div>
+        <div class="filters">
           <calcite-combobox
+            class="filter"
             ref={(el) => this.m_dropdownEl = el}
             label="search"
             placeholder="Search by ANC"
@@ -88,6 +106,7 @@ export class DcFilter {
           >
             {filterOptions}
           </calcite-combobox>
+          {this.filter ? this.resetButton() : ""}
         </div>
       </Host>
     );

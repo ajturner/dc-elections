@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop } from '@stencil/core';
+import { Component, Host, h, Prop, State } from '@stencil/core';
 import { ISurveyQuestionType } from '../../utils/response';
 
 @Component({
@@ -9,9 +9,10 @@ import { ISurveyQuestionType } from '../../utils/response';
 export class DcSurveySummary {
 
   @Prop() questions = null;
+  @State() numberResponses:number = 172;
 
   calculatePercentage(value: number): number {
-    return Math.floor(value / 172 * 100)
+    return Math.ceil(value / this.numberResponses * 100)
   }
   renderEnumerationSummary(question) {
     return (
@@ -44,7 +45,7 @@ export class DcSurveySummary {
     return (
       <Host>
         <slot></slot>
-        <h3>Summary of All Responses</h3> 
+        <h3>Summary of All {this.numberResponses} Responses</h3> 
         {this.questions.map((question) => {
           return this.renderQuestionSummary(question);
         })}
