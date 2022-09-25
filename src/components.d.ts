@@ -63,7 +63,7 @@ export namespace Components {
     interface DcLoader {
     }
     interface DcMap {
-        "selectFeature": (feature: any) => Promise<void>;
+        "selectFeature": (feature: any, emitEvent?: boolean) => Promise<void>;
     }
     interface DcSurveySummary {
         "questions": any;

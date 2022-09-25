@@ -89,8 +89,8 @@ export class DcElectionSurvey {
     // TODO move these to reactive props on elements
     this.filterDropdownEl.value = newValue;
 
-    // TODO Fix to highlight map when drop-down chosen
-    // this.mapEl.selectFeature( newValue );    
+    // @ts-ignore for some reason doesn't detect that mathod has two parameters
+    this.mapEl.selectFeature( {attributes: { ANC_ID: newValue.slice(0,2)}}, false /* emitEvent */ );    
     state.filter = newValue;
   }
   clearFilters() {

@@ -15,11 +15,13 @@ export class DcMap {
   @Event({ cancelable: false })  featureSelected: EventEmitter<any>;
 
   @Method()
-  public async selectFeature(feature) {
+  public async selectFeature(feature, emitEvent:boolean = true) {
     // filter = filter.slice(0, 2);
     console.log("dc-map: selectFeature", {feature})
     this.highlightFeature({ attributes: { ANC_ID: feature.attributes.ANC_ID } })
-    this.featureSelected.emit({ feature: feature })
+    if(emitEvent) {
+      this.featureSelected.emit({ feature: feature })
+    }
   }
 
 
