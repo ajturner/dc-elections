@@ -202,7 +202,7 @@ export class DcMap {
         });
         view.ui.add(homeWidget, "top-left");
         view.ui.move("zoom", "top-right");
-        homeWidget.on("go", (event) => {
+        homeWidget.on("go", () => {
           searchWidget.clear();
           this.highlightFeature();
           this.featureSelected.emit({ });
