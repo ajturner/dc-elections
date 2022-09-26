@@ -13,6 +13,6 @@
   flex-direction: column;
   flex-basis: 100%;
   flex: 1;
-  max-width: 20vw;
+  max-width: 300px;
   padding-right: 2em;
 }

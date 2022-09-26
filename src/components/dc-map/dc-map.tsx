@@ -30,6 +30,10 @@ export class DcMap {
     const { detail: { view, loadModules } } = event;
     this.m_view = view;
     this.m_view.map.basemap = "streets-vector";
+    this.m_view.navigation = {
+      mouseWheelZoomEnabled: false,
+      browserTouchPanEnabled: false
+    }
 
     loadModules([
       'esri/geometry/Extent',
