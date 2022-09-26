@@ -43,7 +43,7 @@ export class DcElectionQuestion {
   }
 
   renderResponse(response, _responseCount:number = 2) {
-    const filteredCandidates = this.applyFilters(response.candidates);
+    let filteredCandidates = this.applyFilters(response.candidates);
 
     // TODO: remove the prior change of this default response.
     if(response.response !== "No Response" && filteredCandidates.length !== 0) {
@@ -51,7 +51,7 @@ export class DcElectionQuestion {
       let formattedString = response.response.replace(/^[0-9]\.\s+/, '').replace(/(?:\r\n|\r|\n)/g, '<br>');
       
       let appearance: "grid" | "stack" | "narrow" | "quote" = 'grid';
-      console.debug("dc-election-question: renderREsponse", {type: this.type, formattedString, filteredCandidates})
+      console.debug("dc-election-question: Response", {type: this.type, formattedString, filteredCandidates})
       switch (this.type) {
         case ISurveyQuestionType.Choice:
           // appearance = responseCount > 3 ? 'narrow':'grid';
@@ -72,7 +72,7 @@ export class DcElectionQuestion {
         case ISurveyQuestionType.Text:
           appearance = 'quote';
           const candidates = filteredCandidates;
-          // console.debug("dc-election-question: text", {formattedString, filteredCandidates})
+          console.debug("dc-election-question: text", {formattedString, filteredCandidates})
 
           return (
               <div class="response-quote">
@@ -155,7 +155,8 @@ export class DcElectionQuestion {
 
   render() {
     const responses = shuffle(this.responses, this.question.Sort);
-    // console.debug("dc-election-question: render", {q: this.question, responses})
+  
+    console.debug("dc-election-question: render", {q: this.question, responses})
     return (
       <Host>
         <slot></slot>
@@ -166,9 +167,11 @@ export class DcElectionQuestion {
         <div class={`response layout-${this.type.toLowerCase()}`}>
           {responses.length === 0 ? this.renderNoResponse() : null }
             
-          {responses.map((response) => {
+          {responses.map((response, idx) => {
             return (
-              this.renderResponse(response, this.responses.length)
+              <div>
+              {this.renderResponse(response, responses.length)}
+              </div>
             )
           })}
         </div>

@@ -10,7 +10,7 @@ import { shuffle } from '../../utils/utils';
 export class DcSurveySummary {
 
   @Prop() questions = null;
-  @State() numberResponses:number = 172;
+  @State() numberResponses:number = 180;
 
   calculatePercentage(value: number): number {
     return Math.ceil(value / this.numberResponses * 100)

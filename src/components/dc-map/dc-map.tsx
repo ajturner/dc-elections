@@ -17,8 +17,8 @@ export class DcMap {
   @Method()
   public async selectFeature(feature, emitEvent:boolean = true) {
     // filter = filter.slice(0, 2);
-    console.log("dc-map: selectFeature", {feature})
-    this.highlightFeature({ attributes: { ANC_ID: feature.attributes.ANC_ID } })
+    console.log("dc-map: selectFeature", feature.attributes)
+    this.highlightFeature( feature )
     if(emitEvent) {
       this.featureSelected.emit({ feature: feature })
     }
@@ -236,7 +236,7 @@ export class DcMap {
     // console.debug("search-complete", query)
     this.m_layers['smdLayer'].queryFeatures(query).then((result) => {
       let resultFeature = result.features[0];
-      // console.debug("search-complete: resultFeature", resultFeature)
+      console.debug("search-complete: resultFeature", resultFeature.attributes)
       this.selectFeature(resultFeature);
     });
   }

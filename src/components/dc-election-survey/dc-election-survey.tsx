@@ -89,8 +89,13 @@ export class DcElectionSurvey {
     // TODO move these to reactive props on elements
     this.filterDropdownEl.value = newValue;
 
+    const feature = { attributes: {}};
+    if(newValue.length === 4) {
+      feature.attributes['SMD_ID'] = newValue;
+    }
+    feature.attributes['ANC_ID'] = newValue.slice(0,2);
     // @ts-ignore for some reason doesn't detect that mathod has two parameters
-    this.mapEl.selectFeature( {attributes: { ANC_ID: newValue.slice(0,2)}}, false /* emitEvent */ );    
+    this.mapEl.selectFeature( feature, false /* emitEvent */ );    
     state.filter = newValue;
   }
   clearFilters() {

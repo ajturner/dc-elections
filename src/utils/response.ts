@@ -219,8 +219,6 @@ function sortQuestionByType(questionType:string): Array<ISurveySort> {
   switch(questionType) {
     case ISurveyQuestionType.Text:
       return [{attribute: 'Race', order: 'asc'}, {attribute: 'Candidate', order: 'asc'}];
-
-    // all use this default for now 
     case ISurveyQuestionType.Rank:
       return [{attribute: 'Race', order: 'asc'}, {attribute: 'Candidate', order: 'asc'}];
     case ISurveyQuestionType.Option:
@@ -397,7 +395,7 @@ function groupQuestionResponses(question:string, candidates: Array<ISurveyCandid
     // Add this candidate to the cohort of responses
     response.candidates.push( candidate );
   })
-  // console.debug("groupQuestionResponses", {question, responses, candidates})
+  console.debug("groupQuestionResponses", {question, responses, candidates})
 
   return responses;
 }
