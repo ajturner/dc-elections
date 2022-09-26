@@ -8,6 +8,7 @@ import { Component, Host, h, Prop } from '@stencil/core';
 export class DcElectionGallery {
   @Prop({mutable: true, reflect: true}) candidates: Array<any> = [];
   @Prop({mutable: true}) appearance: "grid" | "stack" | "narrow"| "quote" = "grid";
+  
 
   private renderResponses() {
     let output = [];
@@ -37,7 +38,7 @@ export class DcElectionGallery {
     return output;
   }
   render() {
-    console.debug("dc-election-gallery", this.candidates)
+    // console.debug("dc-election-gallery", this.candidates)
     return (
       <Host>
         <slot></slot>

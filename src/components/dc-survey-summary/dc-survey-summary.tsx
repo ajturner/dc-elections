@@ -16,7 +16,7 @@ export class DcSurveySummary {
     return Math.ceil(value / this.numberResponses * 100)
   }
   renderEnumerationSummary(question) {
-    console.debug("dc-survey-summary: renderEnumeration", {question});
+    // console.debug("dc-survey-summary: renderEnumeration", {question});
     const responses = shuffle(question.responses, question.question.Sort);
     return (
       <dl>
@@ -31,7 +31,7 @@ export class DcSurveySummary {
   }
 
   renderQuestionSummary(question) {
-    console.debug("dc-survey-summary: renderQuestionSummary", {question})
+    // console.debug("dc-survey-summary: renderQuestionSummary", {question})
     switch (question.question.Type) {
       case ISurveyQuestionType.Choice:
         

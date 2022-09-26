@@ -15,7 +15,7 @@ export class DcFeatureSummary {
   }
 
   renderWebsite(website:string) {
-    console.log("renderWebsite", website)
+    // console.log("renderWebsite", website)
     if(!!website && website.length > 0) {
       return (<span>Website: <a target="_new" href={website}>{website}</a></span>)
     } else {

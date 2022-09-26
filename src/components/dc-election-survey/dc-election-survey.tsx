@@ -62,42 +62,57 @@ export class DcElectionSurvey {
       // TODO: this fires before the map has loaded in HTML
       // this.filterChanged.emit({ value: this.filter});
     }
-    console.debug("dc-election-survey", {candidates: this.candidates, questions: this.questions})
+    // console.debug("dc-election-survey", {candidates: this.candidates, questions: this.questions})
     this.loading = false;
   }
+
+  // TODO: This is a hack to stop propagating events all around, stopping map zoom
+  @State() stopFilterPropagation: boolean = false;
 
   @Listen("featureSelected")
   featureSelectedHandler(event) {
     console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
+    
+    this.stopFilterPropagation = true;
+
     this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
     this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
     this.filter = event.detail.feature.attributes.ANC_ID;
     state.filter = this.filter;
+    
   }
   @Listen("filterChanged")
   filterChangedHandler(event) {
-    console.debug("dc-election-survey: filterChangedHandler", event.detail.value)
+    // console.debug("dc-election-survey: filterChangedHandler", event.detail.value)
     this.filter = event.detail.value;
 
-    // Quick fix to hide ANC based filter
-    this.featureSummaryEl.race = event.detail.value;
+    // Update summary if the filter is an SMD
+    if(!this.stopFilterPropagation) {
+      this.featureSummaryEl.race = event.detail.value;
+    }
+    this.stopFilterPropagation = false;
   }
 
   @Watch('filter')
   filterPropChanged(newValue: string) {
-    console.debug("dc-election-survey: filterPropChanged")
+    // console.debug("dc-election-survey: filterPropChanged", {newValue})
     // TODO move these to reactive props on elements
     this.filterDropdownEl.value = newValue;
 
-    const feature = { attributes: {}};
+    const feature = { attributes: {
+      ANC_ID: newValue.slice(0,2)
+    }};
     if(newValue.length === 4) {
       feature.attributes['SMD_ID'] = newValue;
     }
-    feature.attributes['ANC_ID'] = newValue.slice(0,2);
-    // @ts-ignore for some reason doesn't detect that mathod has two parameters
-    this.mapEl.selectFeature( feature, false /* emitEvent */ );    
-    state.filter = newValue;
+    
+    if(!this.stopFilterPropagation) {
+      // @ts-ignore for some reason doesn't detect that mathod has two parameters
+      this.mapEl.selectFeature( feature, false /* emitEvent */ );    
+      state.filter = newValue;
+    }
   }
+  
   clearFilters() {
     this.filter = '';
     state.filter = '';
@@ -172,7 +187,7 @@ export class DcElectionSurvey {
           return (<li>{this.renderQuestion(question)}</li>);  
         })}
       </ol>)
-    console.debug("dc-election-survey: renderBody", {filter})
+    // console.debug("dc-election-survey: renderBody", {filter})
     return (
       <div class="questions">
         {this.renderFilter(filter)}

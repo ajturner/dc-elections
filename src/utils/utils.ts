@@ -48,7 +48,7 @@ export function sortShuffle(array: Array<any>, sort:Array<ISurveySort>): Array<a
       [alpha, beta] = getShuffleComparisons(a,b, attribute)
       index++;
     }
-    console.debug(`compare: [${alpha > beta}]`, {a, b, alpha, beta, attribute, sort})
+    // console.debug(`compare: [${alpha > beta}]`, {a, b, alpha, beta, attribute, sort})
     
     return alpha > beta ? orderResp : -orderResp;
   })
@@ -56,7 +56,7 @@ export function sortShuffle(array: Array<any>, sort:Array<ISurveySort>): Array<a
 
 // TODO: add option for what type of shuffle: sort | random, and attribute
 export function shuffle(array: Array<any>, sort:Array<ISurveySort>): Array<any> {
-  console.debug("shuffle", array);
+  // console.debug("shuffle", array);
   const response = sortShuffle(array, sort);
   return response;
 }

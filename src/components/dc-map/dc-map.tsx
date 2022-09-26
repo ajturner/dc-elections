@@ -10,14 +10,14 @@ export class DcMap {
   @State() m_view;
   @State() m_layerViews = {};
   @State() m_layers = {};
-  @State() m_highlight;
+  @State() m_highlights = {};
 
   @Event({ cancelable: false })  featureSelected: EventEmitter<any>;
 
   @Method()
   public async selectFeature(feature, emitEvent:boolean = true) {
     // filter = filter.slice(0, 2);
-    console.log("dc-map: selectFeature", feature.attributes)
+    // console.debug("dc-map: selectFeature", {attributes: feature.attributes, emitEvent} )
     this.highlightFeature( feature )
     if(emitEvent) {
       this.featureSelected.emit({ feature: feature })
@@ -236,10 +236,11 @@ export class DcMap {
     // console.debug("search-complete", query)
     this.m_layers['smdLayer'].queryFeatures(query).then((result) => {
       let resultFeature = result.features[0];
-      console.debug("search-complete: resultFeature", resultFeature.attributes)
+      // console.debug("search-complete: resultFeature", resultFeature.attributes)
       this.selectFeature(resultFeature);
     });
   }
+
   mapMouseHandler(event) {
     const opts = {
       include: this.m_layers['smdLayer']
@@ -252,7 +253,7 @@ export class DcMap {
 
         // currentANCName = response.results[0].graphic.attributes["NAME"];
         if (event.type === "pointer-down") {
-          console.debug("dc-map: mapMouseHandler", {feature})
+          // console.debug("dc-map: mapMouseHandler", {feature})
           this.selectFeature(feature);
         }
       }
@@ -262,20 +263,20 @@ export class DcMap {
 
   // Feature clicked on
   highlightFeature(feature) {
+    if (this.m_highlights['smdLayer']) {
+      this.m_highlights['smdLayer'].remove();
+    }
+    if (this.m_highlights['ancLayer']) {
+      this.m_highlights['ancLayer'].remove();
+    }
     const query = this.m_layerViews['ancLayer'].createQuery();
     query.where = `NAME = '${feature.attributes.ANC_ID}'`;
     this.m_layerViews['ancLayer'].queryFeatures(query).then((result) => {
-      console.debug("selectFeature 1", {feature, where: query.where, result})
+      // console.debug("dc-map: highlightFeature 1", {feature, where: query.where, result})
 
-      if (this.m_highlight) {
-        this.m_highlight.remove();
-      }
+
       if(!!result && result.features.length > 0) {
-
-        
         const foundFeature = result.features[0];
-        // console.debug("selectFeature", {feature, query, result, foundFeature})
-        // console.debug("selectFeature: viewLayer", this.m_layerViews['ancLayer'])
         
         this.m_view.goTo(
           {
@@ -286,11 +287,26 @@ export class DcMap {
             easing: "in-out-expo"
           }
         )
-        console.debug("dc-map: highlightFeature", {lv: this.m_layerViews, an: this.m_layerViews['ancLayer'], hl: this.m_layerViews['ancLayer'].highlight})
-        this.m_highlight = this.m_layerViews['ancLayer'].highlight(foundFeature.attributes.OBJECTID);
+        // console.debug("dc-map: highlightFeature 2", {lv: this.m_layerViews, an: this.m_layerViews['ancLayer'], hl: this.m_layerViews['ancLayer'].highlight})
+        this.m_highlights['ancLayer'] = this.m_layerViews['ancLayer'].highlight(foundFeature.attributes.OBJECTID);
 
       }
     });
+    // this.outlineFeature(feature)
+    // Highlight the specific SMD
+    if(feature.attributes.SMD_ID !== undefined) {
+      const query = this.m_layerViews['smdLayer'].createQuery();
+      query.where = `SMD_ID = '${feature.attributes.SMD_ID}'`;
+
+
+      // console.debug("dc-map: highlightFeature 2", {feature, where: query.where})
+
+      this.m_layerViews['smdLayer'].queryFeatures(query).then((result) => {
+        const foundFeature = result.features[0];
+        this.m_highlights['smdLayer'] = this.m_layerViews['smdLayer'].highlight(foundFeature.attributes.OBJECTID);
+      });  
+    }
+    
   }
 
   // Feature hovered
