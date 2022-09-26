@@ -167,12 +167,8 @@ export class DcElectionQuestion {
         <div class={`response layout-${this.type.toLowerCase()}`}>
           {responses.length === 0 ? this.renderNoResponse() : null }
             
-          {responses.map((response, idx) => {
-            return (
-              <div>
-              {this.renderResponse(response, responses.length)}
-              </div>
-            )
+          {responses.map((response) => {
+            return this.renderResponse(response, responses.length)
           })}
         </div>
       </Host>
