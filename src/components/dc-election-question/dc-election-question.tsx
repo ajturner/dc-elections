@@ -50,6 +50,15 @@ export class DcElectionQuestion {
       // remove numeric prefix like `1. answer` -> `answer`
       let formattedString = response.response.replace(/^[0-9]\.\s+/, '').replace(/(?:\r\n|\r|\n)/g, '<br>');
       
+      // Parse out any footnotes in response
+      let footnote = '', focus = formattedString;
+      try {
+        [, focus, footnote] = formattedString.match(/(.*)_(.*)_/);
+      } catch (error) {
+        // we'll just ignore...
+      }
+      formattedString = `${focus} <span class="footnote">${footnote}`;
+
       let appearance: "grid" | "stack" | "narrow" | "quote" = 'grid';
       // console.debug("dc-election-question: Response", {type: this.type, formattedString, filteredCandidates})
       switch (this.type) {
