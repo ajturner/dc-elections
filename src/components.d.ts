@@ -12,6 +12,7 @@ export namespace Components {
         "fullname": string;
         "office": string;
         "photo": string;
+        "website": string;
     }
     interface DcElectionGallery {
         "appearance": "grid" | "stack" | "narrow"| "quote";
@@ -161,6 +162,7 @@ declare namespace LocalJSX {
         "fullname"?: string;
         "office"?: string;
         "photo"?: string;
+        "website"?: string;
     }
     interface DcElectionGallery {
         "appearance"?: "grid" | "stack" | "narrow"| "quote";

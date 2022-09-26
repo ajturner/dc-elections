@@ -120,13 +120,14 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
 
   //// 
   // indexes for working with spreadsheet
-  const questionColumnStart = 16;
+  const questionColumnStart = 8;
   const responseRowStart = 2;
   const idColumn = 0;
-  const nameColumn = 9;
-  const ancColumn = 13; // TODO fix this hard-coding of the schema
-  const smdColumn = 14;
-  const photoColumn = 15;
+  const nameColumn = 1;
+  const websiteColumn = 3;
+  const ancColumn = 5; // TODO fix this hard-coding of the schema
+  const smdColumn = 6;
+  const photoColumn = 7;
   
   // Row 1 is questions, Row 2 is question metadata
   const questionRow = 0;
@@ -174,7 +175,8 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
     let candidate:ISurveyCandidate = {
       Candidate: response[nameColumn],
       Photo: `2022/${response[idColumn]}_${response[photoColumn]}`,
-      Race: response[ancColumn] + response[smdColumn]
+      Race: response[ancColumn] + response[smdColumn],
+      Website: response[websiteColumn]
     }
     // console.debug({candidate})
     responseArray.push(candidate);

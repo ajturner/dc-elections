@@ -12,6 +12,7 @@ export class DcElectionCandidate {
   @Prop() photo: string = null;
   @Prop() office: string = null;
   @Prop() bio: string = null;
+  @Prop() website: string = null;
 
   // Add zero-width space for optional line-break on names with an apostrophe
   private displayName(fullname:string):string {
@@ -36,6 +37,9 @@ export class DcElectionCandidate {
         {this.bio 
           ? <span class="bio">{this.bio}</span>
           : null}
+        {this.website 
+          ? <span class="website"><a href={this.website} target="_new" title={`Website of ${this.fullname}`}>website</a></span>
+          : null}          
       </Host>
     );
   }

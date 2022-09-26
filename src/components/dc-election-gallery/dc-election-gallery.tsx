@@ -8,7 +8,7 @@ import { Component, Host, h, Prop } from '@stencil/core';
 export class DcElectionGallery {
   @Prop({mutable: true, reflect: true}) candidates: Array<any> = [];
   @Prop({mutable: true}) appearance: "grid" | "stack" | "narrow"| "quote" = "grid";
-  
+
 
   private renderResponses() {
     let output = [];
@@ -21,6 +21,7 @@ export class DcElectionGallery {
       this.candidates.map((candidate) => {
           // don't display placeholder candidates.
           // used to add another column but with no responses.
+          console.debug("dc-election-gallery: candidate", {candidate})
           if(candidate["Candidate"] === undefined || candidate["Candidate"].length === 0) {
             return;
           }
@@ -30,6 +31,7 @@ export class DcElectionGallery {
               photo={`${candidate["Photo"]}`}
               fullname={candidate["Candidate"]}
               office={candidate?.Race}
+              website={candidate?.Website}
             ></dc-election-candidate>
           )
       })
