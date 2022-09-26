@@ -27,14 +27,13 @@ export class DcSurveySummary {
       const r = this.formatResponse( response.response );
       if(!output[r]) {
         output[r] = {
-          response: r,
           count: 0
         }
       }
       output[r].count += response.candidates.length;
       return output;
     }, {})
-    console.debug("dc-survey-summery: renderEnumerationSummary", summary);
+
     return (
       <dl>
         <dt class="question">
