@@ -104,7 +104,7 @@ export class DcElectionSurvey {
     if(!!this.filterDropdownEl) {
       this.filterDropdownEl.value = newValue;
     }
-    
+
     setFilterBookmark(newValue)
     
     const feature = { attributes: {
@@ -189,6 +189,8 @@ export class DcElectionSurvey {
       ></dc-survey-summary>      
     )
   }
+
+  // TODO: Simplify the filter logic
   renderBody(filter:string) {
     const questions = (
       <ol>
@@ -196,11 +198,10 @@ export class DcElectionSurvey {
           return (<li>{this.renderQuestion(question)}</li>);  
         })}
       </ol>)
-    // console.debug("dc-election-survey: renderBody", {filter})
     return (
       <div class="questions">
         {this.renderFilter(filter)}
-        {filter === null || (filter && filter.length !== 0) ? questions : this.renderHelp()}
+        {!this.showFilter || filter === null || (!!filter && filter.length !== 0) ? questions : this.renderHelp()}
       </div>
     )
   }
