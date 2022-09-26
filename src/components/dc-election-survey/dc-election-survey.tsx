@@ -71,13 +71,17 @@ export class DcElectionSurvey {
 
   @Listen("featureSelected")
   featureSelectedHandler(event) {
-    console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
     
     this.stopFilterPropagation = true;
-
-    this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
-    this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
-    this.filter = event.detail.feature.attributes.ANC_ID;
+    if(event.detail.feature !== undefined) {
+      console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
+      this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
+      this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
+      this.filter = event.detail.feature.attributes.ANC_ID;
+    } else {
+      this.filter = "";
+      this.featureSummaryEl.race = "";
+    }
     state.filter = this.filter;
     
   }

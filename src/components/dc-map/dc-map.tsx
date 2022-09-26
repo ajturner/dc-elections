@@ -191,13 +191,18 @@ export class DcMap {
           position: "top-left",
           index: 2
         });
+        searchWidget.on("search-complete", (event) => {this.searchCompleteHandler(event)});
+
         let homeWidget = new Home({
           view: this.m_view
         });
         view.ui.add(homeWidget, "top-left");
         view.ui.move("zoom", "top-right");
-
-        searchWidget.on("search-complete", (event) => {this.searchCompleteHandler(event)});
+        homeWidget.on("go", (event) => {
+          searchWidget.clear();
+          this.highlightFeature();
+          this.featureSelected.emit({ });
+        })
 
         this.m_view
           .when()
@@ -262,12 +267,16 @@ export class DcMap {
   }
 
   // Feature clicked on
-  highlightFeature(feature) {
+  highlightFeature(feature = null) {
     if (this.m_highlights['smdLayer']) {
       this.m_highlights['smdLayer'].remove();
     }
     if (this.m_highlights['ancLayer']) {
       this.m_highlights['ancLayer'].remove();
+    }
+    // clear Highlights
+    if(feature === null) {
+      return;
     }
     const query = this.m_layerViews['ancLayer'].createQuery();
     query.where = `NAME = '${feature.attributes.ANC_ID}'`;
