@@ -5,6 +5,7 @@ import state from '../../utils/store';
 import HTMLCalciteComboboxElement from "@esri/calcite-components/dist/components/calcite-combobox";
 // @ts-ignore
 import HTMLDcFilterElement from '../dc-filter';
+import { getFilterBookmark, setFilterBookmark } from '../../utils/utils';
 
 @Component({
   tag: 'dc-election-survey',
@@ -55,12 +56,11 @@ export class DcElectionSurvey {
     if(!!this.candidatesFile) {
       this.candidates = await Response.fetchCandidates( this.candidatesFile )
     }
-    
+
+    this.filter = getFilterBookmark();
     if(!!this.filter) {
       // set the filter state
       state.filter = this.filter;
-      // TODO: this fires before the map has loaded in HTML
-      // this.filterChanged.emit({ value: this.filter});
     }
     // console.debug("dc-election-survey", {candidates: this.candidates, questions: this.questions})
     this.loading = false;
@@ -101,8 +101,12 @@ export class DcElectionSurvey {
   filterPropChanged(newValue: string) {
     // console.debug("dc-election-survey: filterPropChanged", {newValue})
     // TODO move these to reactive props on elements
-    this.filterDropdownEl.value = newValue;
-
+    if(!!this.filterDropdownEl) {
+      this.filterDropdownEl.value = newValue;
+    }
+    
+    setFilterBookmark(newValue)
+    
     const feature = { attributes: {
       ANC_ID: newValue.slice(0,2)
     }};
@@ -110,7 +114,7 @@ export class DcElectionSurvey {
       feature.attributes['SMD_ID'] = newValue;
     }
     
-    if(!this.stopFilterPropagation) {
+    if(!this.stopFilterPropagation && !!this.mapEl) {
       // @ts-ignore for some reason doesn't detect that mathod has two parameters
       this.mapEl.selectFeature( feature, false /* emitEvent */ );    
       state.filter = newValue;
@@ -134,6 +138,7 @@ export class DcElectionSurvey {
           <slot name="filter"></slot>
           <dc-map
             ref={(el) => this.mapEl = el}
+
           ></dc-map>
           <dc-feature-summary
             candidates={this.candidates}

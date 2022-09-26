@@ -1,7 +1,6 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
 import { ISurveyQuestionType } from '../../utils/response';
 import { shuffle } from '../../utils/utils';
-
 @Component({
   tag: 'dc-survey-summary',
   styleUrl: 'dc-survey-summary.scss',
@@ -20,6 +19,7 @@ export class DcSurveySummary {
   }
   renderEnumerationSummary(question) {
     // console.debug("dc-survey-summary: renderEnumeration", {question});
+    
     const responses = shuffle(question.responses, question.question.Sort);
 
     // Responses might have footnotes that should be left out of summary

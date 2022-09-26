@@ -1,5 +1,32 @@
 import { ISurveySort } from "./response";
 
+const filterName = "location-filter";
+
+// Get current window bookmark
+export function getFilterBookmark() {
+  let filter = "";
+  var url = window?.location?.search;
+  
+  let searchParams = new URLSearchParams(url);
+
+  // console.debug("getFilterBookmark", {url, value: searchParams.get(filterName), searchParams})
+
+  if(searchParams.has(filterName)) {
+    filter = searchParams.get(filterName)
+  }
+  return filter;
+  // window.location.search = searchParams;
+}
+
+export function setFilterBookmark(filter: string) {
+  // window.location.search = `?filter=${filter}`;
+  //@ts-ignore
+  const url = new URL(window.location);
+  url.searchParams.set(filterName, filter);
+  window.history.pushState({}, '', url);  
+
+}
+
 // Fisher-Yates (Knuth) array shuffle from http://sedition.com/perl/javascript-fy.html
 export function randomShuffle(array: Array<any>): Array<any> {
   let currentIndex = array.length,  randomIndex;

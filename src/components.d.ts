@@ -64,6 +64,7 @@ export namespace Components {
     interface DcLoader {
     }
     interface DcMap {
+        "filter": string;
         "selectFeature": (feature: any, emitEvent?: boolean) => Promise<void>;
     }
     interface DcSurveySummary {
@@ -216,7 +217,9 @@ declare namespace LocalJSX {
     interface DcLoader {
     }
     interface DcMap {
+        "filter"?: string;
         "onFeatureSelected"?: (event: DcMapCustomEvent<any>) => void;
+        "onMapLoaded"?: (event: DcMapCustomEvent<any>) => void;
     }
     interface DcSurveySummary {
         "questions"?: any;

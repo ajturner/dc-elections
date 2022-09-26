@@ -21,7 +21,7 @@ export class DcElectionGallery {
       this.candidates.map((candidate) => {
           // don't display placeholder candidates.
           // used to add another column but with no responses.
-          console.debug("dc-election-gallery: candidate", {candidate})
+          // console.debug("dc-election-gallery: candidate", {candidate})
           if(candidate["Candidate"] === undefined || candidate["Candidate"].length === 0) {
             return;
           }

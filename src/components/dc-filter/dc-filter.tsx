@@ -23,6 +23,7 @@ export class DcFilter {
     this.fetchOptions();
   }
 
+
   // TODO: extract hard-coded ANC_ID, SMD_ID attribute names to @Prop
   async fetchOptions() {
     const filters = [];
@@ -49,6 +50,7 @@ export class DcFilter {
   }
   @Watch('filter')
   filterPropChanged(newValue: string) {
+    console.debug("dc-filter: filterPropChanged", newValue);
     this.m_dropdownEl.value = newValue;
   }
 

@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Host, h, Listen, State, Method } from '@stencil/core';
+import { Component, Event, EventEmitter, Host, h, Listen, State, Method, Prop } from '@stencil/core';
 
 @Component({
   tag: 'dc-map',
@@ -7,12 +7,14 @@ import { Component, Event, EventEmitter, Host, h, Listen, State, Method } from '
 })
 export class DcMap {
 
+  @Prop() filter:string = "";
   @State() m_view;
   @State() m_layerViews = {};
   @State() m_layers = {};
   @State() m_highlights = {};
 
   @Event({ cancelable: false })  featureSelected: EventEmitter<any>;
+  @Event({ cancelable: false })  mapLoaded: EventEmitter<any>;
 
   @Method()
   public async selectFeature(feature, emitEvent:boolean = true) {
@@ -233,6 +235,7 @@ export class DcMap {
           })
           .then((layerView) => {
             this.m_layerViews['ancLayer'] = layerView;
+            this.mapLoaded.emit();
           })
 
       });
