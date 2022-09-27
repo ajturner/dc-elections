@@ -95,8 +95,8 @@ export class DcFilter {
     }
     return (
       <Host>
-        <slot></slot>
         <div class="filters">
+          <slot></slot>
           <calcite-combobox
             class="filter"
             ref={(el) => this.m_dropdownEl = el}

@@ -11,6 +11,10 @@
   border: thin solid #0f9535;
   max-width: 780px;
 }
+/* contains card within filter */
+.filter {
+  position: relative;
+}
 dc-map {
   height: 400px;
   width: 400px;
@@ -21,7 +25,9 @@ dc-feature-summary {
   background-color: rgba(255,255,255, 0.8);
   width: 300px;
 }
-
+dc-filter {
+  margin-top: 0.5em;
+}
 ol {
   /* margin: 0 0 0 1em; */
   padding: 0;

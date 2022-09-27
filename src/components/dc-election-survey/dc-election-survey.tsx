@@ -74,7 +74,7 @@ export class DcElectionSurvey {
     
     this.stopFilterPropagation = true;
     if(event.detail.feature !== undefined) {
-      console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
+      // console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
       this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
       this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
       this.filter = event.detail.feature.attributes.ANC_ID;
@@ -138,7 +138,6 @@ export class DcElectionSurvey {
           <slot name="filter"></slot>
           <dc-map
             ref={(el) => this.mapEl = el}
-
           ></dc-map>
           <dc-feature-summary
             candidates={this.candidates}
@@ -147,7 +146,9 @@ export class DcElectionSurvey {
           <dc-filter
             ref={(el) => this.filterDropdownEl = el}
             filter={filter}
-          ></dc-filter>
+          >
+          
+          </dc-filter>
 
           {/* <input onChange={this.filterHandler} 
                  ref={(el) => this.filterInput = el} 

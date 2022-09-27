@@ -9,8 +9,12 @@ import { shuffle } from '../../utils/utils';
 export class DcSurveySummary {
 
   @Prop() questions = null;
-  @State() numberResponses:number = 179;
+  @State() numberResponses:number = 0;
 
+  componentDidLoad() {
+    // todo - fix count to be more resilient in case first question is open-ended
+    this.numberResponses = this.questions[0].responses.length;
+  }
   calculatePercentage(value: number): number {
     return Math.ceil(value / this.numberResponses * 100)
   }
