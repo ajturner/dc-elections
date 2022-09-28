@@ -224,7 +224,7 @@ export class DcMap {
             this.m_layerViews['smdLayer'] = layerView;
             
             this.m_view.on("pointer-move", (event) => {this.mapMouseHandler(event)});
-            this.m_view.on("pointer-down", (event) => {this.mapMouseHandler(event)});
+            this.m_view.on("click", (event) => {this.mapMouseHandler(event)});
           })
           // Get ANC Layer definitions
           .then(() => {
@@ -264,7 +264,7 @@ export class DcMap {
         this.outlineFeature(feature)
 
         // currentANCName = response.results[0].graphic.attributes["NAME"];
-        if (event.type === "pointer-down") {
+        if (event.type === "click") {
           // console.debug("dc-map: mapMouseHandler", {feature})
           this.selectFeature(feature);
         }
