@@ -74,7 +74,7 @@ export class DcElectionSurvey {
     
     this.stopFilterPropagation = true;
     if(event.detail.feature !== undefined) {
-      // console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
+      console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
       this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
       this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
       this.filter = event.detail.feature.attributes.ANC_ID;
@@ -132,6 +132,7 @@ export class DcElectionSurvey {
   }
 
   renderFilter(filter:string) {
+    console.debug("dc-election-survey: renderFilter", {filter})
     if(this.showFilter) {
       return (
         <div class="filter">
