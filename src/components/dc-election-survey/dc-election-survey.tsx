@@ -26,7 +26,7 @@ export class DcElectionSurvey {
   /**
   * Optional URL to CSV to candidates: Race,Name,Website
   */
-  @Prop() candidatesFile:string = null;
+  @Prop() candidateFiles:string = null;
 
   /** String to filter Race
    */
@@ -53,8 +53,8 @@ export class DcElectionSurvey {
     this.questions = await Response.fetchResponses(this.filename, this.format);
 
     // Optionally load a CSV of Candidates (Race,Name,Website)
-    if(!!this.candidatesFile) {
-      this.candidates = await Response.fetchCandidates( this.candidatesFile )
+    if(!!this.candidateFiles) {
+      this.candidates = await Response.fetchCandidates( this.candidateFiles )
     }
 
     this.filter = getFilterBookmark();

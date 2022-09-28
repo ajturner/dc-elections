@@ -34,7 +34,7 @@ export namespace Components {
         /**
           * Optional URL to CSV to candidates: Race,Name,Website
          */
-        "candidatesFile": string;
+        "candidateFiles": string;
         /**
           * URL to Survey responses
          */
@@ -185,7 +185,7 @@ declare namespace LocalJSX {
         /**
           * Optional URL to CSV to candidates: Race,Name,Website
          */
-        "candidatesFile"?: string;
+        "candidateFiles"?: string;
         /**
           * URL to Survey responses
          */
