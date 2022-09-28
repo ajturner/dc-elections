@@ -1,5 +1,10 @@
 :host {
   display: block;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  opacity: 0.9;
+
 }
 .preface {
   font-weight: 300;
@@ -12,9 +17,5 @@
   font-size: 1.2em;
   padding-top: 0.3em;
   padding-bottom: 0.5em;
-  position: sticky;
-  background-color: white;
-  opacity: 0.9;
-  top: 0px;
   display: block;
 }
