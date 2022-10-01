@@ -16,6 +16,7 @@ export class DcMap {
   @Event({ cancelable: false })  featureSelected: EventEmitter<any>;
   @Event({ cancelable: false })  mapLoaded: EventEmitter<any>;
 
+  // Highlight + Select a feature with attributes
   @Method()
   public async selectFeature(feature, emitEvent:boolean = true) {
     // filter = filter.slice(0, 2);
@@ -24,6 +25,12 @@ export class DcMap {
     if(emitEvent) {
       this.featureSelected.emit({ feature: feature })
     }
+  }
+
+  // Just highlight features based on a query
+  @Method()
+  public async highlightFeatures(ids:Array<string>) {
+    this.outlineFeatures(ids);
   }
 
 
@@ -69,26 +76,28 @@ export class DcMap {
               color: [255,255,255,0.8]
             }
           }
-        }        
-        const ancLabels = new LabelClass({
-          labelExpressionInfo: { expression: "$feature.NAME" },
-          symbol: {
-            type: "text",  // autocasts as new TextSymbol()
-            color: "white",
-            haloSize: 0.5,
-            haloColor: "black",
-            font: {
-              size: 12,
-              weight: "bold"
-            }
-          }
-        });
+        }
+
+        // ANC labels are difficult to see
+        // const ancLabels = new LabelClass({
+        //   labelExpressionInfo: { expression: "$feature.NAME" },
+        //   symbol: {
+        //     type: "text",  // autocasts as new TextSymbol()
+        //     color: "white",
+        //     haloSize: 0.5,
+        //     haloColor: "black",
+        //     font: {
+        //       size: 12,
+        //       weight: "bold"
+        //     }
+        //   }
+        // });
 
         // from https://opendata.dc.gov
         this.m_layers['ancLayer'] = new FeatureLayer({
           url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/54",
           renderer: ancStyle,
-          labelingInfo: [ancLabels]
+          // labelingInfo: [ancLabels]
         });
 
 
@@ -273,6 +282,7 @@ export class DcMap {
 
   }
 
+
   // Feature clicked on
   highlightFeature(feature = null) {
     if (this.m_highlights['smdLayer']) {
@@ -332,6 +342,25 @@ export class DcMap {
         where: `SMD_ID = '${feature.attributes.SMD_ID}'`
       },
       excludedLabelsVisible: true,
+      includedEffect: "brightness(5) hue-rotate(270deg) contrast(100%) saturate(150%) "
+    }
+
+    // this.m_layerViews['smdLayer'].queryFeatures(query).then((ids) => {
+    //   if (highlight) {
+    //     highlight.remove();
+    //   }
+    //   // highlight = this.m_layerViews['smdLayer'].highlight(ids.features[0].attributes.OBJECTID);
+    // }); 
+  }
+
+  // Outline features by Query
+  outlineFeatures(ids:Array<string>) {
+    this.m_layers['smdLayer'].featureEffect = {
+      filter: {
+        where: `SMD_ID in ('${ids.join("','")}')`
+      },
+      excludedLabelsVisible: false,
+      excludedEffect: "brightness(0) contrast(0%)",
       includedEffect: "brightness(5) hue-rotate(270deg) contrast(100%) saturate(150%) "
     }
 

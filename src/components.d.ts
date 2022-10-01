@@ -65,6 +65,7 @@ export namespace Components {
     }
     interface DcMap {
         "filter": string;
+        "highlightFeatures": (ids: Array<string>) => Promise<void>;
         "selectFeature": (feature: any, emitEvent?: boolean) => Promise<void>;
     }
     interface DcSurveySummary {
@@ -82,6 +83,10 @@ export interface DcFilterCustomEvent<T> extends CustomEvent<T> {
 export interface DcMapCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLDcMapElement;
+}
+export interface DcSurveySummaryCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLDcSurveySummaryElement;
 }
 declare global {
     interface HTMLDcElectionCandidateElement extends Components.DcElectionCandidate, HTMLStencilElement {
@@ -222,6 +227,7 @@ declare namespace LocalJSX {
         "onMapLoaded"?: (event: DcMapCustomEvent<any>) => void;
     }
     interface DcSurveySummary {
+        "onAggregateSummary"?: (event: DcSurveySummaryCustomEvent<any>) => void;
         "questions"?: any;
     }
     interface IntrinsicElements {

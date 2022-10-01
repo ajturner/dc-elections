@@ -69,12 +69,21 @@ export class DcElectionSurvey {
   // TODO: This is a hack to stop propagating events all around, stopping map zoom
   @State() stopFilterPropagation: boolean = false;
 
+  // Click on chart
+  @Listen('aggregateSummary')
+  async handleAggregateSummary(event) {
+    const ids = Object.keys(event.detail['Race']).map((id) => {
+      return id;
+    })
+    this.mapEl.highlightFeatures(ids);
+  }
+
   @Listen("featureSelected")
   featureSelectedHandler(event) {
     
     this.stopFilterPropagation = true;
     if(event.detail.feature !== undefined) {
-      console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
+      // console.debug("dc-election-survey: featureSelectedHandler", event.detail.feature.attributes);
       this.featureSummaryEl.race = event.detail.feature.attributes.SMD_ID;
       this.featureSummaryEl.website = event.detail.feature.attributes.WEB_URL;
       this.filter = event.detail.feature.attributes.ANC_ID;
@@ -99,7 +108,7 @@ export class DcElectionSurvey {
 
   @Watch('filter')
   filterPropChanged(newValue: string) {
-    // console.debug("dc-election-survey: filterPropChanged", {newValue})
+    console.debug("dc-election-survey: filterPropChanged", {newValue})
     // TODO move these to reactive props on elements
     if(!!this.filterDropdownEl) {
       this.filterDropdownEl.value = newValue;
@@ -135,7 +144,7 @@ export class DcElectionSurvey {
     console.debug("dc-election-survey: renderFilter", {filter})
     if(this.showFilter) {
       return (
-        <div class="filter">
+        <div class={`filter ${this.filter?.length === 0 ? 'summary': ''}`}>
           <slot name="filter"></slot>
           <dc-map
             ref={(el) => this.mapEl = el}

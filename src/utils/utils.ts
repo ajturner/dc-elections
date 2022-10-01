@@ -19,13 +19,15 @@ export function getFilterBookmark() {
 }
 
 export function setFilterBookmark(filter: string) {
-  // window.location.search = `?filter=${filter}`;
+  //@ts-ignore
+  const url = new URL(window.location);
+
   if(!!filter && filter.length !== 0) {
-    //@ts-ignore
-    const url = new URL(window.location);
     url.searchParams.set(filterName, filter);
-    window.history.pushState({}, '', url);  
+  } else {
+    url.searchParams.delete(filterName);
   }
+  window.history.pushState({}, '', url);  
 
 }
 

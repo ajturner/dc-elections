@@ -4,6 +4,7 @@
 }
 .filter {
   max-width: 800px;
+  z-index: 100;
 }
 .help {
   margin: 1em 0;
@@ -13,8 +14,16 @@
 }
 /* contains card within filter */
 .filter {
-  position: relative;
+  /* position: relative; */
+  display: block;
 }
+.filter.summary {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  opacity: 1.0;
+}
+
 dc-map {
   height: 400px;
   width: 400px;
@@ -24,6 +33,9 @@ dc-feature-summary {
   top: 250px;
   background-color: rgba(255,255,255, 0.8);
   width: 300px;
+}
+dc-survey-summary {
+  z-index: 10;
 }
 dc-filter {
   margin-top: 0.5em;
