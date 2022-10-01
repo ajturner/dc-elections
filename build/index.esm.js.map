@@ -1,0 +1,1 @@
+{"version":3,"sources":["src/index.ts"],"names":["console","log"],"mappings":"AAEAA,QAAQC,IAAI,MAAO,EAAE","sourcesContent":["export { Components, JSX } from './components';\n\nconsole.log(\"add\", 1+1)"]}

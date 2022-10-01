@@ -1,1 +1,2 @@
-console.log("add",2);
+console.log("add",1+1);
+//# sourceMappingURL=index.esm.js.map
