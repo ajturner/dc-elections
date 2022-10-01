@@ -97,6 +97,7 @@ export class DcMap {
         this.m_layers['ancLayer'] = new FeatureLayer({
           url: "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/54",
           renderer: ancStyle,
+          outFields: ['NAME'],
           // labelingInfo: [ancLabels]
         });
 
@@ -298,8 +299,7 @@ export class DcMap {
     const query = this.m_layerViews['ancLayer'].createQuery();
     query.where = `NAME = '${feature.attributes.ANC_ID}'`;
     this.m_layerViews['ancLayer'].queryFeatures(query).then((result) => {
-      // console.debug("dc-map: highlightFeature 1", {feature, where: query.where, result})
-
+      console.debug("dc-map: highlightFeature 1", {feature, where: query.where, result})
 
       if(!!result && result.features.length > 0) {
         const foundFeature = result.features[0];
