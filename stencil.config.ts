@@ -3,10 +3,15 @@ import { sass } from '@stencil/sass';
 
 export const config: Config = {
   namespace: 'dc-election',
+  sourceMap: true,
   plugins: [
     sass()
   ],
   outputTargets: [
+    { 
+      type: 'docs-vscode',
+      file: 'vscode-data.json',
+    },
     {
       type: 'dist',
       esmLoaderPath: '../loader',
