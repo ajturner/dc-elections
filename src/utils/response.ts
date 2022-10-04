@@ -23,7 +23,8 @@ export interface ISurveyCandidate {
   Photo: string;
   Candidate: string;
   Race?: string;
-  Website?: string
+  Website?: string;
+  Endorsed?: string;
   // Answers based on Question as a key
   [index: string]: string;
 }
@@ -120,14 +121,15 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
 
   //// 
   // indexes for working with spreadsheet
-  const questionColumnStart = 8;
-  const responseRowStart = 2;
   const idColumn = 0;
   const nameColumn = 1;
+  const responseRowStart = 2;
   const websiteColumn = 3;
   const ancColumn = 5; // TODO fix this hard-coding of the schema
   const smdColumn = 6;
-  const photoColumn = 7;
+  const endorsedColumn = 7;
+  const photoColumn = 8;
+  const questionColumnStart = 9;
   
   // Row 1 is questions, Row 2 is question metadata
   const questionRow = 0;
@@ -176,7 +178,8 @@ function parseSurveyMonkeyQuestions( _parseFile: any, parseData: any ):Array<ISu
       Candidate: response[nameColumn],
       Photo: `2022/${response[idColumn]}_${response[photoColumn]}`,
       Race: response[ancColumn] + response[smdColumn],
-      Website: response[websiteColumn]
+      Website: response[websiteColumn],
+      Endorsed: response[endorsedColumn]
     }
     // console.debug({candidate})
     responseArray.push(candidate);

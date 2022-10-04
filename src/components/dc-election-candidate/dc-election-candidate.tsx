@@ -13,6 +13,7 @@ export class DcElectionCandidate {
   @Prop() office: string = null;
   @Prop() bio: string = null;
   @Prop() website: string = null;
+  @Prop() endorsed: boolean = null;
 
   // Add zero-width space for optional line-break on names with an apostrophe
   private displayName(fullname:string):string {
@@ -24,6 +25,11 @@ export class DcElectionCandidate {
     const imageSrc = getAssetPath(`../assets/photos/${this.photo}`);
     return (
       <Host>
+      <div class={
+          this.endorsed ? "endorsed" : ""
+        }
+        data-ribbon={ this.endorsed ? "GGWash Endorsed" : ""}
+        >
         <slot></slot>
         {this.photo 
           ? <img src={imageSrc} alt={`Photograph of ${this.fullname}`} />
@@ -39,7 +45,8 @@ export class DcElectionCandidate {
           : null}
         {this.website 
           ? <span class="website"><a href={this.website} target="_new" title={`Website of ${this.fullname}`}>website</a></span>
-          : null}          
+          : null}  
+        </div>        
       </Host>
     );
   }

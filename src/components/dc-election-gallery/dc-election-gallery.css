@@ -17,10 +17,8 @@
   border-left: 3px solid #0f9535;
 }
 
-.gallery dc-election-candidate {
-  border: thin solid #eee;
-  padding: 0.5em;
-}
+/* .gallery dc-election-candidate {
+} */
 
 /* Displays empty state */
 .gallery:empty::after {

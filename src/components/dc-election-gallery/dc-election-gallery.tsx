@@ -32,6 +32,7 @@ export class DcElectionGallery {
               fullname={candidate["Candidate"]}
               office={candidate?.Race}
               website={candidate?.Website}
+              endorsed={candidate?.Endorsed === "Yes" ? true : false}
             ></dc-election-candidate>
           )
       })

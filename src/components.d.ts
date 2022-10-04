@@ -9,6 +9,7 @@ import { ISurveyQuestion, ISurveyQuestionType } from "./utils/response";
 export namespace Components {
     interface DcElectionCandidate {
         "bio": string;
+        "endorsed": boolean;
         "fullname": string;
         "office": string;
         "photo": string;
@@ -165,6 +166,7 @@ declare global {
 declare namespace LocalJSX {
     interface DcElectionCandidate {
         "bio"?: string;
+        "endorsed"?: boolean;
         "fullname"?: string;
         "office"?: string;
         "photo"?: string;

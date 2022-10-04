@@ -1,4 +1,10 @@
 :host {
+  
+}
+
+div {
+  border: thin solid #eee;
+  padding: 0.5em;
   display: grid;
 }
 
@@ -22,4 +28,52 @@ img {
 a {
   font-size: 0.8em;
   font-weight: 400;
+}
+
+.ribbon {
+  --f: 10px; /* control the folded part*/
+  --r: 15px; /* control the ribbon shape */
+  --t: 10px; /* the top offset */
+  
+  position: relative;
+  inset: var(--t) calc(-1*var(--f)) auto auto;
+  padding: 0 10px var(--f) calc(10px + var(--r));
+  clip-path: 
+    polygon(0 0,100% 0,100% calc(100% - var(--f)),calc(100% - var(--f)) 100%,
+      calc(100% - var(--f)) calc(100% - var(--f)),0 calc(100% - var(--f)),
+      var(--r) calc(50% - var(--f)/2));
+  background: green;
+  box-shadow: 0 calc(-1*var(--f)) 0 inset #0005;
+}
+
+
+.endorsed {
+  border: 2px solid #0f9535;
+  --d:6px;  /* folded part */
+  --c:#0f9535; /* color */
+  --f:10px; /* ribbon font-size */
+  position: relative;
+
+}
+.endorsed::before {
+  content: attr(data-ribbon);
+  font-size:var(--f);
+  /* I : position & coloration */
+  position: absolute;
+  color:white;
+  top: 0;
+  right: 0;
+  transform: translate(29.29%, -100%) rotate(45deg);
+  transform-origin: bottom left;
+  padding: 5px 35px calc(var(--d) + 5px);
+  background: linear-gradient(rgba(0,0,0,0.5) 0 0) bottom/100% var(--d) no-repeat var(--c);
+  /* II : clipping */
+  clip-path: polygon(0 0,100% 0,100% 100%,calc(100% - var(--d)) calc(100% - var(--d)),var(--d) calc(100% - var(--d)) , 0 100%);
+  /* III : masking */
+  -webkit-mask: 
+      linear-gradient( 135deg, transparent calc(50% - var(--d)*0.707),#fff 0) bottom left,
+      linear-gradient(-135deg, transparent calc(50% - var(--d)*0.707),#fff 0) bottom right;
+  -webkit-mask-size:300vmax 300vmax;
+  -webkit-mask-composite: destination-in, xor;
+   mask-composite: intersect;
 }
