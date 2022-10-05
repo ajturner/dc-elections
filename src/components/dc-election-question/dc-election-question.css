@@ -3,10 +3,9 @@
   /* margin-bottom: 2em; */
 }
 
-/* dc-election-query {
-    position: sticky;
-    top: 0;
-} */
+dc-election-query {
+  z-index: 1000;
+}
 
 .response:empty::before {
   content: "No candidates submitted responses in this ANC.";
