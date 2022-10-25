@@ -46,7 +46,9 @@ a {
   box-shadow: 0 calc(-1*var(--f)) 0 inset #0005;
 }
 
-
+.withdrawn {
+  text-decoration: line-through;
+}
 .endorsed {
   border: 2px solid #0f9535;
   --d:6px;  /* folded part */
